@@ -35,9 +35,14 @@ func (l *Literal) String() string {
 	return l.Value
 }
 
-type Stmt interface {
+// if 关键字
+type IfExpr struct {
+	Cond Expr
+	Body Expr
+	Else Expr
 }
 
-type BlockStmt struct {
-	List []Stmt
+// {} 花括号表达式
+type BraceExpr struct {
+	List []Expr
 }

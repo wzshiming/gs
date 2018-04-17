@@ -10,65 +10,109 @@ func NewParser(s string) *parser {
 	}
 }
 
-func (s *parser) ParseExprs() []Expr {
+func (s *parser) Parse() []Expr {
 	ex := []Expr{}
-	for s.ch != -1 {
-		ex = append(ex, s.ParseExpr())
+	for s.tok != 0 {
+		pe := s.ParseExpr()
+		if pe == nil {
+			break
+		}
+		ex = append(ex, pe)
+
 	}
 	return ex
 }
 
 func (s *parser) ParseExpr() Expr {
-	return s.parseBinary(1)
+	return s.parseBinaryExpr(1)
 }
 
-func (s *parser) parseUnary() Expr {
-	s.skipSpace()
+func (s *parser) parseUnaryExpr() Expr {
 
 	switch {
-	case s.ch == '+', s.ch == '-':
-		op := s.operator()
-		s.next()
-		b := &OperatorUnary{
-			Op: op,
-			X:  s.parseUnary(),
+	case s.tok.IsOperator():
+		switch s.tok {
+		case ADD, SUB:
+
+			s.scan()
+			b := &OperatorUnary{
+				Op: s.tok,
+				X:  s.parseUnaryExpr(),
+			}
+			return b
+		case RPAREN, RBRACE:
+			return nil
+		case LPAREN:
+			s.next()
+			s.scan()
+			b := s.ParseExpr()
+			s.scan()
+			return b
+		case LBRACE:
+			s.next()
+			s.scan()
+			b := s.Parse()
+
+			s.scan()
+
+			return &BraceExpr{
+				List: b,
+			}
 		}
-		return b
-	case s.ch == '(':
-		s.next()
-		b := s.parseBinary(1)
-		s.next()
-		return b
-	case s.ch >= '0' && s.ch <= '9':
-		return &Literal{
-			Type:  NUMBER,
-			Value: s.scanNumber(),
+	case s.tok.IsKeywork():
+		switch s.tok {
+		case IF:
+			s.scan()
+			cond := s.ParseExpr()
+			body := s.ParseExpr()
+			var els Expr
+
+			if s.tok == ELSE {
+				s.scan()
+				els = s.ParseExpr()
+			}
+			return &IfExpr{
+				Cond: cond,
+				Body: body,
+				Else: els,
+			}
 		}
+
 	default:
-		return &Literal{
-			Type:  IDENT,
-			Value: s.scanIdent(),
+		b := &Literal{
+			Type:  s.tok,
+			Value: s.val,
 		}
+		s.scan()
+		return b
 	}
+
 	return nil
 }
 
-func (s *parser) parseBinary(pre int) Expr {
+func (s *parser) parseBinaryExpr(pre int) Expr {
 
-	x := s.parseUnary()
+	x := s.parseUnaryExpr()
+	if x == nil {
+		return x
+	}
 	for {
-		s.skipSpace()
-		op := s.operator()
+		op := s.tok
+		//ffmt.Mark(op)
+		if !op.IsOperator() {
+			break
+		}
 		op2 := op.Precedence()
 		if op2 < pre {
-			return x
+			break
 		}
-		s.next()
-		y := s.parseBinary(op2 + 1)
+		s.scan()
+		y := s.parseBinaryExpr(op2 + 1)
 		x = &OperatorBinary{
 			X:  x,
 			Op: op,
 			Y:  y,
 		}
 	}
+	return x
 }
