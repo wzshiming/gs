@@ -27,7 +27,7 @@ func (s *scanner) next() {
 	return
 }
 
-func (s *scanner) scanOperator() Token {
+func (s *scanner) operator() Token {
 	switch {
 	case s.ch == '+':
 		return ADD
@@ -37,9 +37,22 @@ func (s *scanner) scanOperator() Token {
 		return MUL
 	case s.ch == '/':
 		return QUO
+	case s.ch == '.':
+		return DOT
 	default:
 		return 0
 	}
+}
+
+func (s *scanner) scanIdent() string {
+	off := s.off - 1
+	for s.ch >= '0' && s.ch <= '9' ||
+		s.ch >= 'a' && s.ch <= 'z' ||
+		s.ch >= 'A' && s.ch <= 'Z' ||
+		s.ch == '_' {
+		s.next()
+	}
+	return string(s.buf[off : s.off-1])
 }
 
 func (s *scanner) scanNumber() string {

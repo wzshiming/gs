@@ -9,10 +9,14 @@ type Token int
 const (
 	_ Token = iota
 
+	NUMBER // 123 or 123.4
+	IDENT  // abc or a123
+
 	ADD // +
 	SUB // -
 	MUL // *
 	QUO // /
+	DOT // .
 )
 
 var tokenMap = map[Token]string{
@@ -20,6 +24,7 @@ var tokenMap = map[Token]string{
 	SUB: "-",
 	MUL: "*",
 	QUO: "/",
+	DOT: ".",
 }
 
 func (op Token) String() string {
@@ -36,6 +41,8 @@ func (op Token) Precedence() int {
 		return 2
 	case MUL, QUO:
 		return 3
+	case DOT:
+		return 4
 	}
 	return 0
 }
