@@ -1,20 +1,20 @@
 package gs
 
-type scan struct {
+type scanner struct {
 	buf []rune
 	ch  rune
 	off int
 }
 
-func NewScan(buf string) *scan {
-	s := &scan{
+func NewScan(buf string) *scanner {
+	s := &scanner{
 		buf: []rune(buf),
 	}
 	s.next()
 	return s
 }
 
-func (s *scan) next() {
+func (s *scanner) next() {
 	if len(s.buf) == s.off {
 		s.ch = -1
 		s.off = len(s.buf) + 1
@@ -27,11 +27,11 @@ func (s *scan) next() {
 	return
 }
 
-func (s *scan) Scan() Expr {
+func (s *scanner) Scan() Expr {
 	return s.scanBinary(1)
 }
 
-func (s *scan) scanUnary() Expr {
+func (s *scanner) scanUnary() Expr {
 	switch {
 	case s.ch == '+', s.ch == '-':
 		op := s.scanOperator()
@@ -56,7 +56,7 @@ func (s *scan) scanUnary() Expr {
 	return nil
 }
 
-func (s *scan) scanBinary(pre int) Expr {
+func (s *scanner) scanBinary(pre int) Expr {
 	x := s.scanUnary()
 	for {
 		op := s.scanOperator()
@@ -74,7 +74,7 @@ func (s *scan) scanBinary(pre int) Expr {
 	}
 }
 
-func (s *scan) scanOperator() Token {
+func (s *scanner) scanOperator() Token {
 	switch {
 	case s.ch == '+':
 		return ADD
@@ -89,7 +89,7 @@ func (s *scan) scanOperator() Token {
 	}
 }
 
-func (s *scan) scanNumber() string {
+func (s *scanner) scanNumber() string {
 	off := s.off - 1
 	for s.ch >= '0' && s.ch <= '9' {
 		s.next()
