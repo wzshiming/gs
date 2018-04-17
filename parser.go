@@ -10,10 +10,21 @@ func NewParser(s string) *parser {
 	}
 }
 
-func (s *parser) Parse() Expr {
+func (s *parser) ParseExprs() []Expr {
+	ex := []Expr{}
+	for s.ch != -1 {
+		ex = append(ex, s.ParseExpr())
+	}
+	return ex
+}
+
+func (s *parser) ParseExpr() Expr {
 	return s.parseBinary(1)
 }
+
 func (s *parser) parseUnary() Expr {
+	s.skipSpace()
+
 	switch {
 	case s.ch == '+', s.ch == '-':
 		op := s.operator()
@@ -43,8 +54,10 @@ func (s *parser) parseUnary() Expr {
 }
 
 func (s *parser) parseBinary(pre int) Expr {
+
 	x := s.parseUnary()
 	for {
+		s.skipSpace()
 		op := s.operator()
 		op2 := op.Precedence()
 		if op2 < pre {

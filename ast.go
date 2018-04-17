@@ -1,6 +1,8 @@
 package gs
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Expr interface {
 }
@@ -31,4 +33,11 @@ type Literal struct {
 
 func (l *Literal) String() string {
 	return l.Value
+}
+
+type Stmt interface {
+}
+
+type BlockStmt struct {
+	List []Stmt
 }

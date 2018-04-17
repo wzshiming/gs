@@ -17,6 +17,14 @@ const (
 	MUL // *
 	QUO // /
 	DOT // .
+
+	LPAREN // (
+	LBRACK // [
+	LBRACE // {
+
+	RPAREN // )
+	RBRACK // ]
+	RBRACE // }
 )
 
 var tokenMap = map[Token]string{
@@ -25,6 +33,14 @@ var tokenMap = map[Token]string{
 	MUL: "*",
 	QUO: "/",
 	DOT: ".",
+
+	LPAREN: "(",
+	LBRACK: "[",
+	LBRACE: "{",
+
+	RPAREN: ")",
+	RBRACK: "]",
+	RBRACE: "}",
 }
 
 func (op Token) String() string {

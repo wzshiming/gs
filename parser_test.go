@@ -7,9 +7,11 @@ import (
 )
 
 func TestA(t *testing.T) {
-
-	expr := "-1+a.b-1+1"
+	expr := `
+-1 + a.b - - 1 + 1
+b+2
+`
 	scan := NewParser(expr)
-	out := scan.Parse()
+	out := scan.ParseExprs()
 	ffmt.Puts(out)
 }

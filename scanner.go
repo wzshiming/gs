@@ -14,6 +14,17 @@ func NewScanner(buf string) *scanner {
 	return s
 }
 
+func (s *scanner) skipSpace() {
+	for {
+		switch s.ch {
+		case ' ', '\n', '\r', '\t':
+			s.next()
+		default:
+			return
+		}
+	}
+}
+
 func (s *scanner) next() {
 	if len(s.buf) == s.off {
 		s.ch = -1
