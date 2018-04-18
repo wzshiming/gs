@@ -1,6 +1,8 @@
 package scanner
 
 import (
+	"fmt"
+
 	"github.com/wzshiming/gs/position"
 	"github.com/wzshiming/gs/token"
 )
@@ -19,6 +21,13 @@ func NewScanner(f *position.File, buf []rune) *Scanner {
 	}
 	s.next()
 	return s
+}
+
+func (s *Scanner) SkipError() {
+	s.next()
+	for s.ch != '\n' && s.ch != -1 {
+		s.next()
+	}
 }
 
 func (s *Scanner) skipSpace() {
@@ -141,10 +150,19 @@ func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err err
 	default:
 		tok = s.scanOperator()
 		val = tok.String()
-		if tok == token.PERIOD && s.ch >= '0' && s.ch <= '9' {
-			tok = token.NUMBER
-			val = "." + s.scanNumber()
+		switch tok {
+		case token.PERIOD:
+			if s.ch >= '0' && s.ch <= '9' {
+				tok = token.NUMBER
+				val = "." + s.scanNumber()
+			}
+			return
+		case token.INVALID:
+			err = fmt.Errorf("无效的符号 '%v'", string([]rune{s.ch}))
+			s.SkipError()
+			return
 		}
+
 		return
 	}
 }

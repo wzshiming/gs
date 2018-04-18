@@ -1,7 +1,10 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/wzshiming/gs/ast"
+	"github.com/wzshiming/gs/errors"
 	"github.com/wzshiming/gs/position"
 	"github.com/wzshiming/gs/scanner"
 	"github.com/wzshiming/gs/token"
@@ -10,49 +13,80 @@ import (
 type parser struct {
 	scanner *scanner.Scanner
 	fset    *position.FileSet
+	errs    *errors.Errors
 
 	tok token.Token
 	val string
 	pos position.Pos
-	err error
 }
 
 func NewParser(fset *position.FileSet, filename string, src []rune) *parser {
-	file := fset.AddFile(filename, 1, len(src)-1)
+	file := fset.AddFile(filename, 1, len(src))
 	p := &parser{
 		fset:    fset,
 		scanner: scanner.NewScanner(file, src),
+		errs:    &errors.Errors{},
 	}
 	p.scan()
 	return p
 }
 
-func (s *parser) scan() {
-	s.pos, s.tok, s.val, s.err = s.scanner.Scan()
+func (s *parser) Err() error {
+	if s.errs.Len() == 0 {
+		return nil
+	}
+	return s.errs
+}
 
-	//	ffmt.Mark(s.fset.Position(s.pos), s.tok, s.val)
+func (s *parser) scan() {
+	var err error
+	s.pos, s.tok, s.val, err = s.scanner.Scan()
+	if err != nil {
+		s.errors(err)
+	}
+}
+
+func (s *parser) errors(err error) {
+	s.errorsPos(s.pos, err)
+}
+
+func (s *parser) errorsPos(pos position.Pos, err error) {
+	s.errs.Append(s.fset.Position(pos), err)
 }
 
 func (s *parser) Parse() []ast.Expr {
+	ex := s.parse()
+	if s.tok != token.EOF {
+		s.errors(fmt.Errorf("Early exit '%v'", s.val))
+	}
+	return ex
+}
+
+func (s *parser) parse() []ast.Expr {
 	ex := []ast.Expr{}
 	for {
+
+		pe := s.parseExpr()
+		if pe != nil {
+			ex = append(ex, pe)
+		}
+
 		switch s.tok {
 		case token.EOF:
 			return ex
 		case token.RPAREN, token.RBRACK, token.RBRACE:
-			s.scan()
 			return ex
+		default:
+			if pe == nil {
+				s.errors(fmt.Errorf("Invalid expr '%v'", s.val))
+				s.scanner.SkipError()
+				s.scan()
+			}
 		}
-		pe := s.ParseExpr()
-		if pe == nil {
-			//			ffmt.Mark(s.fset.Position(s.pos), s.tok, s.val)
-			return ex
-		}
-		ex = append(ex, pe)
 	}
 }
 
-func (s *parser) ParseExpr() ast.Expr {
+func (s *parser) parseExpr() ast.Expr {
 	return s.parseBinaryExpr(1)
 }
 
@@ -75,42 +109,43 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 			}
 
 		case token.RPAREN, token.RBRACE:
-			//s.scan()
 			// return nil
 		case token.LPAREN:
 			s.scan()
-			b := s.ParseExpr()
+			b := s.parseExpr()
+			if s.tok != token.RBRACE {
+				s.errorsPos(pos, fmt.Errorf("The parentheses are not closed '%s'", tok))
+			}
 			s.scan()
 			expr = b
 		case token.LBRACE:
-			//			ffmt.Mark(s.tok)
 			s.scan()
-			//	ffmt.Mark(s.tok)
-			b := s.Parse()
-			//	ffmt.Mark(s.tok)
+			b := s.parse()
+			if s.tok != token.RBRACE {
+				s.errorsPos(pos, fmt.Errorf("The parentheses are not closed '%s'", tok))
+			}
 			s.scan()
+
 			expr = &ast.BraceExpr{
 				Pos:  pos,
 				List: b,
 			}
-		//	ffmt.Mark(s.tok)
-		case token.COMMA:
+		default:
+			s.errors(fmt.Errorf("Undefined unary expr %v", s.val))
 		}
 	case tok.IsKeywork():
 		switch tok {
 		case token.IF:
 			s.scan()
-			cond := s.ParseExpr()
-			body := s.ParseExpr()
+			cond := s.parseExpr()
+			body := s.parseExpr()
 			var els ast.Expr
-
 			for s.tok == token.SEMICOLON {
 				s.scan()
 			}
-
 			if s.tok == token.ELSE {
 				s.scan()
-				els = s.ParseExpr()
+				els = s.parseExpr()
 			}
 			expr = &ast.IfExpr{
 				Pos:  pos,
@@ -118,11 +153,15 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 				Body: body,
 				Else: els,
 			}
+		default:
+			s.errors(fmt.Errorf("Undefined keywork %v", s.tok))
 		}
 
 	default:
 		switch tok {
 		case token.EOF:
+		case token.INVALID:
+			s.errors(fmt.Errorf("Undefined value %v", s.val))
 		default:
 			b := &ast.Literal{
 				Pos:   pos,
@@ -133,6 +172,10 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 			expr = b
 		}
 
+	}
+
+	if expr == nil {
+		return
 	}
 
 loop:
@@ -160,7 +203,7 @@ loop:
 			expr = &ast.CallExpr{
 				Pos:      pos,
 				Name:     expr,
-				Argument: s.ParseExpr(),
+				Argument: s.parseExpr(),
 			}
 		default:
 

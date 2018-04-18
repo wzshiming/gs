@@ -21,7 +21,7 @@ type OperatorPreUnary struct {
 
 func (o *OperatorPreUnary) String() string {
 	if o == nil {
-		return "<nil>"
+		return "<nil.OperatorPreUnary>"
 	}
 	return fmt.Sprintf(" %s%s", o.Op, o.X)
 }
@@ -35,7 +35,7 @@ type OperatorSufUnary struct {
 
 func (o *OperatorSufUnary) String() string {
 	if o == nil {
-		return "<nil>"
+		return "<nil.OperatorSufUnary>"
 	}
 	return fmt.Sprintf("%s%s ", o.X, o.Op)
 }
@@ -50,7 +50,7 @@ type OperatorBinary struct {
 
 func (o *OperatorBinary) String() string {
 	if o == nil {
-		return "<nil>"
+		return "<nil.OperatorBinary>"
 	}
 	return fmt.Sprintf("(%s %s %s)", o.X, o.Op, o.Y)
 }
@@ -64,7 +64,7 @@ type Literal struct {
 
 func (l *Literal) String() string {
 	if l == nil {
-		return "<nil>"
+		return "<nil.Literal>"
 	}
 	return l.Value
 }
@@ -78,7 +78,7 @@ type CallExpr struct {
 
 func (l *CallExpr) String() string {
 	if l == nil {
-		return "<nil>"
+		return "<nil.CallExpr>"
 	}
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString(l.Name.String())
@@ -97,7 +97,7 @@ type IfExpr struct {
 
 func (l *IfExpr) String() string {
 	if l == nil {
-		return "<nil>"
+		return "<nil.IfExpr>"
 	}
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("if ")
@@ -119,7 +119,7 @@ type TupleExpr struct {
 
 func (l *TupleExpr) String() string {
 	if l == nil {
-		return "<nil>"
+		return "<nil.TupleExpr>"
 	}
 	buf := bytes.NewBuffer(nil)
 	buf.WriteByte('(')
@@ -142,7 +142,7 @@ type BraceExpr struct {
 
 func (l *BraceExpr) String() string {
 	if l == nil {
-		return "<nil>"
+		return "<nil.BraceExpr>"
 	}
 	buf := bytes.NewBuffer(nil)
 	buf.WriteByte('{')
