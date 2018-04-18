@@ -10,9 +10,6 @@ type Scanner struct {
 	buf  []rune
 	ch   rune
 	off  int
-	Tok  token.Token
-	Val  string
-	Pos  position.Pos
 }
 
 func NewScanner(f *position.File, buf []rune) *Scanner {
@@ -21,7 +18,6 @@ func NewScanner(f *position.File, buf []rune) *Scanner {
 		buf:  buf,
 	}
 	s.next()
-	s.Scan()
 	return s
 }
 
@@ -87,36 +83,32 @@ func (s *Scanner) scanNumber() string {
 	return string(s.buf[off : s.off-1])
 }
 
-func (s *Scanner) Scan() {
+func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err error) {
 	s.skipSpace()
-	s.Pos = s.file.Pos(s.off)
+	pos = s.file.Pos(s.off)
 	switch {
 	case s.ch == '\'', s.ch == '"', s.ch == '`':
-		s.Tok = token.STRING
-		s.Val = s.scanString()
+		tok = token.STRING
+		val = s.scanString()
+		return
 	case s.ch >= '0' && s.ch <= '9':
-		s.Tok = token.NUMBER
-		s.Val = s.scanNumber()
+		tok = token.NUMBER
+		val = s.scanNumber()
 		return
 	case s.ch >= 'a' && s.ch <= 'z',
 		s.ch >= 'A' && s.ch <= 'Z',
 		s.ch == '_':
 
-		iden := s.scanIdent()
-
-		if tok := token.LookupKeywork(iden); tok != token.INVALID {
-			s.Tok = tok
-			s.Val = iden
-			return
+		val = s.scanIdent()
+		if tok = token.LookupKeywork(val); tok == token.INVALID {
+			tok = token.IDENT
 		}
-		s.Tok = token.IDENT
-		s.Val = iden
 		return
-
 	default:
-		op := token.LookupOperator(string([]rune{s.ch}))
-		s.Tok = op
-		s.Val = ""
+		b := string([]rune{s.ch})
+		op := token.LookupOperator(b)
+		tok = op
+		val = b
 		s.next()
 		return
 	}

@@ -9,6 +9,11 @@ import (
 
 type parser struct {
 	scanner *scanner.Scanner
+
+	tok token.Token
+	val string
+	pos position.Pos
+	err error
 }
 
 func NewParser(fset *position.FileSet, filename string, src []rune) *parser {
@@ -16,13 +21,17 @@ func NewParser(fset *position.FileSet, filename string, src []rune) *parser {
 	p := &parser{
 		scanner: scanner.NewScanner(file, src),
 	}
-
+	p.scan()
 	return p
+}
+
+func (s *parser) scan() {
+	s.pos, s.tok, s.val, s.err = s.scanner.Scan()
 }
 
 func (s *parser) Parse() []ast.Expr {
 	ex := []ast.Expr{}
-	for s.scanner.Tok != 0 {
+	for s.tok != 0 {
 		pe := s.ParseExpr()
 		if pe == nil {
 			break
@@ -38,13 +47,13 @@ func (s *parser) ParseExpr() ast.Expr {
 }
 
 func (s *parser) parseUnaryExpr() ast.Expr {
-	tok := s.scanner.Tok
-	pos := s.scanner.Pos
+	tok := s.tok
+	pos := s.pos
 	switch {
 	case tok.IsOperator():
-		switch s.scanner.Tok {
+		switch s.tok {
 		case token.ADD, token.SUB:
-			s.scanner.Scan()
+			s.scan()
 			b := &ast.OperatorUnary{
 				Pos: pos,
 				Op:  tok,
@@ -54,15 +63,15 @@ func (s *parser) parseUnaryExpr() ast.Expr {
 		case token.RPAREN, token.RBRACE:
 			return nil
 		case token.LPAREN:
-			s.scanner.Scan()
+			s.scan()
 			b := s.ParseExpr()
-			s.scanner.Scan()
+			s.scan()
 			return b
 		case token.LBRACE:
 
-			s.scanner.Scan()
+			s.scan()
 			b := s.Parse()
-			s.scanner.Scan()
+			s.scan()
 			return &ast.BraceExpr{
 				Pos:  pos,
 				List: b,
@@ -72,13 +81,13 @@ func (s *parser) parseUnaryExpr() ast.Expr {
 	case tok.IsKeywork():
 		switch tok {
 		case token.IF:
-			s.scanner.Scan()
+			s.scan()
 			cond := s.ParseExpr()
 			body := s.ParseExpr()
 			var els ast.Expr
 
-			if s.scanner.Tok == token.ELSE {
-				s.scanner.Scan()
+			if s.tok == token.ELSE {
+				s.scan()
 				els = s.ParseExpr()
 			}
 			return &ast.IfExpr{
@@ -92,10 +101,10 @@ func (s *parser) parseUnaryExpr() ast.Expr {
 	default:
 		b := &ast.Literal{
 			Pos:   pos,
-			Type:  s.scanner.Tok,
-			Value: s.scanner.Val,
+			Type:  s.tok,
+			Value: s.val,
 		}
-		s.scanner.Scan()
+		s.scan()
 		return b
 	}
 
@@ -109,8 +118,8 @@ func (s *parser) parseBinaryExpr(pre int) ast.Expr {
 	}
 
 	for {
-		op := s.scanner.Tok
-		pos := s.scanner.Pos
+		op := s.tok
+		pos := s.pos
 		if !op.IsOperator() {
 			break
 		}
@@ -118,7 +127,7 @@ func (s *parser) parseBinaryExpr(pre int) ast.Expr {
 		if op2 < pre {
 			break
 		}
-		s.scanner.Scan()
+		s.scan()
 		y := s.parseBinaryExpr(op2 + 1)
 		x = &ast.OperatorBinary{
 			Pos: pos,
