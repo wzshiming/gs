@@ -56,6 +56,17 @@ func (s *Scanner) scanIdent() string {
 	return string(s.buf[off : s.off-1])
 }
 
+func (s *Scanner) scanString() string {
+	off := s.off - 1
+	ch := s.ch
+	s.next()
+	for ch != s.ch {
+		s.next()
+	}
+	s.next()
+	return string(s.buf[off : s.off-1])
+}
+
 func (s *Scanner) scanNumber() string {
 	off := s.off - 1
 	for s.ch >= '0' && s.ch <= '9' {
@@ -73,6 +84,9 @@ func (s *Scanner) scanNumber() string {
 func (s *Scanner) Scan() {
 	s.skipSpace()
 	switch {
+	case s.ch == '\'', s.ch == '"', s.ch == '`':
+		s.Tok = token.STRING
+		s.Val = s.scanString()
 	case s.ch >= '0' && s.ch <= '9':
 		s.Tok = token.NUMBER
 		s.Val = s.scanNumber()
