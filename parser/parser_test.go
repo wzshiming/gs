@@ -10,7 +10,7 @@ import (
 func TestA(t *testing.T) {
 
 	expr := `	
-	a.b aa 
+	a.b aa, bb, cc
 	if 1* -2-- -- {
 	  3 + 4
 	  44 +11

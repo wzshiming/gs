@@ -55,6 +55,7 @@ func (o *OperatorBinary) String() string {
 	return fmt.Sprintf("(%s %s %s)", o.X, o.Op, o.Y)
 }
 
+// 常量和符号
 type Literal struct {
 	Pos   position.Pos
 	Type  token.Token
@@ -81,9 +82,8 @@ func (l *CallExpr) String() string {
 	}
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString(l.Name.String())
-	buf.WriteString("(")
+	buf.WriteString(" ")
 	buf.WriteString(l.Argument.String())
-	buf.WriteString(")")
 	return buf.String()
 }
 
@@ -108,6 +108,29 @@ func (l *IfExpr) String() string {
 		buf.WriteString("else ")
 		buf.WriteString(l.Else.String())
 	}
+	return buf.String()
+}
+
+// () 元组表达式
+type TupleExpr struct {
+	Pos  position.Pos
+	List []Expr
+}
+
+func (l *TupleExpr) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	buf := bytes.NewBuffer(nil)
+	buf.WriteByte('(')
+
+	for k, v := range l.List {
+		if k != 0 {
+			buf.WriteString(", ")
+		}
+		buf.WriteString(v.String())
+	}
+	buf.WriteString(")")
 	return buf.String()
 }
 

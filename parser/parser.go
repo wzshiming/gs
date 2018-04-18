@@ -128,7 +128,6 @@ loop:
 			}
 		case tok.IsKeywork():
 			break loop
-
 		default:
 			switch tok {
 			case token.IDENT:
@@ -162,11 +161,23 @@ func (s *parser) parseBinaryExpr(pre int) ast.Expr {
 		}
 		s.scan()
 		y := s.parseBinaryExpr(op2 + 1)
-		x = &ast.OperatorBinary{
-			Pos: pos,
-			X:   x,
-			Op:  op,
-			Y:   y,
+		switch op {
+		case token.COMMA:
+			if t, ok := x.(*ast.TupleExpr); ok {
+				t.List = append(t.List, y)
+			} else {
+				x = &ast.TupleExpr{
+					Pos:  pos,
+					List: []ast.Expr{x, y},
+				}
+			}
+		default:
+			x = &ast.OperatorBinary{
+				Pos: pos,
+				X:   x,
+				Op:  op,
+				Y:   y,
+			}
 		}
 	}
 	return x
