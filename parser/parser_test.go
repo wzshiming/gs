@@ -1,4 +1,4 @@
-package gs
+package parser
 
 import (
 	"testing"

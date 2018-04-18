@@ -1,8 +1,10 @@
-package gs
+package ast
 
 import (
 	"bytes"
 	"fmt"
+
+	"github.com/wzshiming/gs/token"
 )
 
 type Expr interface {
@@ -10,7 +12,7 @@ type Expr interface {
 }
 
 type OperatorUnary struct {
-	Op Token
+	Op token.Token
 	X  Expr
 }
 
@@ -20,7 +22,7 @@ func (o *OperatorUnary) String() string {
 
 type OperatorBinary struct {
 	X  Expr
-	Op Token
+	Op token.Token
 	Y  Expr
 }
 
@@ -29,7 +31,7 @@ func (o *OperatorBinary) String() string {
 }
 
 type Literal struct {
-	Type  Token
+	Type  token.Token
 	Value string
 }
 

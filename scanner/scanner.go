@@ -1,23 +1,27 @@
-package gs
+package scanner
 
-type scanner struct {
+import (
+	"github.com/wzshiming/gs/token"
+)
+
+type Scanner struct {
 	buf []rune
 	ch  rune
 	off int
-	tok Token
-	val string
+	Tok token.Token
+	Val string
 }
 
-func NewScanner(buf string) *scanner {
-	s := &scanner{
+func NewScanner(buf string) *Scanner {
+	s := &Scanner{
 		buf: []rune(buf),
 	}
 	s.next()
-	s.scan()
+	s.Scan()
 	return s
 }
 
-func (s *scanner) skipSpace() {
+func (s *Scanner) skipSpace() {
 	for {
 		switch s.ch {
 		case ' ', '\n', '\r', '\t':
@@ -28,7 +32,7 @@ func (s *scanner) skipSpace() {
 	}
 }
 
-func (s *scanner) next() {
+func (s *Scanner) next() {
 	if len(s.buf) <= s.off {
 		s.ch = -1
 		s.off = len(s.buf) + 1
@@ -41,7 +45,7 @@ func (s *scanner) next() {
 	return
 }
 
-func (s *scanner) scanIdent() string {
+func (s *Scanner) scanIdent() string {
 	off := s.off - 1
 	for s.ch >= '0' && s.ch <= '9' ||
 		s.ch >= 'a' && s.ch <= 'z' ||
@@ -52,7 +56,7 @@ func (s *scanner) scanIdent() string {
 	return string(s.buf[off : s.off-1])
 }
 
-func (s *scanner) scanNumber() string {
+func (s *Scanner) scanNumber() string {
 	off := s.off - 1
 	for s.ch >= '0' && s.ch <= '9' {
 		s.next()
@@ -66,12 +70,12 @@ func (s *scanner) scanNumber() string {
 	return string(s.buf[off : s.off-1])
 }
 
-func (s *scanner) scan() {
+func (s *Scanner) Scan() {
 	s.skipSpace()
 	switch {
 	case s.ch >= '0' && s.ch <= '9':
-		s.tok = NUMBER
-		s.val = s.scanNumber()
+		s.Tok = token.NUMBER
+		s.Val = s.scanNumber()
 		return
 	case s.ch >= 'a' && s.ch <= 'z',
 		s.ch >= 'A' && s.ch <= 'Z',
@@ -79,19 +83,19 @@ func (s *scanner) scan() {
 
 		iden := s.scanIdent()
 
-		if tok := LookupKeywork(iden); tok != INVALID {
-			s.tok = tok
-			s.val = iden
+		if tok := token.LookupKeywork(iden); tok != token.INVALID {
+			s.Tok = tok
+			s.Val = iden
 			return
 		}
-		s.tok = IDENT
-		s.val = iden
+		s.Tok = token.IDENT
+		s.Val = iden
 		return
 
 	default:
-		op := LookupOperator(string([]rune{s.ch}))
-		s.tok = op
-		s.val = ""
+		op := token.LookupOperator(string([]rune{s.ch}))
+		s.Tok = op
+		s.Val = ""
 		s.next()
 		return
 	}
