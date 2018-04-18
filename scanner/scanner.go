@@ -25,8 +25,8 @@ func (s *Scanner) skipSpace() {
 	for {
 		switch s.ch {
 		case '\n':
-			s.next()
 			s.file.AddLine(s.off)
+			return
 		case ' ', '\r', '\t':
 			s.next()
 		default:
@@ -97,7 +97,7 @@ func (s *Scanner) scanOperator() token.Token {
 
 func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err error) {
 	s.skipSpace()
-	pos = s.file.Pos(s.off)
+	pos = s.file.Pos(s.off - 1)
 	switch {
 	case s.ch == '\'', s.ch == '"', s.ch == '`':
 		tok = token.STRING
@@ -123,12 +123,28 @@ func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err err
 		}
 		return
 	case s.ch >= 'A' && s.ch <= 'Z', s.ch == '_':
-		val = s.scanIdent()
 		tok = token.IDENT
+		val = s.scanIdent()
+		return
+
+	case s.ch == '\n', s.ch == ';':
+		val = string([]rune{s.ch})
+		for s.ch == '\n' || s.ch == ';' {
+			s.next()
+		}
+		tok = token.SEMICOLON
+		return
+	case s.ch == -1:
+		val = ""
+		tok = token.EOF
 		return
 	default:
 		tok = s.scanOperator()
 		val = tok.String()
+		if tok == token.PERIOD && s.ch >= '0' && s.ch <= '9' {
+			tok = token.NUMBER
+			val = "." + s.scanNumber()
+		}
 		return
 	}
 }

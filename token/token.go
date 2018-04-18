@@ -8,12 +8,16 @@ type Token uint
 
 const (
 	INVALID Token = iota
+	EOF
 
+	literalBeg
 	NIL    // nil
 	BOOL   // true or false
 	STRING // "123" or '123' or `123`
 	NUMBER // 123 or 123.4
 	IDENT  // abc or a123
+	FUNC   // func
+	literalEnd
 
 	operatorBeg
 	ADD // +
@@ -81,9 +85,15 @@ const (
 )
 
 var tokenMap = map[Token]string{
+	INVALID: "invalid",
+	EOF:     "eof",
+
+	NIL:    "nil",
+	BOOL:   "bool",
 	STRING: "string",
 	NUMBER: "number",
 	IDENT:  "ident",
+	FUNC:   "func",
 
 	ADD: "+",
 	SUB: "-",
@@ -164,6 +174,10 @@ func (op Token) Precedence() int {
 	return prec[op]
 }
 
+func (t Token) IsLiteral() bool {
+	return literalBeg < t && t < literalEnd
+}
+
 func (t Token) IsKeywork() bool {
 	return keyworkBeg < t && t < keyworkEnd
 }
@@ -177,8 +191,9 @@ var LookupOperator = newLooker()
 
 func init() {
 
-	for _, v := range [][]Token{
-		{COLON, ASSIGN, ADD_ASSIGN, SUB_ASSIGN, MUL_ASSIGN, QUO_ASSIGN, REM_ASSIGN, AND_ASSIGN, OR_ASSIGN, XOR_ASSIGN, SHL_ASSIGN, SHR_ASSIGN, AND_NOT_ASSIGN},
+	for k, v := range [][]Token{
+		{COMMA, COLON},
+		{ASSIGN, ADD_ASSIGN, SUB_ASSIGN, MUL_ASSIGN, QUO_ASSIGN, REM_ASSIGN, AND_ASSIGN, OR_ASSIGN, XOR_ASSIGN, SHL_ASSIGN, SHR_ASSIGN, AND_NOT_ASSIGN},
 		{LOR},
 		{LAND},
 		{EQL, NEQ, LSS, LEQ, GTR, GEQ},
@@ -186,9 +201,8 @@ func init() {
 		{MUL, QUO, REM, SHL, SHR, AND, AND_NOT},
 		{POW},
 		{PERIOD},
-		{COMMA},
 	} {
-		for k, v0 := range v {
+		for _, v0 := range v {
 			v0.setPrecedence(k + 1)
 		}
 	}
