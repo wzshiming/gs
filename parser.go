@@ -33,31 +33,28 @@ func (s *parser) parseUnaryExpr() Expr {
 	case s.tok.IsOperator():
 		switch s.tok {
 		case ADD, SUB:
-
+			tok := s.tok
 			s.scan()
 			b := &OperatorUnary{
-				Op: s.tok,
+				Op: tok,
 				X:  s.parseUnaryExpr(),
 			}
 			return b
 		case RPAREN, RBRACE:
 			return nil
 		case LPAREN:
-			s.next()
 			s.scan()
 			b := s.ParseExpr()
 			s.scan()
 			return b
 		case LBRACE:
-			s.next()
 			s.scan()
 			b := s.Parse()
-
 			s.scan()
-
 			return &BraceExpr{
 				List: b,
 			}
+		case COMMA:
 		}
 	case s.tok.IsKeywork():
 		switch s.tok {
@@ -91,14 +88,13 @@ func (s *parser) parseUnaryExpr() Expr {
 }
 
 func (s *parser) parseBinaryExpr(pre int) Expr {
-
 	x := s.parseUnaryExpr()
 	if x == nil {
 		return x
 	}
+
 	for {
 		op := s.tok
-		//ffmt.Mark(op)
 		if !op.IsOperator() {
 			break
 		}
