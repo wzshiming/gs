@@ -67,11 +67,7 @@ func (s *scanner) scanNumber() string {
 }
 
 func (s *scanner) scan() {
-	// s.next()
-	//	ffmt.Mark(string([]rune{s.ch}), s.tok, s.val)
 	s.skipSpace()
-	//ffmt.Mark(string([]rune{s.ch}), s.tok, s.val)
-	//defer ffmt.Mark(string([]rune{s.ch}), s.tok, s.val)
 	switch {
 	case s.ch >= '0' && s.ch <= '9':
 		s.tok = NUMBER

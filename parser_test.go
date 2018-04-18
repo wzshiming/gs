@@ -9,7 +9,7 @@ import (
 func TestA(t *testing.T) {
 	expr := `
 {
-a
+a +
 if 1+2 {
   3 + 4 
   44 +11
@@ -17,11 +17,11 @@ if 1+2 {
   aa+1	
 } else b+1
 
-a+1
+ a+1
 }
 
 `
 	scan := NewParser(expr)
-	out := scan.Parse()
+	out := scan.ParseExpr()
 	ffmt.Puts(out)
 }
