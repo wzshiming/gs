@@ -14,21 +14,62 @@ const (
 	IDENT  // abc or a123
 
 	operatorBeg
-	ADD    // +
-	SUB    // -
-	MUL    // *
-	QUO    // /
-	POW    // **
-	PERIOD // .
-	COMMA  // ,
+	ADD // +
+	SUB // -
+	MUL // *
+	QUO // /
+	POW // **
+	REM // %
+
+	AND     // &
+	OR      // |
+	XOR     // ^
+	SHL     // <<
+	SHR     // >>
+	AND_NOT // &^
+
+	ADD_ASSIGN // +=
+	SUB_ASSIGN // -=
+	MUL_ASSIGN // *=
+	QUO_ASSIGN // /=
+	REM_ASSIGN // %=
+
+	AND_ASSIGN     // &=
+	OR_ASSIGN      // |=
+	XOR_ASSIGN     // ^=
+	SHL_ASSIGN     // <<=
+	SHR_ASSIGN     // >>=
+	AND_NOT_ASSIGN // &^=
+
+	LAND  // &&
+	LOR   // ||
+	ARROW // <-
+	INC   // ++
+	DEC   // --
+
+	EQL    // ==
+	LSS    // <
+	GTR    // >
+	ASSIGN // =
+	NOT    // !
+
+	NEQ      // !=
+	LEQ      // <=
+	GEQ      // >=
+	DEFINE   // :=
+	ELLIPSIS // ...
 
 	LPAREN // (
 	LBRACK // [
 	LBRACE // {
+	COMMA  // ,
+	PERIOD // .
 
-	RPAREN // )
-	RBRACK // ]
-	RBRACE // }
+	RPAREN    // )
+	RBRACK    // ]
+	RBRACE    // }
+	SEMICOLON // ;
+	COLON     // :
 	operatorEnd
 
 	keyworkBeg
@@ -42,21 +83,62 @@ var tokenMap = map[Token]string{
 	NUMBER: "number",
 	IDENT:  "ident",
 
-	ADD:    "+",
-	SUB:    "-",
-	MUL:    "*",
-	QUO:    "/",
-	POW:    "**",
-	PERIOD: ".",
-	COMMA:  ",",
+	ADD: "+",
+	SUB: "-",
+	MUL: "*",
+	QUO: "/",
+	POW: "**",
+	REM: "%",
+
+	AND:     "&",
+	OR:      "|",
+	XOR:     "^",
+	SHL:     "<<",
+	SHR:     ">>",
+	AND_NOT: "&^",
+
+	ADD_ASSIGN: "+=",
+	SUB_ASSIGN: "-=",
+	MUL_ASSIGN: "*=",
+	QUO_ASSIGN: "/=",
+	REM_ASSIGN: "%=",
+
+	AND_ASSIGN:     "&=",
+	OR_ASSIGN:      "|=",
+	XOR_ASSIGN:     "^=",
+	SHL_ASSIGN:     "<<=",
+	SHR_ASSIGN:     ">>=",
+	AND_NOT_ASSIGN: "&^=",
+
+	LAND:  "&&",
+	LOR:   "||",
+	ARROW: "<-",
+	INC:   "++",
+	DEC:   "--",
+
+	EQL:    "==",
+	LSS:    "<",
+	GTR:    ">",
+	ASSIGN: "=",
+	NOT:    "!",
+
+	NEQ:      "!=",
+	LEQ:      "<=",
+	GEQ:      ">=",
+	DEFINE:   ":=",
+	ELLIPSIS: "...",
 
 	LPAREN: "(",
 	LBRACK: "[",
 	LBRACE: "{",
+	COMMA:  ",",
+	PERIOD: ".",
 
-	RPAREN: ")",
-	RBRACK: "]",
-	RBRACE: "}",
+	RPAREN:    ")",
+	RBRACK:    "]",
+	RBRACE:    "}",
+	SEMICOLON: ";",
+	COLON:     ":",
 
 	IF:   "if",
 	ELSE: "else",
@@ -71,16 +153,6 @@ func (op Token) String() string {
 }
 
 var prec = map[Token]int{}
-
-func init() {
-	ADD.setPrecedence(2)
-	SUB.setPrecedence(2)
-	MUL.setPrecedence(3)
-	QUO.setPrecedence(3)
-	POW.setPrecedence(4)
-	PERIOD.setPrecedence(5)
-	COMMA.setPrecedence(6)
-}
 
 func (op Token) setPrecedence(pre int) {
 	prec[op] = pre
@@ -102,6 +174,23 @@ var LookupKeywork = newLooker()
 var LookupOperator = newLooker()
 
 func init() {
+
+	for _, v := range [][]Token{
+		{COLON, ASSIGN, ADD_ASSIGN, SUB_ASSIGN, MUL_ASSIGN, QUO_ASSIGN, REM_ASSIGN, AND_ASSIGN, OR_ASSIGN, XOR_ASSIGN, SHL_ASSIGN, SHR_ASSIGN, AND_NOT_ASSIGN},
+		{LOR},
+		{LAND},
+		{EQL, NEQ, LSS, LEQ, GTR, GEQ},
+		{ADD, SUB, OR, XOR},
+		{MUL, QUO, REM, SHL, SHR, AND, AND_NOT},
+		{POW},
+		{PERIOD},
+		{COMMA},
+	} {
+		for k, v0 := range v {
+			v0.setPrecedence(k + 1)
+		}
+	}
+
 	for i := keyworkBeg + 1; i != keyworkEnd; i++ {
 		LookupKeywork.Add([]rune(tokenMap[i]), i)
 	}

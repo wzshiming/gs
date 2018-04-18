@@ -11,11 +11,11 @@ func TestA(t *testing.T) {
 
 	expr := `
 {
-a +
+a += 
 if 1* -2 {
   3 + 4 
   44 +11
-} else if 3 ** 4 {
+} else if 3 ** .4 {
   aa+1	
 } else b+1
 
