@@ -3,10 +3,12 @@ package parser
 import (
 	"testing"
 
+	"github.com/wzshiming/gs/position"
 	ffmt "gopkg.in/ffmt.v1"
 )
 
 func TestA(t *testing.T) {
+
 	expr := `
 {
 a +
@@ -17,11 +19,14 @@ if 1+ -2 {
   aa+1	
 } else b+1
 
- a+1
+ a+ "123"
 }
 
 `
-	scan := NewParser(expr)
+
+	fset := position.NewFileSet()
+	scan := NewParser(fset, "_", []rune(expr))
 	out := scan.ParseExpr()
 	ffmt.Puts(out)
+
 }

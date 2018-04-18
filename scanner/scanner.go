@@ -1,20 +1,24 @@
 package scanner
 
 import (
+	"github.com/wzshiming/gs/position"
 	"github.com/wzshiming/gs/token"
 )
 
 type Scanner struct {
-	buf []rune
-	ch  rune
-	off int
-	Tok token.Token
-	Val string
+	file *position.File
+	buf  []rune
+	ch   rune
+	off  int
+	Tok  token.Token
+	Val  string
+	Pos  position.Pos
 }
 
-func NewScanner(buf string) *Scanner {
+func NewScanner(f *position.File, buf []rune) *Scanner {
 	s := &Scanner{
-		buf: []rune(buf),
+		file: f,
+		buf:  buf,
 	}
 	s.next()
 	s.Scan()
@@ -24,7 +28,10 @@ func NewScanner(buf string) *Scanner {
 func (s *Scanner) skipSpace() {
 	for {
 		switch s.ch {
-		case ' ', '\n', '\r', '\t':
+		case '\n':
+			s.next()
+			s.file.AddLine(s.off)
+		case ' ', '\r', '\t':
 			s.next()
 		default:
 			return
@@ -41,7 +48,6 @@ func (s *Scanner) next() {
 
 	s.ch = s.buf[s.off]
 	s.off++
-
 	return
 }
 
@@ -83,6 +89,7 @@ func (s *Scanner) scanNumber() string {
 
 func (s *Scanner) Scan() {
 	s.skipSpace()
+	s.Pos = s.file.Pos(s.off)
 	switch {
 	case s.ch == '\'', s.ch == '"', s.ch == '`':
 		s.Tok = token.STRING

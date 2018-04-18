@@ -2,23 +2,27 @@ package parser
 
 import (
 	"github.com/wzshiming/gs/ast"
+	"github.com/wzshiming/gs/position"
 	"github.com/wzshiming/gs/scanner"
 	"github.com/wzshiming/gs/token"
 )
 
 type parser struct {
-	scanner.Scanner
+	scanner *scanner.Scanner
 }
 
-func NewParser(s string) *parser {
-	return &parser{
-		Scanner: *scanner.NewScanner(s),
+func NewParser(fset *position.FileSet, filename string, src []rune) *parser {
+	file := fset.AddFile(filename, 1, len(src)-1)
+	p := &parser{
+		scanner: scanner.NewScanner(file, src),
 	}
+
+	return p
 }
 
 func (s *parser) Parse() []ast.Expr {
 	ex := []ast.Expr{}
-	for s.Tok != 0 {
+	for s.scanner.Tok != 0 {
 		pe := s.ParseExpr()
 		if pe == nil {
 			break
@@ -34,47 +38,51 @@ func (s *parser) ParseExpr() ast.Expr {
 }
 
 func (s *parser) parseUnaryExpr() ast.Expr {
-
+	tok := s.scanner.Tok
+	pos := s.scanner.Pos
 	switch {
-	case s.Tok.IsOperator():
-		switch s.Tok {
+	case tok.IsOperator():
+		switch s.scanner.Tok {
 		case token.ADD, token.SUB:
-			tok := s.Tok
-			s.Scan()
+			s.scanner.Scan()
 			b := &ast.OperatorUnary{
-				Op: tok,
-				X:  s.parseUnaryExpr(),
+				Pos: pos,
+				Op:  tok,
+				X:   s.parseUnaryExpr(),
 			}
 			return b
 		case token.RPAREN, token.RBRACE:
 			return nil
 		case token.LPAREN:
-			s.Scan()
+			s.scanner.Scan()
 			b := s.ParseExpr()
-			s.Scan()
+			s.scanner.Scan()
 			return b
 		case token.LBRACE:
-			s.Scan()
+
+			s.scanner.Scan()
 			b := s.Parse()
-			s.Scan()
+			s.scanner.Scan()
 			return &ast.BraceExpr{
+				Pos:  pos,
 				List: b,
 			}
 		case token.COMMA:
 		}
-	case s.Tok.IsKeywork():
-		switch s.Tok {
+	case tok.IsKeywork():
+		switch tok {
 		case token.IF:
-			s.Scan()
+			s.scanner.Scan()
 			cond := s.ParseExpr()
 			body := s.ParseExpr()
 			var els ast.Expr
 
-			if s.Tok == token.ELSE {
-				s.Scan()
+			if s.scanner.Tok == token.ELSE {
+				s.scanner.Scan()
 				els = s.ParseExpr()
 			}
 			return &ast.IfExpr{
+				Pos:  pos,
 				Cond: cond,
 				Body: body,
 				Else: els,
@@ -83,10 +91,11 @@ func (s *parser) parseUnaryExpr() ast.Expr {
 
 	default:
 		b := &ast.Literal{
-			Type:  s.Tok,
-			Value: s.Val,
+			Pos:   pos,
+			Type:  s.scanner.Tok,
+			Value: s.scanner.Val,
 		}
-		s.Scan()
+		s.scanner.Scan()
 		return b
 	}
 
@@ -100,7 +109,8 @@ func (s *parser) parseBinaryExpr(pre int) ast.Expr {
 	}
 
 	for {
-		op := s.Tok
+		op := s.scanner.Tok
+		pos := s.scanner.Pos
 		if !op.IsOperator() {
 			break
 		}
@@ -108,12 +118,13 @@ func (s *parser) parseBinaryExpr(pre int) ast.Expr {
 		if op2 < pre {
 			break
 		}
-		s.Scan()
+		s.scanner.Scan()
 		y := s.parseBinaryExpr(op2 + 1)
 		x = &ast.OperatorBinary{
-			X:  x,
-			Op: op,
-			Y:  y,
+			Pos: pos,
+			X:   x,
+			Op:  op,
+			Y:   y,
 		}
 	}
 	return x

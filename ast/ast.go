@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
+	"github.com/wzshiming/gs/position"
 	"github.com/wzshiming/gs/token"
 )
 
@@ -12,8 +13,9 @@ type Expr interface {
 }
 
 type OperatorUnary struct {
-	Op token.Token
-	X  Expr
+	Pos position.Pos
+	Op  token.Token
+	X   Expr
 }
 
 func (o *OperatorUnary) String() string {
@@ -21,9 +23,10 @@ func (o *OperatorUnary) String() string {
 }
 
 type OperatorBinary struct {
-	X  Expr
-	Op token.Token
-	Y  Expr
+	Pos position.Pos
+	X   Expr
+	Op  token.Token
+	Y   Expr
 }
 
 func (o *OperatorBinary) String() string {
@@ -31,6 +34,7 @@ func (o *OperatorBinary) String() string {
 }
 
 type Literal struct {
+	Pos   position.Pos
 	Type  token.Token
 	Value string
 }
@@ -41,6 +45,7 @@ func (l *Literal) String() string {
 
 // if 关键字
 type IfExpr struct {
+	Pos  position.Pos
 	Cond Expr
 	Body Expr
 	Else Expr
@@ -61,6 +66,7 @@ func (l *IfExpr) String() string {
 
 // {} 花括号表达式
 type BraceExpr struct {
+	Pos  position.Pos
 	List []Expr
 }
 
