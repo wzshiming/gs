@@ -18,6 +18,7 @@ const (
 	SUB    // -
 	MUL    // *
 	QUO    // /
+	POW    // **
 	PERIOD // .
 	COMMA  // ,
 
@@ -37,6 +38,7 @@ const (
 )
 
 var tokenMap = map[Token]string{
+	STRING: "string",
 	NUMBER: "number",
 	IDENT:  "ident",
 
@@ -44,6 +46,7 @@ var tokenMap = map[Token]string{
 	SUB:    "-",
 	MUL:    "*",
 	QUO:    "/",
+	POW:    "**",
 	PERIOD: ".",
 	COMMA:  ",",
 
@@ -70,40 +73,21 @@ func (op Token) String() string {
 var prec = map[Token]int{}
 
 func init() {
-	ADD.SetPrecedence(2)
-	SUB.SetPrecedence(2)
-	MUL.SetPrecedence(3)
-	QUO.SetPrecedence(3)
-	PERIOD.SetPrecedence(4)
-	COMMA.SetPrecedence(5)
+	ADD.setPrecedence(2)
+	SUB.setPrecedence(2)
+	MUL.setPrecedence(3)
+	QUO.setPrecedence(3)
+	POW.setPrecedence(4)
+	PERIOD.setPrecedence(5)
+	COMMA.setPrecedence(6)
 }
 
-func (op Token) SetPrecedence(pre int) {
+func (op Token) setPrecedence(pre int) {
 	prec[op] = pre
 }
 
 func (op Token) Precedence() int {
 	return prec[op]
-}
-
-var ks = map[string]Token{}
-var os = map[string]Token{}
-
-func init() {
-	for i := keyworkBeg; i != keyworkEnd; i++ {
-		ks[tokenMap[i]] = i
-	}
-	for i := operatorBeg; i != operatorEnd; i++ {
-		os[tokenMap[i]] = i
-	}
-}
-
-func LookupKeywork(s string) Token {
-	return ks[s]
-}
-
-func LookupOperator(s string) Token {
-	return os[s]
 }
 
 func (t Token) IsKeywork() bool {
@@ -112,4 +96,16 @@ func (t Token) IsKeywork() bool {
 
 func (t Token) IsOperator() bool {
 	return operatorBeg < t && t < operatorEnd
+}
+
+var LookupKeywork = newLooker()
+var LookupOperator = newLooker()
+
+func init() {
+	for i := keyworkBeg + 1; i != keyworkEnd; i++ {
+		LookupKeywork.Add([]rune(tokenMap[i]), i)
+	}
+	for i := operatorBeg + 1; i != operatorEnd; i++ {
+		LookupOperator.Add([]rune(tokenMap[i]), i)
+	}
 }

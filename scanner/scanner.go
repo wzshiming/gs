@@ -83,6 +83,18 @@ func (s *Scanner) scanNumber() string {
 	return string(s.buf[off : s.off-1])
 }
 
+func (s *Scanner) scanOperator() token.Token {
+	look := token.LookupOperator
+	for {
+		look0 := look.GetRune(s.ch)
+		if look0 == nil {
+			return look.Tok
+		}
+		look = look0
+		s.next()
+	}
+}
+
 func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err error) {
 	s.skipSpace()
 	pos = s.file.Pos(s.off)
@@ -91,25 +103,24 @@ func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err err
 		tok = token.STRING
 		val = s.scanString()
 		return
-	case s.ch >= '0' && s.ch <= '9':
+	case s.ch >= '0' && s.ch <= '9', s.ch == '.':
 		tok = token.NUMBER
 		val = s.scanNumber()
 		return
-	case s.ch >= 'a' && s.ch <= 'z',
-		s.ch >= 'A' && s.ch <= 'Z',
-		s.ch == '_':
-
+	case s.ch >= 'a' && s.ch <= 'z':
 		val = s.scanIdent()
-		if tok = token.LookupKeywork(val); tok == token.INVALID {
+		tok = token.LookupKeywork.Get(val)
+		if tok == token.INVALID {
 			tok = token.IDENT
 		}
 		return
+	case s.ch >= 'A' && s.ch <= 'Z', s.ch == '_':
+		val = s.scanIdent()
+		tok = token.IDENT
+		return
 	default:
-		b := string([]rune{s.ch})
-		op := token.LookupOperator(b)
-		tok = op
-		val = b
-		s.next()
+		tok = s.scanOperator()
+		val = tok.String()
 		return
 	}
 }
