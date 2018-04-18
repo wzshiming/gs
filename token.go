@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type Token int
+type Token uint
 
 const (
 	INVALID Token = iota
@@ -13,11 +13,12 @@ const (
 	IDENT  // abc or a123
 
 	operatorBeg
-	ADD // +
-	SUB // -
-	MUL // *
-	QUO // /
-	DOT // .
+	ADD    // +
+	SUB    // -
+	MUL    // *
+	QUO    // /
+	PERIOD // .
+	COMMA  // ,
 
 	LPAREN // (
 	LBRACK // [
@@ -38,11 +39,12 @@ var tokenMap = map[Token]string{
 	NUMBER: "number",
 	IDENT:  "ident",
 
-	ADD: "+",
-	SUB: "-",
-	MUL: "*",
-	QUO: "/",
-	DOT: ".",
+	ADD:    "+",
+	SUB:    "-",
+	MUL:    "*",
+	QUO:    "/",
+	PERIOD: ".",
+	COMMA:  ",",
 
 	LPAREN: "(",
 	LBRACK: "[",
@@ -64,16 +66,23 @@ func (op Token) String() string {
 	return fmt.Sprintf("Token(%d)", op)
 }
 
+var prec = map[Token]int{}
+
+func init() {
+	ADD.SetPrecedence(2)
+	SUB.SetPrecedence(2)
+	MUL.SetPrecedence(3)
+	QUO.SetPrecedence(3)
+	PERIOD.SetPrecedence(4)
+	COMMA.SetPrecedence(5)
+}
+
+func (op Token) SetPrecedence(pre int) {
+	prec[op] = pre
+}
+
 func (op Token) Precedence() int {
-	switch op {
-	case ADD, SUB:
-		return 2
-	case MUL, QUO:
-		return 3
-	case DOT:
-		return 4
-	}
-	return 0
+	return prec[op]
 }
 
 var ks = map[string]Token{}
