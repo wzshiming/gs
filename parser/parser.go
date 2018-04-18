@@ -46,33 +46,33 @@ func (s *parser) ParseExpr() ast.Expr {
 	return s.parseBinaryExpr(1)
 }
 
-func (s *parser) parseUnaryExpr() ast.Expr {
+func (s *parser) parseUnaryExpr() (expr ast.Expr) {
 	tok := s.tok
 	pos := s.pos
 	switch {
 	case tok.IsOperator():
 		switch s.tok {
-		case token.ADD, token.SUB:
+		case token.ADD, token.SUB, token.ELLIPSIS:
 			s.scan()
-			b := &ast.OperatorUnary{
+			expr = &ast.OperatorPreUnary{
 				Pos: pos,
 				Op:  tok,
 				X:   s.parseUnaryExpr(),
 			}
-			return b
+
 		case token.RPAREN, token.RBRACE:
-			return nil
+			// return nil
 		case token.LPAREN:
 			s.scan()
 			b := s.ParseExpr()
 			s.scan()
-			return b
+			expr = b
 		case token.LBRACE:
 
 			s.scan()
 			b := s.Parse()
 			s.scan()
-			return &ast.BraceExpr{
+			expr = &ast.BraceExpr{
 				Pos:  pos,
 				List: b,
 			}
@@ -90,7 +90,7 @@ func (s *parser) parseUnaryExpr() ast.Expr {
 				s.scan()
 				els = s.ParseExpr()
 			}
-			return &ast.IfExpr{
+			expr = &ast.IfExpr{
 				Pos:  pos,
 				Cond: cond,
 				Body: body,
@@ -105,10 +105,34 @@ func (s *parser) parseUnaryExpr() ast.Expr {
 			Value: s.val,
 		}
 		s.scan()
-		return b
+		expr = b
 	}
 
-	return nil
+loop:
+	for {
+		tok := s.tok
+		pos := s.pos
+		switch {
+		case tok.IsOperator():
+			switch s.tok {
+			case token.INC, token.DEC, token.ELLIPSIS:
+
+				expr = &ast.OperatorSufUnary{
+					Pos: pos,
+					Op:  tok,
+					X:   expr,
+				}
+				s.scan()
+			default:
+				break loop
+			}
+
+		default:
+			break loop
+		}
+	}
+
+	return expr
 }
 
 func (s *parser) parseBinaryExpr(pre int) ast.Expr {

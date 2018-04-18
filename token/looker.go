@@ -7,15 +7,16 @@ type looker struct {
 }
 
 func newLooker() *looker {
-	return &looker{
-		m: map[rune]*looker{},
-	}
+	return &looker{}
 }
 
 func (l *looker) Add(r []rune, t Token) {
 	if len(r) == 0 {
 		l.Tok = t
 		return
+	}
+	if l.m == nil {
+		l.m = map[rune]*looker{}
 	}
 	if l.m[r[0]] == nil {
 		l.m[r[0]] = newLooker()

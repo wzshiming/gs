@@ -12,19 +12,35 @@ type Expr interface {
 	String() string
 }
 
-type OperatorUnary struct {
+// 前缀一元表达式
+type OperatorPreUnary struct {
 	Pos position.Pos
 	Op  token.Token
 	X   Expr
 }
 
-func (o *OperatorUnary) String() string {
+func (o *OperatorPreUnary) String() string {
 	if o == nil {
 		return "<nil>"
 	}
 	return fmt.Sprintf("%s%s", o.Op, o.X)
 }
 
+// 后缀一元表达式
+type OperatorSufUnary struct {
+	X   Expr
+	Pos position.Pos
+	Op  token.Token
+}
+
+func (o *OperatorSufUnary) String() string {
+	if o == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("%s%s", o.X, o.Op)
+}
+
+// 二元表达式
 type OperatorBinary struct {
 	Pos position.Pos
 	X   Expr

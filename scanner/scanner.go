@@ -103,7 +103,7 @@ func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err err
 		tok = token.STRING
 		val = s.scanString()
 		return
-	case s.ch >= '0' && s.ch <= '9', s.ch == '.':
+	case s.ch >= '0' && s.ch <= '9':
 		tok = token.NUMBER
 		val = s.scanNumber()
 		return
