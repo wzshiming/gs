@@ -126,9 +126,20 @@ loop:
 			default:
 				break loop
 			}
+		case tok.IsKeywork():
+			break loop
 
 		default:
+			switch tok {
+			case token.IDENT:
+				expr = &ast.CallExpr{
+					Pos:      pos,
+					Name:     expr,
+					Argument: s.ParseExpr(),
+				}
+			}
 			break loop
+
 		}
 	}
 
@@ -144,9 +155,7 @@ func (s *parser) parseBinaryExpr(pre int) ast.Expr {
 	for {
 		op := s.tok
 		pos := s.pos
-		if !op.IsOperator() {
-			break
-		}
+
 		op2 := op.Precedence()
 		if op2 < pre {
 			break

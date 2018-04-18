@@ -9,10 +9,9 @@ import (
 
 func TestA(t *testing.T) {
 
-	expr := `
-	{
-	a +=
-	if 1* -2-- {
+	expr := `	
+	a.b aa 
+	if 1* -2-- -- {
 	  3 + 4
 	  44 +11
 	} else if 3 ** 4 {
@@ -20,13 +19,14 @@ func TestA(t *testing.T) {
 	} else ...b+1
 
 	 a+ "123"...
-	}
 
-	`
+`
 
 	fset := position.NewFileSet()
 	scan := NewParser(fset, "_", []rune(expr))
-	out := scan.ParseExpr()
-	ffmt.Puts(out)
+	out := scan.Parse()
+	for _, v := range out {
+		ffmt.Puts(v)
+	}
 
 }

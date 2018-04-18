@@ -9,7 +9,9 @@ type Token uint
 const (
 	INVALID Token = iota
 
-	STRING // "123" or '123'
+	NIL    // nil
+	BOOL   // true or false
+	STRING // "123" or '123' or `123`
 	NUMBER // 123 or 123.4
 	IDENT  // abc or a123
 

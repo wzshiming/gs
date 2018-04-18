@@ -109,9 +109,17 @@ func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err err
 		return
 	case s.ch >= 'a' && s.ch <= 'z':
 		val = s.scanIdent()
-		tok = token.LookupKeywork.Get(val)
-		if tok == token.INVALID {
-			tok = token.IDENT
+
+		switch val {
+		case "true", "false":
+			tok = token.BOOL
+		case "nil":
+			tok = token.NIL
+		default:
+			tok = token.LookupKeywork.Get(val)
+			if tok == token.INVALID {
+				tok = token.IDENT
+			}
 		}
 		return
 	case s.ch >= 'A' && s.ch <= 'Z', s.ch == '_':

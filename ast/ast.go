@@ -23,7 +23,7 @@ func (o *OperatorPreUnary) String() string {
 	if o == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("%s%s", o.Op, o.X)
+	return fmt.Sprintf(" %s%s", o.Op, o.X)
 }
 
 // 后缀一元表达式
@@ -37,7 +37,7 @@ func (o *OperatorSufUnary) String() string {
 	if o == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("%s%s", o.X, o.Op)
+	return fmt.Sprintf("%s%s ", o.X, o.Op)
 }
 
 // 二元表达式
@@ -66,6 +66,25 @@ func (l *Literal) String() string {
 		return "<nil>"
 	}
 	return l.Value
+}
+
+// call
+type CallExpr struct {
+	Pos      position.Pos
+	Name     Expr
+	Argument Expr
+}
+
+func (l *CallExpr) String() string {
+	if l == nil {
+		return "<nil>"
+	}
+	buf := bytes.NewBuffer(nil)
+	buf.WriteString(l.Name.String())
+	buf.WriteString("(")
+	buf.WriteString(l.Argument.String())
+	buf.WriteString(")")
+	return buf.String()
 }
 
 // if 关键字
