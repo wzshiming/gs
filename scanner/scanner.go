@@ -158,7 +158,7 @@ func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err err
 			}
 			return
 		case token.INVALID:
-			err = fmt.Errorf("无效的符号 '%v'", string([]rune{s.ch}))
+			err = fmt.Errorf("Invalid symbol '%v'", val)
 			s.SkipError()
 			return
 		}
