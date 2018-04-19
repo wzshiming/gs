@@ -80,6 +80,7 @@ const (
 	keyworkBeg
 	IF     // if
 	ELSE   // else
+	FOR    // for
 	FUNC   // func
 	RETURN // return
 	keyworkEnd
@@ -154,6 +155,7 @@ var tokenMap = map[Token]string{
 
 	IF:     "if",
 	ELSE:   "else",
+	FOR:    "for",
 	FUNC:   "func",
 	RETURN: "return",
 }

@@ -135,6 +135,52 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 		}
 	case tok.IsKeywork():
 		switch tok {
+		case token.FOR:
+			fe := &ast.ForExpr{
+				Pos: pos,
+			}
+			s.scan()
+			if s.tok == token.SEMICOLON { // 开头是 ;
+				s.scan()
+				fe.Cond = s.parseExpr()
+
+				if s.tok != token.SEMICOLON {
+					s.errors(fmt.Errorf("没有分号结尾"))
+					return nil
+				}
+				s.scan()
+				if s.tok != token.LBRACE {
+					fe.Next = s.parseExpr()
+				}
+			} else {
+				initOrCond := s.parseExpr()
+
+				if s.tok != token.SEMICOLON {
+					fe.Cond = initOrCond
+				} else {
+					fe.Init = initOrCond
+					s.scan()
+					fe.Cond = s.parseExpr()
+					if s.tok != token.SEMICOLON {
+						s.errors(fmt.Errorf("没有分号结尾"))
+						return nil
+					}
+					s.scan()
+					if s.tok != token.LBRACE {
+						fe.Next = s.parseExpr()
+					}
+				}
+			}
+			fe.Body = s.parseExpr()
+			for s.tok == token.SEMICOLON {
+				s.scan()
+			}
+			if s.tok == token.ELSE {
+				s.scan()
+				fe.Else = s.parseExpr()
+			}
+			expr = fe
+
 		case token.IF:
 			s.scan()
 			init := s.parseExpr()
