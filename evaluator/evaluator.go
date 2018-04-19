@@ -14,14 +14,12 @@ import (
 type Evaluator struct {
 	fset *position.FileSet
 	errs *errors.Errors
-	es   []ast.Expr
 }
 
-func NewEvaluator(fset *position.FileSet, errs *errors.Errors, es []ast.Expr) *Evaluator {
+func NewEvaluator(fset *position.FileSet, errs *errors.Errors) *Evaluator {
 	return &Evaluator{
 		fset: fset,
 		errs: errs,
-		es:   es,
 	}
 }
 
@@ -29,13 +27,13 @@ func (s *Evaluator) errorsPos(pos position.Pos, err error) {
 	s.errs.Append(s.fset.Position(pos), err)
 }
 
-func (ev *Evaluator) Eval() ast.Expr {
+func (ev *Evaluator) Eval(es []ast.Expr) ast.Expr {
 	s := value.NewScope(nil)
-	return ev.EvalBy(s)
+	return ev.EvalBy(es, s)
 }
 
-func (ev *Evaluator) EvalBy(s *value.Scope) (ex ast.Expr) {
-	for _, v := range ev.es {
+func (ev *Evaluator) EvalBy(es []ast.Expr, s *value.Scope) (ex ast.Expr) {
+	for _, v := range es {
 		ex = ev.eval(v, s)
 	}
 	return
@@ -87,6 +85,24 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 		}
 
 		return z
+	case *ast.IfExpr:
+		ss := s.NewChildScope()
+		ev.eval(t.Init, ss)
+		loop := ev.eval(t.Cond, ss)
+		vb, ok := loop.(*value.ValueBool)
+		if !ok {
+			ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'if'."))
+		}
+
+		if vb.Val {
+			return ev.eval(t.Body, ss)
+		} else if t.Else != nil {
+			return ev.eval(t.Else, ss)
+		}
+		return &value.ValueNil{}
+	case *ast.BraceExpr:
+		ss := s.NewChildScope()
+		return ev.EvalBy(t.List, ss)
 	}
 
 	return e

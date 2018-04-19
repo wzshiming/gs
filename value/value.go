@@ -98,7 +98,7 @@ func (v *ValueNumber) Clone() *ValueNumber {
 	}
 }
 
-func (v *ValueNumber) Binary(t token.Token, y Value) (Value, error) {
+func (v *ValueNumber) Binary(t token.Token, y Value) (vv Value, err error) {
 	sum := 0.0
 	switch yy := y.(type) {
 	case *ValueNumber:
@@ -117,25 +117,51 @@ func (v *ValueNumber) Binary(t token.Token, y Value) (Value, error) {
 	case token.ADD:
 		v = v.Clone()
 		v.Val += sum
+		vv = v
 	case token.SUB:
 		v = v.Clone()
 		v.Val -= sum
+		vv = v
 	case token.MUL:
 		v = v.Clone()
 		v.Val *= sum
+		vv = v
 	case token.QUO:
 		v = v.Clone()
 		v.Val /= sum
+		vv = v
 	case token.POW:
 		v = v.Clone()
 		v.Val = math.Pow(v.Val, sum)
+		vv = v
 	case token.REM:
 		v = v.Clone()
 		v.Val = float64(int64(v.Val) % int64(sum))
+		vv = v
+
+		// 比较
+	case token.EQL:
+		vv = &ValueBool{Val: v.Val == sum}
+
+	case token.LSS:
+		vv = &ValueBool{Val: v.Val < sum}
+
+	case token.GTR:
+		vv = &ValueBool{Val: v.Val > sum}
+
+	case token.NEQ:
+		vv = &ValueBool{Val: v.Val != sum}
+
+	case token.LEQ:
+		vv = &ValueBool{Val: v.Val <= sum}
+
+	case token.GEQ:
+		vv = &ValueBool{Val: v.Val >= sum}
+
 	default:
 		return v, undefined
 	}
-	return v, nil
+	return vv, nil
 }
 
 func (v *ValueNumber) PreUnary(t token.Token) (Value, error) {

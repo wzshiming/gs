@@ -16,8 +16,11 @@ func TestA(t *testing.T) {
 	expr := `
 a =	2 ** 10
 
-b = a+a
-b
+if 1 != 1 {
+	a = a + 1
+} else {
+	a = a - 1
+}
 `
 
 	fset := position.NewFileSet()
@@ -31,8 +34,8 @@ b
 		ffmt.Puts(v)
 	}
 
-	ev := NewEvaluator(fset, errs, out)
-	ex := ev.Eval()
+	ev := NewEvaluator(fset, errs)
+	ex := ev.Eval(out)
 
 	if errs.Len() != 0 {
 		ffmt.Puts(errs)
