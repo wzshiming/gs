@@ -37,6 +37,7 @@ const (
 	SUB_ASSIGN // -=
 	MUL_ASSIGN // *=
 	QUO_ASSIGN // /=
+	POW_ASSIGN // **=
 	REM_ASSIGN // %=
 
 	AND_ASSIGN     // &=
@@ -114,6 +115,7 @@ var tokenMap = map[Token]string{
 	SUB_ASSIGN: "-=",
 	MUL_ASSIGN: "*=",
 	QUO_ASSIGN: "/=",
+	POW_ASSIGN: "**=",
 	REM_ASSIGN: "%=",
 
 	AND_ASSIGN:     "&=",
