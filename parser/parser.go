@@ -195,7 +195,7 @@ func (s *parser) parseUnary() (expr ast.Expr) {
 				s.scan()
 				els = s.parseExpr()
 			}
-			expr = &ast.IfExpr{
+			expr = &ast.If{
 				Pos:  pos,
 				Init: init,
 				Cond: cond,

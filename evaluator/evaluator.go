@@ -89,7 +89,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 		}
 
 		return z
-	case *ast.IfExpr:
+	case *ast.If:
 		ss := s.NewChildScope()
 		ev.eval(t.Init, ss)
 		loop := ev.eval(t.Cond, ss)

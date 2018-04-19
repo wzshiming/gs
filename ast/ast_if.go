@@ -7,7 +7,7 @@ import (
 )
 
 // if 关键字
-type IfExpr struct {
+type If struct {
 	Pos  position.Pos
 	Init Expr
 	Cond Expr
@@ -15,7 +15,7 @@ type IfExpr struct {
 	Else Expr
 }
 
-func (l *IfExpr) String() string {
+func (l *If) String() string {
 	if l == nil {
 		return "<nil.If>"
 	}
