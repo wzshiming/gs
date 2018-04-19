@@ -98,7 +98,12 @@ func (l *FuncExpr) String() string {
 	}
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("func ")
-	buf.WriteString(l.Func.String())
+
+	if l.Func != nil {
+		buf.WriteString(l.Func.String())
+	} else {
+		buf.WriteString("()")
+	}
 	buf.WriteString(" ")
 	if l.Body != nil {
 		buf.WriteString(l.Body.String())
@@ -194,7 +199,6 @@ func (l *BraceExpr) String() string {
 		buf.WriteString("\n  ")
 		buf.WriteString(v.String())
 	}
-	buf.WriteByte('\n')
-	buf.WriteString("} ")
+	buf.WriteString("\n}\n")
 	return buf.String()
 }

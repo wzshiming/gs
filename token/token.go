@@ -194,8 +194,8 @@ var LookupOperator = newLooker()
 func init() {
 
 	for k, v := range [][]Token{
-		{COMMA, COLON},
 		{ASSIGN, ADD_ASSIGN, SUB_ASSIGN, MUL_ASSIGN, QUO_ASSIGN, REM_ASSIGN, AND_ASSIGN, OR_ASSIGN, XOR_ASSIGN, SHL_ASSIGN, SHR_ASSIGN, AND_NOT_ASSIGN},
+		{COMMA, COLON},
 		{LOR},
 		{LAND},
 		{EQL, NEQ, LSS, LEQ, GTR, GEQ},
