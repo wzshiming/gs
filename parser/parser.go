@@ -113,7 +113,7 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 		case token.LPAREN:
 			s.scan()
 			b := s.parseExpr()
-			if s.tok != token.RBRACE {
+			if s.tok != token.RPAREN {
 				s.errorsPos(pos, fmt.Errorf("The parentheses are not closed '%s'", tok))
 			}
 			s.scan()
@@ -152,6 +152,24 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 				Cond: cond,
 				Body: body,
 				Else: els,
+			}
+		case token.FUNC:
+			s.scan()
+			name := s.parseExpr()
+			args := s.parseExpr()
+			body := s.parseExpr()
+			expr = &ast.FuncExpr{
+				Pos:  pos,
+				Name: name,
+				Args: args,
+				Body: body,
+			}
+		case token.RETURN:
+			s.scan()
+			ret := s.parseExpr()
+			expr = &ast.ReturnExpr{
+				Pos: pos,
+				Ret: ret,
 			}
 		default:
 			s.errors(fmt.Errorf("Undefined keywork %v", s.tok))
@@ -201,9 +219,9 @@ loop:
 
 		case tok.IsLiteral():
 			expr = &ast.CallExpr{
-				Pos:      pos,
-				Name:     expr,
-				Argument: s.parseExpr(),
+				Pos:  pos,
+				Name: expr,
+				Args: s.parseExpr(),
 			}
 		default:
 

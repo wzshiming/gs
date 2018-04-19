@@ -10,16 +10,12 @@ import (
 func TestA(t *testing.T) {
 
 	expr := `
-aaa 1+2**3,2+3 + 1 
-a.b aa, bb + 1 , cc
-if 1* -2-- -- {
-  3 + 4
-  44 +11
-} else if 3 ** 4 {
-  aa+1
-} else ...b + .1
- a + "123"...
-
+func hello (a, b ) {
+	s = "hello ? and ?" % (a,b)
+	puts s
+	return 
+	s
+}
 
 `
 

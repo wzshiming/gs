@@ -69,11 +69,49 @@ func (l *Literal) String() string {
 	return l.Value
 }
 
+// return 定义
+type ReturnExpr struct {
+	Pos position.Pos
+	Ret Expr
+}
+
+func (l *ReturnExpr) String() string {
+	if l == nil {
+		return "<nil.ReturnExpr>"
+	}
+	buf := bytes.NewBuffer(nil)
+	buf.WriteString("return ")
+	buf.WriteString(l.Ret.String())
+	return buf.String()
+}
+
+// 函数定义
+type FuncExpr struct {
+	Pos  position.Pos
+	Name Expr
+	Args Expr
+	Body Expr
+}
+
+func (l *FuncExpr) String() string {
+	if l == nil {
+		return "<nil.FuncExpr>"
+	}
+	buf := bytes.NewBuffer(nil)
+	buf.WriteString("func ")
+	buf.WriteString(l.Name.String())
+	buf.WriteString(" ")
+	buf.WriteString(l.Args.String())
+	buf.WriteString(" ")
+	buf.WriteString(l.Body.String())
+	return buf.String()
+}
+
 // call
 type CallExpr struct {
-	Pos      position.Pos
-	Name     Expr
-	Argument Expr
+	Pos  position.Pos
+	Name Expr
+	Args Expr
 }
 
 func (l *CallExpr) String() string {
@@ -83,7 +121,7 @@ func (l *CallExpr) String() string {
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString(l.Name.String())
 	buf.WriteString(" ")
-	buf.WriteString(l.Argument.String())
+	buf.WriteString(l.Args.String())
 	return buf.String()
 }
 

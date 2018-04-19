@@ -16,7 +16,6 @@ const (
 	STRING // "123" or '123' or `123`
 	NUMBER // 123 or 123.4
 	IDENT  // abc or a123
-	FUNC   // func
 	literalEnd
 
 	operatorBeg
@@ -79,8 +78,10 @@ const (
 	operatorEnd
 
 	keyworkBeg
-	IF   // if
-	ELSE // else
+	IF     // if
+	ELSE   // else
+	FUNC   // func
+	RETURN // return
 	keyworkEnd
 )
 
@@ -93,7 +94,6 @@ var tokenMap = map[Token]string{
 	STRING: "string",
 	NUMBER: "number",
 	IDENT:  "ident",
-	FUNC:   "func",
 
 	ADD: "+",
 	SUB: "-",
@@ -152,8 +152,10 @@ var tokenMap = map[Token]string{
 	SEMICOLON: ";",
 	COLON:     ":",
 
-	IF:   "if",
-	ELSE: "else",
+	IF:     "if",
+	ELSE:   "else",
+	FUNC:   "func",
+	RETURN: "return",
 }
 
 func (op Token) String() string {
