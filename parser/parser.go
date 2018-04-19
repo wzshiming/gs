@@ -137,7 +137,16 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 		switch tok {
 		case token.IF:
 			s.scan()
-			cond := s.parseExpr()
+			init := s.parseExpr()
+			cond := init
+
+			if s.tok == token.SEMICOLON {
+				s.scan()
+				cond = s.parseExpr()
+			} else {
+				init = nil
+			}
+
 			body := s.parseExpr()
 			var els ast.Expr
 			for s.tok == token.SEMICOLON {
@@ -149,6 +158,7 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 			}
 			expr = &ast.IfExpr{
 				Pos:  pos,
+				Init: init,
 				Cond: cond,
 				Body: body,
 				Else: els,
@@ -224,11 +234,16 @@ loop:
 
 		//case tok.IsLiteral():
 		default:
-			expr = &ast.CallExpr{
-				Pos:  pos,
-				Name: expr,
-				Args: s.parseExpr(),
+			switch s.tok {
+			case token.EOF:
+			default:
+				expr = &ast.CallExpr{
+					Pos:  pos,
+					Name: expr,
+					Args: s.parseExpr(),
+				}
 			}
+
 			break loop
 		}
 	}

@@ -138,6 +138,7 @@ func (l *CallExpr) String() string {
 // if 关键字
 type IfExpr struct {
 	Pos  position.Pos
+	Init Expr
 	Cond Expr
 	Body Expr
 	Else Expr
@@ -149,6 +150,10 @@ func (l *IfExpr) String() string {
 	}
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("if ")
+	if l.Init != nil {
+		buf.WriteString(l.Init.String())
+		buf.WriteString("; ")
+	}
 	buf.WriteString(l.Cond.String())
 	buf.WriteByte(' ')
 	buf.WriteString(l.Body.String())
