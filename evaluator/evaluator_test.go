@@ -16,11 +16,13 @@ func TestA(t *testing.T) {
 	expr := `
 a =	2 ** 10
 
-if 1 != 1 {
-	a = a + 1
+if 1 == 1 {
+ a = a + 1
 } else {
-	a = a - 1
+ a = a- 1
 }
+
+a
 `
 
 	fset := position.NewFileSet()
