@@ -10,11 +10,9 @@ import (
 func TestA(t *testing.T) {
 
 	expr := `
-func hello (a, b ) {
-	s = "hello ? and ?" % (a,b)
-	puts s
-	return 
-	s
+func hello.String(a, b ) {
+	s = (hello,a,b).String 1
+	return s
 }
 
 `

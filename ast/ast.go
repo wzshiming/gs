@@ -88,8 +88,7 @@ func (l *ReturnExpr) String() string {
 // 函数定义
 type FuncExpr struct {
 	Pos  position.Pos
-	Name Expr
-	Args Expr
+	Func Expr
 	Body Expr
 }
 
@@ -99,11 +98,13 @@ func (l *FuncExpr) String() string {
 	}
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("func ")
-	buf.WriteString(l.Name.String())
+	buf.WriteString(l.Func.String())
 	buf.WriteString(" ")
-	buf.WriteString(l.Args.String())
-	buf.WriteString(" ")
-	buf.WriteString(l.Body.String())
+	if l.Body != nil {
+		buf.WriteString(l.Body.String())
+	} else {
+		buf.WriteString("{}")
+	}
 	return buf.String()
 }
 
@@ -121,7 +122,11 @@ func (l *CallExpr) String() string {
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString(l.Name.String())
 	buf.WriteString(" ")
-	buf.WriteString(l.Args.String())
+	if l.Args != nil {
+		buf.WriteString(l.Args.String())
+	} else {
+		buf.WriteString("()")
+	}
 	return buf.String()
 }
 

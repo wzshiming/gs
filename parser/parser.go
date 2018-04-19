@@ -78,8 +78,8 @@ func (s *parser) parse() []ast.Expr {
 			return ex
 		default:
 			if pe == nil {
-				s.errors(fmt.Errorf("Invalid expr '%v'", s.val))
-				s.scanner.SkipError()
+				//				s.errors(fmt.Errorf("Invalid expr '%v'", s.val))
+				//				s.scanner.SkipError()
 				s.scan()
 			}
 		}
@@ -155,13 +155,11 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 			}
 		case token.FUNC:
 			s.scan()
-			name := s.parseExpr()
-			args := s.parseExpr()
+			fun := s.parseExpr()
 			body := s.parseExpr()
 			expr = &ast.FuncExpr{
 				Pos:  pos,
-				Name: name,
-				Args: args,
+				Func: fun,
 				Body: body,
 			}
 		case token.RETURN:
@@ -211,22 +209,27 @@ loop:
 					X:   expr,
 				}
 				s.scan()
+			case token.LPAREN:
+				expr = &ast.CallExpr{
+					Pos:  pos,
+					Name: expr,
+					Args: s.parseExpr(),
+				}
+				break loop
 			default:
 				break loop
 			}
 		case tok.IsKeywork():
 			break loop
 
-		case tok.IsLiteral():
+		//case tok.IsLiteral():
+		default:
 			expr = &ast.CallExpr{
 				Pos:  pos,
 				Name: expr,
 				Args: s.parseExpr(),
 			}
-		default:
-
 			break loop
-
 		}
 	}
 
