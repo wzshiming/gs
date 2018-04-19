@@ -223,6 +223,9 @@ func (v *ValueString) SufUnary(t token.Token) (Value, error) {
 	return v, undefined
 }
 
+var ValueTrue = &ValueBool{true}
+var ValueFalse = &ValueBool{false}
+
 type ValueBool struct {
 	Val bool
 }
@@ -247,20 +250,22 @@ func (v *ValueBool) SufUnary(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-type ValueNil struct{}
+var ValueNil *valueNil
 
-func (v *ValueNil) String() string {
+type valueNil struct{}
+
+func (v *valueNil) String() string {
 	return "nil"
 }
 
-func (v *ValueNil) Binary(t token.Token, y Value) (Value, error) {
+func (v *valueNil) Binary(t token.Token, y Value) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueNil) PreUnary(t token.Token) (Value, error) {
+func (v *valueNil) PreUnary(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueNil) SufUnary(t token.Token) (Value, error) {
+func (v *valueNil) SufUnary(t token.Token) (Value, error) {
 	return v, undefined
 }

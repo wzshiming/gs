@@ -52,9 +52,13 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 		case token.STRING:
 			vv = &value.ValueString{t.Value[1 : len(t.Value)-1]}
 		case token.BOOL:
-			vv = &value.ValueBool{t.Value == "true"}
+			if t.Value == "true" {
+				vv = value.ValueTrue
+			} else {
+				vv = value.ValueFalse
+			}
 		case token.NIL:
-			vv = &value.ValueNil{}
+			vv = value.ValueNil
 		case token.IDENT:
 			vv = &value.ValueVar{
 				Name:  t.Value,
@@ -99,7 +103,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 		} else if t.Else != nil {
 			return ev.eval(t.Else, ss)
 		}
-		return &value.ValueNil{}
+		return value.ValueNil
 	case *ast.BraceExpr:
 		ss := s.NewChildScope()
 		return ev.EvalBy(t.List, ss)
