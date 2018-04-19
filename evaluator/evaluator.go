@@ -68,7 +68,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 			ev.errorsPos(t.Pos, fmt.Errorf("Panic "+t.Type.String()))
 		}
 		return vv
-	case *ast.OperatorBinary:
+	case *ast.Binary:
 		x := ev.eval(t.X, s)
 		y := ev.eval(t.Y, s)
 		lx, ok := x.(value.Value)
@@ -104,7 +104,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 			return ev.eval(t.Else, ss)
 		}
 		return value.ValueNil
-	case *ast.BraceExpr:
+	case *ast.Brace:
 		ss := s.NewChildScope()
 		return ev.EvalBy(t.List, ss)
 	}

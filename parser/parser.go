@@ -95,7 +95,7 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 			return s.parsePreUnaryExpr()
 		case token.ADD, token.SUB, token.ELLIPSIS:
 			s.scan()
-			expr = &ast.OperatorPreUnary{
+			expr = &ast.UnaryPre{
 				Pos: pos,
 				Op:  tok,
 				X:   s.parsePreUnaryExpr(),
@@ -119,7 +119,7 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 			}
 			s.scan()
 
-			expr = &ast.BraceExpr{
+			expr = &ast.Brace{
 				Pos:  pos,
 				List: b,
 			}
@@ -129,7 +129,7 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 	case tok.IsKeywork():
 		switch tok {
 		case token.FOR:
-			fe := &ast.ForExpr{
+			fe := &ast.For{
 				Pos: pos,
 			}
 			s.scan()
@@ -206,7 +206,7 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 			s.scan()
 			fun := s.parseExpr()
 			body := s.parseExpr()
-			expr = &ast.FuncExpr{
+			expr = &ast.Func{
 				Pos:  pos,
 				Func: fun,
 				Body: body,
@@ -214,7 +214,7 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 		case token.RETURN:
 			s.scan()
 			ret := s.parseExpr()
-			expr = &ast.ReturnExpr{
+			expr = &ast.Return{
 				Pos: pos,
 				Ret: ret,
 			}
@@ -252,14 +252,14 @@ loop:
 			switch s.tok {
 			case token.INC, token.DEC, token.ELLIPSIS:
 
-				expr = &ast.OperatorSufUnary{
+				expr = &ast.UnarySuf{
 					Pos: pos,
 					Op:  tok,
 					X:   expr,
 				}
 				s.scan()
 			case token.LPAREN:
-				expr = &ast.CallExpr{
+				expr = &ast.Call{
 					Pos:  pos,
 					Name: expr,
 					Args: s.parseExpr(),
@@ -276,7 +276,7 @@ loop:
 			switch s.tok {
 			case token.EOF:
 			default:
-				expr = &ast.CallExpr{
+				expr = &ast.Call{
 					Pos:  pos,
 					Name: expr,
 					Args: s.parseExpr(),
@@ -310,16 +310,16 @@ func (s *parser) parseBinaryExpr(pre int) ast.Expr {
 
 		switch op {
 		case token.COMMA:
-			if t, ok := x.(*ast.TupleExpr); ok {
+			if t, ok := x.(*ast.Tuple); ok {
 				t.List = append(t.List, y)
 			} else {
-				x = &ast.TupleExpr{
+				x = &ast.Tuple{
 					Pos:  pos,
 					List: []ast.Expr{x, y},
 				}
 			}
 		default:
-			x = &ast.OperatorBinary{
+			x = &ast.Binary{
 				Pos: pos,
 				X:   x,
 				Op:  op,
