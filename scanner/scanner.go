@@ -58,10 +58,16 @@ func (s *Scanner) next() {
 
 func (s *Scanner) scanIdent() string {
 	off := s.off - 1
-	for s.ch >= '0' && s.ch <= '9' ||
-		s.ch >= 'a' && s.ch <= 'z' ||
-		s.ch >= 'A' && s.ch <= 'Z' ||
-		s.ch == '_' {
+loop:
+	for {
+		switch s.ch {
+		case '+', '-', '*', '/', '%',
+			'^', '&', '|',
+			'\n', '\t', '\r', ' ', '\\',
+			'(', ')', '[', ']', '{', '}',
+			',', '.', ';', ':':
+			break loop
+		}
 		s.next()
 	}
 	return string(s.buf[off : s.off-1])
@@ -135,7 +141,10 @@ func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err err
 		tok = token.IDENT
 		val = s.scanIdent()
 		return
-
+	case s.ch > 127:
+		tok = token.IDENT
+		val = s.scanIdent()
+		return
 	case s.ch == '\n', s.ch == ';':
 		val = string([]rune{s.ch})
 		for s.ch == '\n' || s.ch == ';' {
