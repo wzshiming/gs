@@ -20,22 +20,15 @@ type parser struct {
 	pos position.Pos
 }
 
-func NewParser(fset *position.FileSet, filename string, src []rune) *parser {
+func NewParser(fset *position.FileSet, errs *errors.Errors, filename string, src []rune) *parser {
 	file := fset.AddFile(filename, 1, len(src))
 	p := &parser{
 		fset:    fset,
 		scanner: scanner.NewScanner(file, src),
-		errs:    &errors.Errors{},
+		errs:    errs,
 	}
 	p.scan()
 	return p
-}
-
-func (s *parser) Err() error {
-	if s.errs.Len() == 0 {
-		return nil
-	}
-	return s.errs
 }
 
 func (s *parser) scan() {

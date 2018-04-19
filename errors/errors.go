@@ -20,6 +20,10 @@ func (e *Error) Error() string {
 	return e.String()
 }
 
+func NewErrors() *Errors {
+	return &Errors{}
+}
+
 type Errors []*Error
 
 func (e *Errors) Append(pos position.Position, err error) {

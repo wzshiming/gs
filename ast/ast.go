@@ -9,7 +9,7 @@ import (
 )
 
 type Expr interface {
-	String() string
+	fmt.Stringer
 }
 
 // 前缀一元表达式
