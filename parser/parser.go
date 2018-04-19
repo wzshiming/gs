@@ -165,9 +165,7 @@ func (s *parser) parseUnary() (expr ast.Expr) {
 				}
 			}
 			fe.Body = s.parseExpr()
-			for s.tok == token.SEMICOLON {
-				s.scan()
-			}
+
 			if s.tok == token.ELSE {
 				s.scan()
 				fe.Else = s.parseExpr()
@@ -188,9 +186,6 @@ func (s *parser) parseUnary() (expr ast.Expr) {
 
 			body := s.parseExpr()
 			var els ast.Expr
-			for s.tok == token.SEMICOLON {
-				s.scan()
-			}
 			if s.tok == token.ELSE {
 				s.scan()
 				els = s.parseExpr()
@@ -275,6 +270,7 @@ loop:
 		default:
 			switch s.tok {
 			case token.EOF:
+			case token.SEMICOLON:
 			default:
 				expr = &ast.Call{
 					Pos:  pos,
