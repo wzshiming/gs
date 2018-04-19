@@ -80,10 +80,10 @@ func (s *parser) parse() []ast.Expr {
 }
 
 func (s *parser) parseExpr() ast.Expr {
-	return s.parseBinaryExpr(1)
+	return s.parseBinary(1)
 }
 
-func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
+func (s *parser) parseUnary() (expr ast.Expr) {
 	tok := s.tok
 	pos := s.pos
 
@@ -92,13 +92,13 @@ func (s *parser) parsePreUnaryExpr() (expr ast.Expr) {
 		switch s.tok {
 		case token.SEMICOLON:
 			s.scan()
-			return s.parsePreUnaryExpr()
+			return s.parseUnary()
 		case token.ADD, token.SUB, token.ELLIPSIS:
 			s.scan()
 			expr = &ast.UnaryPre{
 				Pos: pos,
 				Op:  tok,
-				X:   s.parsePreUnaryExpr(),
+				X:   s.parseUnary(),
 			}
 
 		case token.RPAREN, token.RBRACE:
@@ -290,9 +290,9 @@ loop:
 	return expr
 }
 
-func (s *parser) parseBinaryExpr(pre int) ast.Expr {
+func (s *parser) parseBinary(pre int) ast.Expr {
 
-	x := s.parsePreUnaryExpr()
+	x := s.parseUnary()
 	if x == nil {
 		return x
 	}
@@ -306,7 +306,7 @@ func (s *parser) parseBinaryExpr(pre int) ast.Expr {
 			break
 		}
 		s.scan()
-		y := s.parseBinaryExpr(op2 + 1)
+		y := s.parseBinary(op2 + 1)
 
 		switch op {
 		case token.COMMA:
