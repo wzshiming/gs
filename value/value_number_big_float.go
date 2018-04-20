@@ -41,10 +41,10 @@ func (v valueNumberBigFloat) BigFloat() valueNumberBigFloat {
 }
 
 func (v valueNumberBigFloat) Binary(t token.Token, y Value) (vv Value, err error) {
-	var sum *big.Float
+	var sum ValueNumber
 	switch yy := y.(type) {
 	case ValueNumber:
-		sum = yy.BigFloat().Val
+		sum = yy
 	case *ValueVar:
 		val, err := yy.Point()
 		if err != nil {
@@ -63,16 +63,16 @@ func (v valueNumberBigFloat) Binary(t token.Token, y Value) (vv Value, err error
 
 	case token.ADD:
 		v0 := big.NewFloat(0)
-		vv = valueNumberBigFloat{v0.Add(v.Val, sum)}
+		vv = valueNumberBigFloat{v0.Add(v.Val, sum.BigFloat().Val)}
 	case token.SUB:
 		v0 := big.NewFloat(0)
-		vv = valueNumberBigFloat{v0.Sub(v.Val, sum)}
+		vv = valueNumberBigFloat{v0.Sub(v.Val, sum.BigFloat().Val)}
 	case token.MUL:
 		v0 := big.NewFloat(0)
-		vv = valueNumberBigFloat{v0.Mul(v.Val, sum)}
+		vv = valueNumberBigFloat{v0.Mul(v.Val, sum.BigFloat().Val)}
 	case token.QUO:
 		v0 := big.NewFloat(0)
-		vv = valueNumberBigFloat{v0.Quo(v.Val, sum)}
+		vv = valueNumberBigFloat{v0.Quo(v.Val, sum.BigFloat().Val)}
 		//	case token.POW:
 		//		v0 := big.NewFloat(1)
 		//		vv = valueNumberBigFloat{v.Val.Sqrt(v0.Quo(v0, sum))}
@@ -81,22 +81,22 @@ func (v valueNumberBigFloat) Binary(t token.Token, y Value) (vv Value, err error
 
 		// 比较
 	case token.EQL:
-		vv = ValueBool(v.Val.Cmp(sum) == 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigFloat().Val) == 0)
 
 	case token.LSS:
-		vv = ValueBool(v.Val.Cmp(sum) < 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigFloat().Val) < 0)
 
 	case token.GTR:
-		vv = ValueBool(v.Val.Cmp(sum) > 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigFloat().Val) > 0)
 
 	case token.NEQ:
-		vv = ValueBool(v.Val.Cmp(sum) != 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigFloat().Val) != 0)
 
 	case token.LEQ:
-		vv = ValueBool(v.Val.Cmp(sum) <= 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigFloat().Val) <= 0)
 
 	case token.GEQ:
-		vv = ValueBool(v.Val.Cmp(sum) >= 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigFloat().Val) >= 0)
 
 	default:
 		return v, undefined

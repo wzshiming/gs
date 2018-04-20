@@ -33,10 +33,10 @@ func (v valueNumberInt) BigFloat() valueNumberBigFloat {
 }
 
 func (v valueNumberInt) Binary(t token.Token, y Value) (vv Value, err error) {
-	var sum valueNumberInt
+	var sum ValueNumber
 	switch yy := y.(type) {
 	case ValueNumber:
-		sum = yy.Int()
+		sum = yy
 	case *ValueVar:
 		val, err := yy.Point()
 		if err != nil {
@@ -77,7 +77,7 @@ func (v valueNumberInt) Binary(t token.Token, y Value) (vv Value, err error) {
 			return v / sum.Int(), nil
 		}
 	case token.REM:
-		return v % sum, nil
+		return v % sum.Int(), nil
 
 		// 比较
 	case token.EQL:

@@ -39,10 +39,10 @@ func (v valueNumberBigInt) BigFloat() valueNumberBigFloat {
 }
 
 func (v valueNumberBigInt) Binary(t token.Token, y Value) (vv Value, err error) {
-	var sum *big.Int
+	var sum ValueNumber
 	switch yy := y.(type) {
 	case ValueNumber:
-		sum = yy.BigInt().Val
+		sum = yy
 	case *ValueVar:
 		val, err := yy.Point()
 		if err != nil {
@@ -60,39 +60,39 @@ func (v valueNumberBigInt) Binary(t token.Token, y Value) (vv Value, err error) 
 	switch t {
 	case token.ADD:
 		v0 := big.NewInt(0)
-		vv = valueNumberBigInt{v0.Add(v.Val, sum)}
+		vv = valueNumberBigInt{v0.Add(v.Val, sum.BigInt().Val)}
 	case token.SUB:
 		v0 := big.NewInt(0)
-		vv = valueNumberBigInt{v0.Sub(v.Val, sum)}
+		vv = valueNumberBigInt{v0.Sub(v.Val, sum.BigInt().Val)}
 	case token.MUL:
 		v0 := big.NewInt(0)
-		vv = valueNumberBigInt{v0.Mul(v.Val, sum)}
+		vv = valueNumberBigInt{v0.Mul(v.Val, sum.BigInt().Val)}
 	case token.QUO:
-		vv = valueNumberBigInt{v.Val.Quo(v.Val, sum)}
+		vv = valueNumberBigInt{v.Val.Quo(v.Val, sum.BigInt().Val)}
 		//	case token.POW:
 		//		v0 := big.NewInt(1)
 		//		vv = valueNumberBigInt{v.Val.Sqrt(v0.Quo(v0, sum))}
 	case token.REM:
-		vv = valueNumberBigInt{v.Val.Rem(v.Val, sum)}
+		vv = valueNumberBigInt{v.Val.Rem(v.Val, sum.BigInt().Val)}
 
 		// 比较
 	case token.EQL:
-		vv = ValueBool(v.Val.Cmp(sum) == 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigInt().Val) == 0)
 
 	case token.LSS:
-		vv = ValueBool(v.Val.Cmp(sum) < 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigInt().Val) < 0)
 
 	case token.GTR:
-		vv = ValueBool(v.Val.Cmp(sum) > 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigInt().Val) > 0)
 
 	case token.NEQ:
-		vv = ValueBool(v.Val.Cmp(sum) != 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigInt().Val) != 0)
 
 	case token.LEQ:
-		vv = ValueBool(v.Val.Cmp(sum) <= 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigInt().Val) <= 0)
 
 	case token.GEQ:
-		vv = ValueBool(v.Val.Cmp(sum) >= 0)
+		vv = ValueBool(v.Val.Cmp(sum.BigInt().Val) >= 0)
 
 	default:
 		return v, undefined
