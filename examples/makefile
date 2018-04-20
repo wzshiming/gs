@@ -6,9 +6,10 @@ GITPATH = github.com/wzshiming/gs/cmd/gs
 default: gs test
 	
 gs:
+	- $(GO) get -v $(GITPATH)
 	$(GO) install $(GITPATH)
 
 test:
-	$(GS) */*.gs
+	- $(GS) */*.gs
 
 
