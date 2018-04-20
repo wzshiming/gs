@@ -8,7 +8,7 @@ func T i, j {
 }
 
 if 256 != T 2, 4 {
-	return "1.fail"
+	return "recursive.fail"
 }
 
-return "1.pass"
+return "recursive.pass"
