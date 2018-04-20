@@ -1,4 +1,4 @@
-package eval
+package evaluator
 
 import (
 	"fmt"
@@ -14,6 +14,10 @@ import (
 type Evaluator struct {
 	fset *position.FileSet
 	errs *errors.Errors
+
+	stackRet int
+	stackFor int
+	tableFor string
 }
 
 func NewEvaluator(fset *position.FileSet, errs *errors.Errors) *Evaluator {
@@ -33,8 +37,13 @@ func (ev *Evaluator) Eval(es []ast.Expr) value.Value {
 }
 
 func (ev *Evaluator) EvalBy(es []ast.Expr, s *value.Scope) (ex value.Value) {
+	sr := ev.stackRet
+	sf := ev.stackFor
 	for _, v := range es {
 		ex = ev.eval(v, s)
+		if ev.stackRet < sr || ev.stackFor < sf {
+			return
+		}
 	}
 	return
 }
@@ -115,6 +124,9 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 			return ev.eval(t.Else, ss)
 		}
 		return value.ValueNil
+	case *ast.Break:
+		ev.stackFor--
+		return value.ValueNil
 	case *ast.For:
 		ss := s.NewChildScope()
 		ev.eval(t.Init, ss)
@@ -171,7 +183,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 				for i := 0; i != len(ti1) && i != len(ti2); i++ {
 					ss.SetLocal(ti2[i].Value, ti1[i])
 				}
-
+				ev.stackRet++
 				return ev.eval(t2.Body, ss)
 			}
 
@@ -197,8 +209,17 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		}
 
 		return vf
+	case *ast.Return:
+		ev.stackRet--
+		if t.Ret == nil {
+			return value.ValueNil
+		}
+		return ev.eval(t.Ret, s)
 	}
-
+	if e == nil {
+		return value.ValueNil
+	}
+	ev.errorsPos(e.GetPos(), fmt.Errorf("未定义关键字处理"))
 	return value.ValueNil
 }
 

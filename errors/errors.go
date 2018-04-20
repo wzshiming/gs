@@ -26,6 +26,10 @@ func NewErrors() *Errors {
 
 type Errors []*Error
 
+func (e *Errors) Reset() {
+	*e = (*e)[:0]
+}
+
 func (e *Errors) Append(pos position.Position, err error) {
 	*e = append(*e, &Error{
 		Pos: pos,

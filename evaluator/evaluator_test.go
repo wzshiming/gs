@@ -1,4 +1,4 @@
-package eval
+package evaluator
 
 import (
 	"testing"
@@ -14,19 +14,14 @@ var defPuts = ffmt.NewOptional(5, ffmt.StyleP, ffmt.CanFilterDuplicate|ffmt.CanR
 func TestA(t *testing.T) {
 
 	expr := `
-a := 2 ** 10
-
-func Add  i {
-	if nil == i {
-	   a ++	
-	} else {
-	   a += i
+func T i, j {
+	if j >= 2 {
+		return T i*i,j-1
 	}
+	return i
 }
-Add ()
-Add 2
-a
 
+T 2,4
 `
 
 	fset := position.NewFileSet()
