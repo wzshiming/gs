@@ -8,6 +8,7 @@ type Token uint
 
 const (
 	INVALID Token = iota
+	COMMENT
 	EOF
 
 	literalBeg

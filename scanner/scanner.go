@@ -98,12 +98,13 @@ func (s *Scanner) scanNumber() string {
 	return string(s.buf[off : s.off-1])
 }
 
-func (s *Scanner) scanOperator() token.Token {
+func (s *Scanner) scanOperator() (token.Token, string) {
+	off := s.off - 1
 	look := token.LookupOperator
 	for {
 		look0 := look.GetRune(s.ch)
 		if look0 == nil {
-			return look.Tok
+			return look.Tok, string(s.buf[off : s.off-1])
 		}
 		look = look0
 		s.next()
@@ -156,9 +157,20 @@ func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err err
 		val = ""
 		tok = token.EOF
 		return
+	case s.ch == '#':
+		s.SkipError()
+		return s.Scan()
 	default:
-		tok = s.scanOperator()
-		val = tok.String()
+		tok, val = s.scanOperator()
+
+		switch val {
+		case "/":
+			if s.ch == '/' {
+				s.SkipError()
+				return s.Scan()
+			}
+
+		}
 		switch tok {
 		case token.PERIOD:
 			if s.ch >= '0' && s.ch <= '9' {
