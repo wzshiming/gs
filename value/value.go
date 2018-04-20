@@ -11,6 +11,6 @@ var undefined = fmt.Errorf("Undefined operation")
 type Value interface {
 	fmt.Stringer
 	Binary(t token.Token, y Value) (Value, error)
-	PreUnary(t token.Token) (Value, error)
-	SufUnary(t token.Token) (Value, error)
+	UnaryPre(t token.Token) (Value, error)
+	UnarySuf(t token.Token) (Value, error)
 }

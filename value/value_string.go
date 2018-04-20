@@ -46,10 +46,10 @@ func (v *ValueString) Binary(t token.Token, y Value) (Value, error) {
 	return v, nil
 }
 
-func (v *ValueString) PreUnary(t token.Token) (Value, error) {
+func (v *ValueString) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueString) SufUnary(t token.Token) (Value, error) {
+func (v *ValueString) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }

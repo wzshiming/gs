@@ -87,10 +87,10 @@ func (v *ValueNumber) Binary(t token.Token, y Value) (vv Value, err error) {
 	return vv, nil
 }
 
-func (v *ValueNumber) PreUnary(t token.Token) (Value, error) {
+func (v *ValueNumber) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueNumber) SufUnary(t token.Token) (Value, error) {
+func (v *ValueNumber) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }

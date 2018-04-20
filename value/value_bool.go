@@ -23,10 +23,10 @@ func (v *ValueBool) Binary(t token.Token, y Value) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueBool) PreUnary(t token.Token) (Value, error) {
+func (v *ValueBool) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueBool) SufUnary(t token.Token) (Value, error) {
+func (v *ValueBool) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }
