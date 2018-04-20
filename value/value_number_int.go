@@ -44,8 +44,13 @@ func (v valueNumberInt) Binary(t token.Token, y Value) (vv Value, err error) {
 		}
 		return v.Binary(t, val)
 	case *valueNil:
-		if t == token.EQL {
+		switch t {
+		case token.EQL:
 			return ValueFalse, nil
+		case token.NEQ:
+			return ValueTrue, nil
+		default:
+			return v, fmt.Errorf("Type to number error")
 		}
 	default:
 		return v, fmt.Errorf("Type to number error")
