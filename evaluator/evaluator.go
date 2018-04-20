@@ -158,7 +158,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 					break
 				}
 				for i := 0; i != len(ti1); i++ {
-					ti1[i] = ev.eval(ti1[i], ss)
+					ti1[i] = ev.eval(ti1[i], s)
 				}
 				ti2, err := toIdentList(t2.Args)
 				if err != nil {

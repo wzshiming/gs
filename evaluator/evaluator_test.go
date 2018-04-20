@@ -15,11 +15,11 @@ func TestA(t *testing.T) {
 
 	expr := `
 a := 2 ** 10
-func Add(i) {
+func Add i {
 	a + i
 }
 
-Add Add a
+Add 2
 `
 
 	fset := position.NewFileSet()
