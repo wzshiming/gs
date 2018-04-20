@@ -32,6 +32,10 @@ func (v *ValueNumber) Binary(t token.Token, y Value) (vv Value, err error) {
 			return v, err
 		}
 		return v.Binary(t, val)
+	case *valueNil:
+		if t == token.EQL {
+			return ValueFalse, nil
+		}
 	default:
 		return v, fmt.Errorf("Type to number error")
 	}
@@ -88,9 +92,28 @@ func (v *ValueNumber) Binary(t token.Token, y Value) (vv Value, err error) {
 }
 
 func (v *ValueNumber) UnaryPre(t token.Token) (Value, error) {
-	return v, undefined
+
+	switch t {
+	case token.ADD:
+		return v, nil
+	case token.SUB:
+		v = v.Clone()
+		v.Val = -v.Val
+		return v, nil
+	default:
+		return v, undefined
+	}
 }
 
 func (v *ValueNumber) UnarySuf(t token.Token) (Value, error) {
-	return v, undefined
+	switch t {
+	case token.INC:
+		v.Val += 1
+		return v, nil
+	case token.DEC:
+		v.Val -= 1
+		return v, nil
+	default:
+		return v, undefined
+	}
 }

@@ -13,7 +13,22 @@ func (v *valueNil) String() string {
 }
 
 func (v *valueNil) Binary(t token.Token, y Value) (Value, error) {
-	return v, undefined
+	if t != token.EQL {
+		return v, undefined
+	}
+
+	switch yy := y.(type) {
+	case *ValueVar:
+		val, err := yy.Point()
+		if err != nil {
+			return v, err
+		}
+		return v.Binary(t, val)
+	case *valueNil:
+		return ValueTrue, nil
+	}
+
+	return ValueFalse, nil
 }
 
 func (v *valueNil) UnaryPre(t token.Token) (Value, error) {

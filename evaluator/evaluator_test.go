@@ -15,11 +15,18 @@ func TestA(t *testing.T) {
 
 	expr := `
 a := 2 ** 10
-func Add i {
-	a + i
-}
 
+func Add  i {
+	if nil == i {
+	   a ++	
+	} else {
+	   a += i
+	}
+}
+Add ()
 Add 2
+a
+
 `
 
 	fset := position.NewFileSet()

@@ -1,8 +1,6 @@
 package value
 
 import (
-	"fmt"
-
 	"github.com/wzshiming/gs/token"
 )
 
@@ -25,7 +23,7 @@ func (v *ValueVar) String() string {
 func (v *ValueVar) Point() (Value, error) {
 	val, ok := v.Scope.Get(v.Name)
 	if !ok {
-		return v, fmt.Errorf("Variable is empty '%v'", v.Name)
+		return ValueNil, nil
 	}
 	return val, nil
 }
@@ -46,13 +44,52 @@ func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 		return v, err
 	}
 
+	switch t {
+	case token.ADD_ASSIGN, token.SUB_ASSIGN, token.MUL_ASSIGN, token.QUO_ASSIGN, token.POW_ASSIGN, token.REM_ASSIGN,
+		token.AND_ASSIGN, token.OR_ASSIGN, token.XOR_ASSIGN, token.SHL_ASSIGN, token.SHR_ASSIGN, token.AND_NOT_ASSIGN:
+		t0 := t - (token.ADD_ASSIGN - token.ADD)
+		val, err := val.Binary(t0, y)
+		if err != nil {
+			return v, err
+		}
+		v.Scope.Set(v.Name, val)
+		return v, nil
+	}
 	return val.Binary(t, y)
 }
 
 func (v *ValueVar) UnaryPre(t token.Token) (Value, error) {
-	return v, undefined
+
+	val, err := v.Point()
+	if err != nil {
+		return v, err
+	}
+
+	return val.UnaryPre(t)
 }
 
 func (v *ValueVar) UnarySuf(t token.Token) (Value, error) {
-	return v, undefined
+	val, err := v.Point()
+	if err != nil {
+		return v, err
+	}
+
+	switch t {
+	case token.INC:
+		vv, err := val.Binary(token.ADD, &ValueNumber{1})
+		if err != nil {
+			return nil, err
+		}
+		v.Scope.Set(v.Name, vv)
+		return v, nil
+	case token.DEC:
+		vv, err := val.Binary(token.SUB, &ValueNumber{1})
+		if err != nil {
+			return nil, err
+		}
+		v.Scope.Set(v.Name, vv)
+		return v, nil
+	}
+
+	return val.UnarySuf(t)
 }

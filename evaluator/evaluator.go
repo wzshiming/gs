@@ -76,6 +76,24 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 			return value.ValueNil
 		}
 		return z
+	case *ast.UnaryPre:
+		lx := ev.eval(t.X, s)
+
+		z, err := lx.UnaryPre(t.Op)
+		if err != nil {
+			ev.errorsPos(t.Pos, err)
+			return value.ValueNil
+		}
+		return z
+	case *ast.UnarySuf:
+		lx := ev.eval(t.X, s)
+
+		z, err := lx.UnarySuf(t.Op)
+		if err != nil {
+			ev.errorsPos(t.Pos, err)
+			return value.ValueNil
+		}
+		return z
 	case *ast.If:
 		ss := s.NewChildScope()
 		ev.eval(t.Init, ss)
@@ -83,6 +101,12 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		vb, ok := loop.(*value.ValueBool)
 		if !ok {
 			ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'if'."))
+			return value.ValueNil
+		}
+
+		if vb == nil {
+			ev.errorsPos(t.Pos, fmt.Errorf("操作未定义."))
+			return value.ValueNil
 		}
 
 		if vb.Val {
