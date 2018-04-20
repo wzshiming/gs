@@ -6,12 +6,13 @@ import (
 )
 
 type ValueFunc struct {
-	Args ast.Expr
-	Val  ast.Expr
+	Args  ast.Expr
+	Scope *Scope
+	Body  ast.Expr
 }
 
 func (v *ValueFunc) String() string {
-	return v.Val.String()
+	return v.Body.String()
 }
 
 func (v *ValueFunc) Binary(t token.Token, y Value) (Value, error) {

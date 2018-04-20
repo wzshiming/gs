@@ -14,15 +14,12 @@ var defPuts = ffmt.NewOptional(5, ffmt.StyleP, ffmt.CanFilterDuplicate|ffmt.CanR
 func TestA(t *testing.T) {
 
 	expr := `
-a =	2 ** 10
-
-if 1 == 1 {
- a = a + 1
-} else {
- a = a- 1
+a := 2 ** 10
+func Add(i) {
+	a + i
 }
 
-a
+Add Add a
 `
 
 	fset := position.NewFileSet()
