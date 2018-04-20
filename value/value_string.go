@@ -6,26 +6,22 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-type ValueString struct {
-	Val string
+type ValueString string
+
+func (v ValueString) String() string {
+	return string(v)
 }
 
-func (v *ValueString) String() string {
-	return v.Val
+func (v ValueString) Clone() ValueString {
+	return v
 }
 
-func (v *ValueString) Clone() *ValueString {
-	return &ValueString{
-		Val: v.Val,
-	}
-}
+func (v ValueString) Binary(t token.Token, y Value) (Value, error) {
 
-func (v *ValueString) Binary(t token.Token, y Value) (Value, error) {
-
-	sum := ""
+	var sum ValueString
 	switch yy := y.(type) {
-	case *ValueString:
-		sum = yy.Val
+	case ValueString:
+		sum = yy
 	case *ValueVar:
 		val, err := yy.Point()
 		if err != nil {
@@ -36,20 +32,17 @@ func (v *ValueString) Binary(t token.Token, y Value) (Value, error) {
 		return v, fmt.Errorf("Type to string error")
 	}
 
-	v = v.Clone()
 	switch t {
 	case token.ADD:
-		v.Val += sum
-	default:
-		return v, undefined
+		return v + ValueString(sum), nil
 	}
-	return v, nil
-}
-
-func (v *ValueString) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueString) UnarySuf(t token.Token) (Value, error) {
+func (v ValueString) UnaryPre(t token.Token) (Value, error) {
+	return v, undefined
+}
+
+func (v ValueString) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }

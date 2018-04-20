@@ -2,7 +2,6 @@ package evaluator
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/wzshiming/gs/ast"
 	"github.com/wzshiming/gs/errors"
@@ -54,10 +53,9 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		var vv value.Value
 		switch t.Type {
 		case token.NUMBER:
-			val, _ := strconv.ParseFloat(t.Value, 0)
-			vv = &value.ValueNumber{val}
+			vv = value.ParseValueNumber(t.Value)
 		case token.STRING:
-			vv = &value.ValueString{t.Value[1 : len(t.Value)-1]}
+			vv = value.ValueString(t.Value[1 : len(t.Value)-1])
 		case token.BOOL:
 			if t.Value == "true" {
 				vv = value.ValueTrue
@@ -107,18 +105,13 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		ss := s.NewChildScope()
 		ev.eval(t.Init, ss)
 		loop := ev.eval(t.Cond, ss)
-		vb, ok := loop.(*value.ValueBool)
+		vb, ok := loop.(value.ValueBool)
 		if !ok {
 			ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'if'."))
 			return value.ValueNil
 		}
 
-		if vb == nil {
-			ev.errorsPos(t.Pos, fmt.Errorf("操作未定义."))
-			return value.ValueNil
-		}
-
-		if vb.Val {
+		if vb {
 			return ev.eval(t.Body, ss)
 		} else if t.Else != nil {
 			return ev.eval(t.Else, ss)
@@ -135,13 +128,13 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		var ex value.Value
 		for {
 			loop := ev.eval(t.Cond, ss)
-			vb, ok := loop.(*value.ValueBool)
+			vb, ok := loop.(value.ValueBool)
 			if !ok {
 				ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'for'."))
 				break
 			}
 
-			if !vb.Val {
+			if !vb {
 				break
 			}
 

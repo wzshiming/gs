@@ -4,29 +4,29 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-var ValueTrue = &ValueBool{true}
-var ValueFalse = &ValueBool{false}
+var (
+	ValueTrue  ValueBool = true
+	ValueFalse ValueBool = false
+)
 
-type ValueBool struct {
-	Val bool
-}
+type ValueBool bool
 
-func (v *ValueBool) String() string {
-	if v.Val {
+func (v ValueBool) String() string {
+	if v {
 		return "true"
 	} else {
 		return "false"
 	}
 }
 
-func (v *ValueBool) Binary(t token.Token, y Value) (Value, error) {
+func (v ValueBool) Binary(t token.Token, y Value) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueBool) UnaryPre(t token.Token) (Value, error) {
+func (v ValueBool) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueBool) UnarySuf(t token.Token) (Value, error) {
+func (v ValueBool) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }
