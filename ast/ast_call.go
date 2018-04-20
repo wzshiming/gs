@@ -8,7 +8,7 @@ import (
 
 // call
 type Call struct {
-	Pos  position.Pos
+	position.Pos
 	Name Expr
 	Args Expr
 }

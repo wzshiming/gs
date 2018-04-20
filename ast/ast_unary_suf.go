@@ -9,9 +9,9 @@ import (
 
 // 后缀一元表达式
 type UnarySuf struct {
-	X   Expr
-	Pos position.Pos
-	Op  token.Token
+	position.Pos
+	X  Expr
+	Op token.Token
 }
 
 func (o *UnarySuf) String() string {

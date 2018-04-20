@@ -7,7 +7,7 @@ import (
 
 // 常量和符号
 type Literal struct {
-	Pos   position.Pos
+	position.Pos
 	Type  token.Token
 	Value string
 }

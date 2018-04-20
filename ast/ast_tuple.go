@@ -8,7 +8,7 @@ import (
 
 // () 元组表达式
 type Tuple struct {
-	Pos  position.Pos
+	position.Pos
 	List []Expr
 }
 

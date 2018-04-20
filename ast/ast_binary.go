@@ -9,7 +9,7 @@ import (
 
 // 二元表达式
 type Binary struct {
-	Pos position.Pos
+	position.Pos
 	X   Expr
 	Op  token.Token
 	Y   Expr

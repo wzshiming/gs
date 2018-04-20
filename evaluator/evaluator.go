@@ -41,8 +41,6 @@ func (ev *Evaluator) EvalBy(es []ast.Expr, s *value.Scope) (ex value.Value) {
 
 func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 	switch t := e.(type) {
-	case *value.ValueVar:
-		return t
 	case *ast.Literal:
 		var vv value.Value
 		switch t.Type {
@@ -214,6 +212,6 @@ func (ev *Evaluator) toIdents(e ast.Expr) []*ast.Literal {
 		return at
 	}
 
-	// ev.errorsPos(t.Pos, fmt.Errorf("toIdentList type error"))
+	ev.errorsPos(e.GetPos(), fmt.Errorf("toIdentList type error"))
 	return nil
 }

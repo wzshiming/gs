@@ -8,7 +8,7 @@ import (
 
 // {} 花括号表达式
 type Brace struct {
-	Pos  position.Pos
+	position.Pos
 	List []Expr
 }
 

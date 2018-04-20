@@ -8,7 +8,7 @@ import (
 
 // if 关键字
 type If struct {
-	Pos  position.Pos
+	position.Pos
 	Init Expr
 	Cond Expr
 	Body Expr

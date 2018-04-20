@@ -81,6 +81,10 @@ func (p Pos) IsValid() bool {
 	return p != NoPos
 }
 
+func (p Pos) GetPos() Pos {
+	return p
+}
+
 // -----------------------------------------------------------------------------
 // File
 

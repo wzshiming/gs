@@ -8,7 +8,7 @@ import (
 
 // return 定义
 type Return struct {
-	Pos position.Pos
+	position.Pos
 	Ret Expr
 }
 

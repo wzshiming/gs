@@ -8,7 +8,7 @@ import (
 
 // 函数定义
 type Func struct {
-	Pos  position.Pos
+	position.Pos
 	Func Expr
 	Body Expr
 }

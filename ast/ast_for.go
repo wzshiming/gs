@@ -8,7 +8,7 @@ import (
 
 // for 关键字
 type For struct {
-	Pos  position.Pos
+	position.Pos
 	Init Expr
 	Cond Expr
 	Next Expr

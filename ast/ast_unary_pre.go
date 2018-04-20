@@ -9,9 +9,9 @@ import (
 
 // 前缀一元表达式
 type UnaryPre struct {
-	Pos position.Pos
-	Op  token.Token
-	X   Expr
+	position.Pos
+	Op token.Token
+	X  Expr
 }
 
 func (o *UnaryPre) String() string {
