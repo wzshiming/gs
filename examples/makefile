@@ -7,7 +7,6 @@ default: gs test
 	
 gs:
 	- $(GO) get -v $(GITPATH)
-	$(GO) install $(GITPATH)
 
 test:
 	- $(GS) */*.gs
