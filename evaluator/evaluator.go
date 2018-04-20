@@ -27,19 +27,19 @@ func (s *Evaluator) errorsPos(pos position.Pos, err error) {
 	s.errs.Append(s.fset.Position(pos), err)
 }
 
-func (ev *Evaluator) Eval(es []ast.Expr) ast.Expr {
+func (ev *Evaluator) Eval(es []ast.Expr) value.Value {
 	s := value.NewScope(nil)
 	return ev.EvalBy(es, s)
 }
 
-func (ev *Evaluator) EvalBy(es []ast.Expr, s *value.Scope) (ex ast.Expr) {
+func (ev *Evaluator) EvalBy(es []ast.Expr, s *value.Scope) (ex value.Value) {
 	for _, v := range es {
 		ex = ev.eval(v, s)
 	}
 	return
 }
 
-func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
+func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 	switch t := e.(type) {
 	case *value.ValueVar:
 		return t
@@ -69,25 +69,14 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 		}
 		return vv
 	case *ast.Binary:
-		x := ev.eval(t.X, s)
-		y := ev.eval(t.Y, s)
-		lx, ok := x.(value.Value)
-		if !ok {
-			ev.errorsPos(t.Pos, fmt.Errorf("Execution error %v", x))
-			return e
-		}
-		ly, ok := y.(value.Value)
-		if !ok {
-			ev.errorsPos(t.Pos, fmt.Errorf("Execution error %v", y))
-			return e
-		}
+		lx := ev.eval(t.X, s)
+		ly := ev.eval(t.Y, s)
 
 		z, err := lx.Binary(t.Op, ly)
 		if err != nil {
 			ev.errorsPos(t.Pos, err)
-			return e
+			return value.ValueNil
 		}
-
 		return z
 	case *ast.If:
 		ss := s.NewChildScope()
@@ -109,7 +98,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 		ev.eval(t.Init, ss)
 		i := 0
 
-		var ex ast.Expr
+		var ex value.Value
 		for {
 			loop := ev.eval(t.Cond, ss)
 			vb, ok := loop.(*value.ValueBool)
@@ -151,23 +140,14 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 			}
 			switch t2 := val.(type) {
 			case *value.ValueFunc:
+
+				ti1 := ev.toValues(t.Args, s)
+
+				ti2 := ev.toIdents(t2.Args)
+
 				ss := t2.Scope.NewChildScope()
-				ti1, err := toExprList(t.Args)
-				if err != nil {
-					ev.errorsPos(t.Pos, err)
-					break
-				}
-				for i := 0; i != len(ti1); i++ {
-					ti1[i] = ev.eval(ti1[i], s)
-				}
-				ti2, err := toIdentList(t2.Args)
-				if err != nil {
-					ev.errorsPos(t.Pos, err)
-					break
-				}
 				for i := 0; i != len(ti1) && i != len(ti2); i++ {
-					vv := ti1[i].(value.Value)
-					ss.SetLocal(ti2[i].Value, vv)
+					ss.SetLocal(ti2[i].Value, ti1[i])
 				}
 
 				return ev.eval(t2.Body, ss)
@@ -197,37 +177,43 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) ast.Expr {
 		return vf
 	}
 
-	return e
+	return value.ValueNil
 }
 
-func toIdentList(e ast.Expr) ([]*ast.Literal, error) {
+func (ev *Evaluator) toValues(e ast.Expr, s *value.Scope) []value.Value {
 	if e == nil {
-		return nil, nil
+		return nil
+	}
+	switch t := e.(type) {
+	case *ast.Tuple:
+		vs := make([]value.Value, 0, len(t.List))
+		for _, v := range t.List {
+			vs = append(vs, ev.eval(v, s))
+		}
+		return vs
+	}
+	return []value.Value{ev.eval(e, s)}
+}
+
+func (ev *Evaluator) toIdents(e ast.Expr) []*ast.Literal {
+	if e == nil {
+		return nil
 	}
 	switch t := e.(type) {
 	case *ast.Literal:
-		return []*ast.Literal{t}, nil
+		return []*ast.Literal{t}
 	case *ast.Tuple:
 		at := make([]*ast.Literal, 0, len(t.List))
 		for _, v := range t.List {
 			v2, ok := v.(*ast.Literal)
 			if !ok {
-				return nil, fmt.Errorf("toIdentList not is ident error")
+				ev.errorsPos(t.Pos, fmt.Errorf("toIdentList not is ident error"))
 			}
 			at = append(at, v2)
 		}
-		return at, nil
+		return at
 	}
-	return nil, fmt.Errorf("toIdentList error")
-}
 
-func toExprList(e ast.Expr) ([]ast.Expr, error) {
-	if e == nil {
-		return nil, nil
-	}
-	switch t := e.(type) {
-	case *ast.Tuple:
-		return t.List, nil
-	}
-	return []ast.Expr{e}, nil
+	// ev.errorsPos(t.Pos, fmt.Errorf("toIdentList type error"))
+	return nil
 }
