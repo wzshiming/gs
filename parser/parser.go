@@ -21,7 +21,8 @@ type parser struct {
 }
 
 func NewParser(fset *position.FileSet, errs *errors.Errors, filename string, src []rune) *parser {
-	file := fset.AddFile(filename, 1, len(src))
+
+	file := fset.AddFile(filename, fset.Base(), len(src))
 	p := &parser{
 		fset:    fset,
 		scanner: scanner.NewScanner(file, src),
