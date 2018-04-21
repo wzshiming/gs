@@ -1,0 +1,28 @@
+package evaluator
+
+import (
+	"github.com/wzshiming/gs/ast"
+	"github.com/wzshiming/gs/value"
+)
+
+func (ev *Evaluator) evalFunc(t *ast.Func, s *value.Scope) value.Value {
+	fun := t.Func
+	//ss := s.NewChildScope()
+	vf := &value.ValueFunc{
+		Scope: s,
+		Body:  t.Body,
+	}
+	switch t0 := fun.(type) {
+	case *ast.Call: // func name a,b
+		switch t1 := t0.Name.(type) {
+		case *ast.Literal: // func name a,b
+			s.SetLocal(t1.Value, vf)
+			//t1.Value
+		default: // func typ.name a,b
+		}
+		vf.Args = t0.Args
+	default: // func a,b
+	}
+
+	return vf
+}
