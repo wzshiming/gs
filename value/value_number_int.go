@@ -76,11 +76,7 @@ func (v valueNumberInt) Binary(t token.Token, y Value) (vv Value, err error) {
 			return v * sum.Int(), nil
 		}
 	case token.QUO:
-		if v < minInt {
-			return v.BigInt().Binary(t, sum)
-		} else {
-			return v / sum.Int(), nil
-		}
+		return v.Float().Binary(t, sum)
 	case token.REM:
 		return v % sum.Int(), nil
 
