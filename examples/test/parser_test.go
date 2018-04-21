@@ -1,16 +1,17 @@
-package parser
+package test
 
 import (
 	"testing"
 
 	"github.com/wzshiming/gs/errors"
+	"github.com/wzshiming/gs/parser"
 	"github.com/wzshiming/gs/position"
 	ffmt "gopkg.in/ffmt.v1"
 )
 
 var defPuts = ffmt.NewOptional(5, ffmt.StyleP, ffmt.CanFilterDuplicate|ffmt.CanRowSpan)
 
-func TestA(t *testing.T) {
+func TestParser(t *testing.T) {
 
 	expr := `
 func echo.Hello a {
@@ -26,7 +27,7 @@ func echo.Hello a {
 
 	fset := position.NewFileSet()
 	errs := errors.NewErrors()
-	scan := NewParser(fset, errs, "_", []rune(expr))
+	scan := parser.NewParser(fset, errs, "_", []rune(expr))
 	out := scan.Parse()
 	if errs.Len() != 0 {
 		ffmt.Puts(errs)
