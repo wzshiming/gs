@@ -25,7 +25,7 @@ func (v valueNil) Binary(t token.Token, y Value) (Value, error) {
 	case *ValueVar:
 		val, err := yy.Point()
 		if err != nil {
-			return v, err
+			return ValueNil, err
 		}
 		return v.Binary(t, val)
 	case valueNil:

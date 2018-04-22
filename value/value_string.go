@@ -29,11 +29,11 @@ func (v ValueString) Binary(t token.Token, y Value) (Value, error) {
 	case *ValueVar:
 		val, err := yy.Point()
 		if err != nil {
-			return v, err
+			return ValueNil, err
 		}
 		return v.Binary(t, val)
 	default:
-		return v, fmt.Errorf("Type to string error")
+		return ValueNil, fmt.Errorf("Type to string error")
 	}
 
 	switch t {

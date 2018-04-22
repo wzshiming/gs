@@ -33,11 +33,11 @@ func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 	case *ValueTuple:
 		vt = yy
 	default:
-		return v, fmt.Errorf("Type to Tuple error")
+		return ValueNil, fmt.Errorf("Type to Tuple error")
 	}
 
 	if len(v.List) != len(vt.List) {
-		return v, fmt.Errorf("Tuple The length is different")
+		return ValueNil, fmt.Errorf("Tuple The length is different")
 	}
 
 	tmp := make([]Value, 0, len(vt.List))

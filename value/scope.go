@@ -20,7 +20,7 @@ func (p *Scope) Get(name string) (Value, bool) {
 	if ok {
 		return v.scope[name], ok
 	}
-	return nil, ok
+	return ValueNil, ok
 }
 
 func (p *Scope) getScope(name string) (*Scope, bool) {

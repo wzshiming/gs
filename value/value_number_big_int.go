@@ -50,7 +50,7 @@ func (v valueNumberBigInt) Binary(t token.Token, y Value) (vv Value, err error) 
 	case *ValueVar:
 		val, err := yy.Point()
 		if err != nil {
-			return v, err
+			return ValueNil, err
 		}
 		return v.Binary(t, val)
 	case *valueNil:
@@ -60,10 +60,10 @@ func (v valueNumberBigInt) Binary(t token.Token, y Value) (vv Value, err error) 
 		case token.NEQ:
 			return ValueTrue, nil
 		default:
-			return v, fmt.Errorf("Type to number error")
+			return ValueNil, fmt.Errorf("Type to number error")
 		}
 	default:
-		return v, fmt.Errorf("Type to number error")
+		return ValueNil, fmt.Errorf("Type to number error")
 	}
 
 	switch t {

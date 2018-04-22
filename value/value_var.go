@@ -49,7 +49,7 @@ func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 
 	val, err := v.Point()
 	if err != nil {
-		return v, err
+		return ValueNil, err
 	}
 
 	switch t {
@@ -58,7 +58,7 @@ func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 		t0 := t - (token.ADD_ASSIGN - token.ADD)
 		val, err := val.Binary(t0, y)
 		if err != nil {
-			return v, err
+			return ValueNil, err
 		}
 		v.Scope.Set(v.Name, val)
 		return v, nil
@@ -70,7 +70,7 @@ func (v *ValueVar) UnaryPre(t token.Token) (Value, error) {
 
 	val, err := v.Point()
 	if err != nil {
-		return v, err
+		return ValueNil, err
 	}
 
 	return val.UnaryPre(t)
@@ -79,7 +79,7 @@ func (v *ValueVar) UnaryPre(t token.Token) (Value, error) {
 func (v *ValueVar) UnarySuf(t token.Token) (Value, error) {
 	val, err := v.Point()
 	if err != nil {
-		return v, err
+		return ValueNil, err
 	}
 
 	switch t {
