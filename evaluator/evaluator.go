@@ -72,6 +72,8 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		return ev.evalFunc(t, s)
 	case *ast.Return:
 		return ev.evalReturn(t, s)
+	case *ast.Tuple:
+		return ev.evalTuple(t, s)
 	}
 	if e == nil {
 		return value.ValueNil
@@ -79,6 +81,18 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 	ev.errorsPos(e.GetPos(), fmt.Errorf("未定义关键字处理"))
 	return value.ValueNil
 }
+
+//func (ev *Evaluator) toTarget(e ast.Expr, s *value.Scope) {
+//	switch t := e.(type) {
+//	case *ast.Binary:
+//		if t.Op != token.PERIOD {
+//			break
+//		}
+//		lx := ev.toTarget(t.X)
+//		ly := ev.toTarget(t.Y)
+//	case *ast.Literal:
+//	}
+//}
 
 func (ev *Evaluator) toValues(e ast.Expr, s *value.Scope) []value.Value {
 	if e == nil {

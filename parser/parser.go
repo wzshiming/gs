@@ -308,7 +308,9 @@ func (s *parser) parseBinary(pre int) ast.Expr {
 		switch op {
 		case token.COMMA:
 			if t, ok := x.(*ast.Tuple); ok {
-				t.List = append(t.List, y)
+				if y != nil {
+					t.List = append(t.List, y)
+				}
 			} else {
 				x = &ast.Tuple{
 					Pos:  pos,
