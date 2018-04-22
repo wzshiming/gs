@@ -13,4 +13,5 @@ type Value interface {
 	Binary(t token.Token, y Value) (Value, error)
 	UnaryPre(t token.Token) (Value, error)
 	UnarySuf(t token.Token) (Value, error)
+	Point() (Value, error)
 }

@@ -12,6 +12,10 @@ func (v valueNil) String() string {
 	return "nil"
 }
 
+func (v valueNil) Point() (Value, error) {
+	return v, nil
+}
+
 func (v valueNil) Binary(t token.Token, y Value) (Value, error) {
 	if t != token.EQL {
 		return v, undefined

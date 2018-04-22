@@ -21,6 +21,10 @@ func (v valueNumberBigFloat) String() string {
 	return v.Val.String()
 }
 
+func (v valueNumberBigFloat) Point() (Value, error) {
+	return v, nil
+}
+
 func (v valueNumberBigFloat) Int() valueNumberInt {
 	val, _ := v.Val.Int64()
 	return valueNumberInt(val)

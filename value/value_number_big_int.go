@@ -21,6 +21,10 @@ func (v valueNumberBigInt) String() string {
 	return v.Val.String()
 }
 
+func (v valueNumberBigInt) Point() (Value, error) {
+	return v, nil
+}
+
 func (v valueNumberBigInt) Int() valueNumberInt {
 	return valueNumberInt(v.Val.Int64())
 }

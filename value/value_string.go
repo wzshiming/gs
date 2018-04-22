@@ -12,6 +12,10 @@ func (v ValueString) String() string {
 	return string(v)
 }
 
+func (v ValueString) Point() (Value, error) {
+	return v, nil
+}
+
 func (v ValueString) Clone() ValueString {
 	return v
 }

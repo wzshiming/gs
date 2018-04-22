@@ -16,6 +16,10 @@ func (v valueNumberInt) String() string {
 	return fmt.Sprint(int64(v))
 }
 
+func (v valueNumberInt) Point() (Value, error) {
+	return v, nil
+}
+
 func (v valueNumberInt) Int() valueNumberInt {
 	return v
 }

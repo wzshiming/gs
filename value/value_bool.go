@@ -19,6 +19,10 @@ func (v ValueBool) String() string {
 	}
 }
 
+func (v ValueBool) Point() (Value, error) {
+	return v, nil
+}
+
 func (v ValueBool) Binary(t token.Token, y Value) (Value, error) {
 	return v, undefined
 }

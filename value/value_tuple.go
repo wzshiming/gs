@@ -23,6 +23,10 @@ func (v *ValueTuple) String() string {
 	return buf.String()
 }
 
+func (v *ValueTuple) Point() (Value, error) {
+	return v, nil
+}
+
 func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 	var vt *ValueTuple
 	switch yy := y.(type) {
@@ -36,15 +40,23 @@ func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 		return v, fmt.Errorf("Tuple The length is different")
 	}
 
-	vv := &ValueTuple{}
-	for i, v := range v.List {
-		ov, err := v.Binary(t, vt.List[i])
+	tmp := make([]Value, 0, len(vt.List))
+	for _, v := range vt.List {
+		yy, err := v.Point()
 		if err != nil {
-			return nil, err
+			return ValueNil, err
 		}
-		vv.List = append(vv.List, ov)
+		tmp = append(tmp, yy)
 	}
-	return vv, nil
+	for i, v0 := range v.List {
+		ov, err := v0.Binary(t, tmp[i])
+		if err != nil {
+			return ValueNil, err
+		}
+		tmp[i] = ov
+	}
+
+	return &ValueTuple{tmp}, nil
 }
 
 func (v *ValueTuple) UnaryPre(t token.Token) (Value, error) {

@@ -16,6 +16,10 @@ func (v valueNumberFloat) String() string {
 	return fmt.Sprint(float64(v))
 }
 
+func (v valueNumberFloat) Point() (Value, error) {
+	return v, nil
+}
+
 func (v valueNumberFloat) Int() valueNumberInt {
 	return valueNumberInt(v)
 }

@@ -32,10 +32,18 @@ func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 
 	switch t {
 	case token.ASSIGN:
-		v.Scope.Set(v.Name, y)
+		yy, err := y.Point()
+		if err != nil {
+			return ValueNil, err
+		}
+		v.Scope.Set(v.Name, yy)
 		return v, nil
 	case token.DEFINE, token.COLON:
-		v.Scope.SetLocal(v.Name, y)
+		yy, err := y.Point()
+		if err != nil {
+			return ValueNil, err
+		}
+		v.Scope.SetLocal(v.Name, yy)
 		return v, nil
 	}
 
