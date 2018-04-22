@@ -34,7 +34,7 @@ func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 	case token.ASSIGN:
 		v.Scope.Set(v.Name, y)
 		return v, nil
-	case token.DEFINE:
+	case token.DEFINE, token.COLON:
 		v.Scope.SetLocal(v.Name, y)
 		return v, nil
 	}
