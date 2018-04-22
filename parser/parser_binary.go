@@ -2,12 +2,10 @@ package parser
 
 import (
 	"github.com/wzshiming/gs/ast"
-	"github.com/wzshiming/gs/token"
 )
 
 func (s *parser) parseBinary(pre int) ast.Expr {
-
-	x := s.parseUnary()
+	x := s.parseTuple()
 	if x == nil {
 		return x
 	}
@@ -22,26 +20,11 @@ func (s *parser) parseBinary(pre int) ast.Expr {
 		}
 		s.scan()
 		y := s.parseBinary(op2 + 1)
-
-		switch op {
-		case token.COMMA:
-			if t, ok := x.(*ast.Tuple); ok {
-				if y != nil {
-					t.List = append(t.List, y)
-				}
-			} else {
-				x = &ast.Tuple{
-					Pos:  pos,
-					List: []ast.Expr{x, y},
-				}
-			}
-		default:
-			x = &ast.Binary{
-				Pos: pos,
-				X:   x,
-				Op:  op,
-				Y:   y,
-			}
+		x = &ast.Binary{
+			Pos: pos,
+			X:   x,
+			Op:  op,
+			Y:   y,
 		}
 	}
 	return x
