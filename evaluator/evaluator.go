@@ -82,19 +82,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 	return value.ValueNil
 }
 
-//func (ev *Evaluator) toTarget(e ast.Expr, s *value.Scope) {
-//	switch t := e.(type) {
-//	case *ast.Binary:
-//		if t.Op != token.PERIOD {
-//			break
-//		}
-//		lx := ev.toTarget(t.X)
-//		ly := ev.toTarget(t.Y)
-//	case *ast.Literal:
-//	}
-//}
-
-func (ev *Evaluator) toValues(e ast.Expr, s *value.Scope) []value.Value {
+func (ev *Evaluator) toValues(e ast.Expr, s *value.Scope) value.Value {
 	if e == nil {
 		return nil
 	}
@@ -104,30 +92,7 @@ func (ev *Evaluator) toValues(e ast.Expr, s *value.Scope) []value.Value {
 		for _, v := range t.List {
 			vs = append(vs, ev.eval(v, s))
 		}
-		return vs
+		return &value.ValueTuple{vs}
 	}
-	return []value.Value{ev.eval(e, s)}
-}
-
-func (ev *Evaluator) toIdents(e ast.Expr) []*ast.Literal {
-	if e == nil {
-		return nil
-	}
-	switch t := e.(type) {
-	case *ast.Literal:
-		return []*ast.Literal{t}
-	case *ast.Tuple:
-		at := make([]*ast.Literal, 0, len(t.List))
-		for _, v := range t.List {
-			v2, ok := v.(*ast.Literal)
-			if !ok {
-				ev.errorsPos(t.Pos, fmt.Errorf("toIdentList not is ident error"))
-			}
-			at = append(at, v2)
-		}
-		return at
-	}
-
-	ev.errorsPos(e.GetPos(), fmt.Errorf("toIdentList type error"))
-	return nil
+	return ev.eval(e, s)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/wzshiming/gs/ast"
+	"github.com/wzshiming/gs/token"
 	"github.com/wzshiming/gs/value"
 )
 
@@ -19,14 +20,8 @@ func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
 		switch t2 := val.(type) {
 		case *value.ValueFunc:
 
-			ti1 := ev.toValues(t.Args, s)
-
-			ti2 := ev.toIdents(t2.Args)
-
 			ss := t2.Scope.NewChildScope()
-			for i := 0; i != len(ti1) && i != len(ti2); i++ {
-				ss.SetLocal(ti2[i].Value, ti1[i])
-			}
+			ev.evalBinaryBy(ev.eval(t2.Args, ss), ev.toValues(t.Args, s), token.DEFINE)
 			ev.stackRet++
 			return ev.eval(t2.Body, ss)
 		}
