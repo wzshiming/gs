@@ -80,5 +80,5 @@ func (s *parser) parse() []ast.Expr {
 }
 
 func (s *parser) parseExpr() ast.Expr {
-	return s.parseBinary(1)
+	return s.parseDefine()
 }

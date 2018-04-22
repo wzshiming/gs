@@ -6,13 +6,13 @@ import (
 )
 
 func (s *parser) parseTuple() ast.Expr {
-	es := []ast.Expr{s.parseUnary()}
+	es := []ast.Expr{s.parseBinary(1)}
 	for {
 		if s.tok != token.COMMA {
 			break
 		}
 		s.scan()
-		es = append(es, s.parseUnary())
+		es = append(es, s.parseBinary(1))
 	}
 	if len(es) == 1 {
 		return es[0]

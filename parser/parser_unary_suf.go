@@ -35,21 +35,20 @@ func (s *parser) parseUnarySuf(expr ast.Expr) ast.Expr {
 	case tok.IsKeywork():
 		return expr
 
-	//case tok.IsLiteral():
 	default:
 		switch s.tok {
 		case token.EOF:
+			return expr
 		case token.SEMICOLON:
+			return expr
 		default:
 			expr = &ast.Call{
 				Pos:  pos,
 				Name: expr,
 				Args: s.parseExpr(),
 			}
+			return s.parseUnarySuf(expr)
 		}
 
-		return s.parseUnarySuf(expr)
 	}
-
-	return expr
 }

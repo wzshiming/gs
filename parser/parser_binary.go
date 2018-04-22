@@ -5,7 +5,7 @@ import (
 )
 
 func (s *parser) parseBinary(pre int) ast.Expr {
-	x := s.parseTuple()
+	x := s.parseUnary()
 	if x == nil {
 		return x
 	}
