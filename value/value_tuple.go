@@ -16,10 +16,14 @@ func (v *ValueTuple) String() string {
 		return "<nil.ValueTuple>"
 	}
 	buf := bytes.NewBuffer(nil)
-	for _, v := range v.List {
+	buf.WriteByte('(')
+	for k, v := range v.List {
+		if k != 0 {
+			buf.WriteString(", ")
+		}
 		buf.WriteString(v.String())
-		buf.WriteString(", ")
 	}
+	buf.WriteString(")")
 	return buf.String()
 }
 
