@@ -17,22 +17,26 @@ func (v valueNil) Point() (Value, error) {
 }
 
 func (v valueNil) Binary(t token.Token, y Value) (Value, error) {
-	if t != token.EQL {
+	b := false
+	switch t {
+	case token.EQL:
+		b = true
+	case token.NEQ:
+		b = false
+	default:
 		return v, undefined
 	}
 
-	switch yy := y.(type) {
-	case *ValueVar:
-		val, err := yy.Point()
-		if err != nil {
-			return ValueNil, err
-		}
-		return v.Binary(t, val)
-	case valueNil:
-		return ValueTrue, nil
+	y0, err := y.Point()
+	if err != nil {
+		return v, err
 	}
-
-	return ValueFalse, nil
+	switch y0.(type) {
+	case valueNil:
+		return ValueBool(b), nil
+	default:
+		return ValueBool(!b), nil
+	}
 }
 
 func (v valueNil) UnaryPre(t token.Token) (Value, error) {
