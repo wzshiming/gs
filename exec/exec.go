@@ -3,6 +3,7 @@ package exec
 import (
 	"io/ioutil"
 
+	"github.com/wzshiming/gs/builtin"
 	"github.com/wzshiming/gs/errors"
 	"github.com/wzshiming/gs/evaluator"
 	"github.com/wzshiming/gs/parser"
@@ -17,10 +18,14 @@ type Exec struct {
 }
 
 func NewExec() *Exec {
+	scope := value.NewScope(nil)
+	for k, v := range builtin.Func {
+		scope.SetLocal(k, value.NewValueFuncBuiltin(v))
+	}
 	return &Exec{
 		fset:  position.NewFileSet(),
 		errs:  errors.NewErrors(),
-		scope: value.NewScope(nil),
+		scope: scope,
 	}
 }
 

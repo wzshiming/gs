@@ -24,6 +24,17 @@ func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
 			ev.evalBinaryBy(ev.eval(t2.Args, ss), ev.toValues(t.Args, s), token.DEFINE)
 			ev.stackRet++
 			return ev.eval(t2.Body, ss)
+		case *value.ValueFuncBuiltin:
+
+			r, err := t2.Call(ev.toValues(t.Args, s))
+			if err != nil {
+				ev.errorsPos(t.Pos, err)
+				return value.ValueNil
+			}
+			return r
+		default:
+			ev.errorsPos(t.Pos, fmt.Errorf("不是一个函数"))
+			break
 		}
 
 	default: // typ.name a,b
