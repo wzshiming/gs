@@ -58,6 +58,8 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		return ev.evalUnarySuf(t, s)
 	case *ast.If:
 		return ev.evalIf(t, s)
+	case *ast.Brack:
+		return ev.evalBrack(t, s)
 	case *ast.Break:
 		ev.stackFor--
 		return value.ValueNil

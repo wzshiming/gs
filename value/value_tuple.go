@@ -31,6 +31,14 @@ func (v *ValueTuple) Point() (Value, error) {
 	return v, nil
 }
 
+func (v *ValueTuple) Len() int {
+	return len(v.List)
+}
+
+func (v *ValueTuple) Index(i int) Value {
+	return v.List[i]
+}
+
 func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 	var vt *ValueTuple
 	switch yy := y.(type) {
