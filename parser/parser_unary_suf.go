@@ -13,7 +13,6 @@ func (s *parser) parseUnarySuf(expr ast.Expr) ast.Expr {
 	case tok.IsOperator():
 		switch s.tok {
 		case token.INC, token.DEC, token.ELLIPSIS:
-
 			expr = &ast.UnarySuf{
 				Pos: pos,
 				Op:  tok,
@@ -26,6 +25,13 @@ func (s *parser) parseUnarySuf(expr ast.Expr) ast.Expr {
 				Pos:  pos,
 				Name: expr,
 				Args: s.parseExpr(),
+			}
+			return expr
+		case token.LBRACK:
+			expr = &ast.Brack{
+				Pos: pos,
+				X:   expr,
+				Y:   s.parseExpr(),
 			}
 			return expr
 		default:

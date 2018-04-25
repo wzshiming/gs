@@ -23,12 +23,20 @@ func (s *parser) parseUnaryPre() (expr ast.Expr) {
 			X:   s.parseUnary(),
 		}
 		return expr
-	case token.RPAREN, token.RBRACE:
+	case token.RPAREN, token.RBRACK, token.RBRACE:
 		return nil
 	case token.LPAREN:
 		s.scan()
 		b := s.parseExpr()
 		if s.tok != token.RPAREN {
+			s.errorsPos(pos, fmt.Errorf("The parentheses are not closed '%s'", tok))
+		}
+		s.scan()
+		return b
+	case token.LBRACK:
+		s.scan()
+		b := s.parseExpr()
+		if s.tok != token.RBRACK {
 			s.errorsPos(pos, fmt.Errorf("The parentheses are not closed '%s'", tok))
 		}
 		s.scan()
