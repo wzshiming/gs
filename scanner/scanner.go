@@ -33,8 +33,7 @@ func (s *Scanner) SkipError() {
 func (s *Scanner) skipSpace() {
 	for {
 		switch s.ch {
-		case '\n':
-			s.file.AddLine(s.off)
+		case '\n': // 防止调用参数跨行
 			return
 		case ' ', '\r', '\t':
 			s.next()
@@ -52,6 +51,9 @@ func (s *Scanner) next() {
 	}
 
 	s.ch = s.buf[s.off]
+	if s.ch == '\n' {
+		s.file.AddLine(s.off)
+	}
 	s.off++
 	return
 }
