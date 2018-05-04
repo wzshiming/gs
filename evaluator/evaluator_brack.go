@@ -10,6 +10,8 @@ import (
 func (ev *Evaluator) evalBrack(t *ast.Brack, s *value.Scope) value.Value {
 	x := ev.eval(t.X, s)
 	y := ev.eval(t.Y, s)
+	x = x.Point()
+	y = y.Point()
 	switch tx := x.(type) {
 	case *value.ValueTuple:
 		switch ty := y.(type) {
