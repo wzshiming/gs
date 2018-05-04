@@ -12,8 +12,8 @@ func (v ValueString) String() string {
 	return `"` + string(v) + `"`
 }
 
-func (v ValueString) Point() (Value, error) {
-	return v, nil
+func (v ValueString) Point() Value {
+	return v
 }
 
 func (v ValueString) Clone() ValueString {
@@ -27,10 +27,7 @@ func (v ValueString) Binary(t token.Token, y Value) (Value, error) {
 	case ValueString:
 		sum = yy
 	case *ValueVar:
-		val, err := yy.Point()
-		if err != nil {
-			return ValueNil, err
-		}
+		val := yy.Point()
 		return v.Binary(t, val)
 	default:
 		return ValueNil, fmt.Errorf("Type to string error")

@@ -12,8 +12,8 @@ func (v valueNil) String() string {
 	return "nil"
 }
 
-func (v valueNil) Point() (Value, error) {
-	return v, nil
+func (v valueNil) Point() Value {
+	return v
 }
 
 func (v valueNil) Binary(t token.Token, y Value) (Value, error) {
@@ -27,10 +27,8 @@ func (v valueNil) Binary(t token.Token, y Value) (Value, error) {
 		return v, undefined
 	}
 
-	y0, err := y.Point()
-	if err != nil {
-		return v, err
-	}
+	y0 := y.Point()
+
 	switch y0.(type) {
 	case valueNil:
 		return ValueBool(b), nil

@@ -16,8 +16,8 @@ func (v valueNumberInt) String() string {
 	return fmt.Sprint(int64(v))
 }
 
-func (v valueNumberInt) Point() (Value, error) {
-	return v, nil
+func (v valueNumberInt) Point() Value {
+	return v
 }
 
 func (v valueNumberInt) Int() valueNumberInt {
@@ -42,10 +42,7 @@ func (v valueNumberInt) Binary(t token.Token, y Value) (vv Value, err error) {
 	case ValueNumber:
 		sum = yy
 	case *ValueVar:
-		val, err := yy.Point()
-		if err != nil {
-			return ValueNil, err
-		}
+		val := yy.Point()
 		return v.Binary(t, val)
 	case *valueNil:
 		switch t {

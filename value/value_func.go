@@ -15,8 +15,8 @@ func (v *ValueFunc) String() string {
 	return v.Body.String()
 }
 
-func (v *ValueFunc) Point() (Value, error) {
-	return v, nil
+func (v *ValueFunc) Point() Value {
+	return v
 }
 
 func (v *ValueFunc) Binary(t token.Token, y Value) (Value, error) {

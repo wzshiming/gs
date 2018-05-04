@@ -27,8 +27,8 @@ func (v *ValueTuple) String() string {
 	return buf.String()
 }
 
-func (v *ValueTuple) Point() (Value, error) {
-	return v, nil
+func (v *ValueTuple) Point() Value {
+	return v
 }
 
 func (v *ValueTuple) Len() int {
@@ -54,10 +54,7 @@ func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 
 	tmp := make([]Value, 0, len(vt.List))
 	for _, v := range vt.List {
-		yy, err := v.Point()
-		if err != nil {
-			return ValueNil, err
-		}
+		yy := v.Point()
 		tmp = append(tmp, yy)
 	}
 	for i, v0 := range v.List {

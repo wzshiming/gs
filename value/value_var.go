@@ -20,37 +20,28 @@ func (v *ValueVar) String() string {
 	return val.String()
 }
 
-func (v *ValueVar) Point() (Value, error) {
+func (v *ValueVar) Point() Value {
 	val, ok := v.Scope.Get(v.Name)
 	if !ok {
-		return ValueNil, nil
+		return ValueNil
 	}
-	return val, nil
+	return val
 }
 
 func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 
 	switch t {
 	case token.ASSIGN:
-		yy, err := y.Point()
-		if err != nil {
-			return ValueNil, err
-		}
+		yy := y.Point()
 		v.Scope.Set(v.Name, yy)
 		return v, nil
 	case token.DEFINE, token.COLON:
-		yy, err := y.Point()
-		if err != nil {
-			return ValueNil, err
-		}
+		yy := y.Point()
 		v.Scope.SetLocal(v.Name, yy)
 		return v, nil
 	}
 
-	val, err := v.Point()
-	if err != nil {
-		return ValueNil, err
-	}
+	val := v.Point()
 
 	switch t {
 	case token.ADD_ASSIGN, token.SUB_ASSIGN, token.MUL_ASSIGN, token.QUO_ASSIGN, token.POW_ASSIGN, token.REM_ASSIGN,
@@ -68,19 +59,13 @@ func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 
 func (v *ValueVar) UnaryPre(t token.Token) (Value, error) {
 
-	val, err := v.Point()
-	if err != nil {
-		return ValueNil, err
-	}
+	val := v.Point()
 
 	return val.UnaryPre(t)
 }
 
 func (v *ValueVar) UnarySuf(t token.Token) (Value, error) {
-	val, err := v.Point()
-	if err != nil {
-		return ValueNil, err
-	}
+	val := v.Point()
 
 	switch t {
 	case token.INC:

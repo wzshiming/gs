@@ -55,8 +55,8 @@ func (v *ValueFuncBuiltin) String() string {
 	return "<FuncBuiltin>"
 }
 
-func (v *ValueFuncBuiltin) Point() (Value, error) {
-	return v, nil
+func (v *ValueFuncBuiltin) Point() Value {
+	return v
 }
 
 func (v *ValueFuncBuiltin) Binary(t token.Token, y Value) (Value, error) {
