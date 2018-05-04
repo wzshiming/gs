@@ -94,7 +94,7 @@ func (ev *Evaluator) toValues(e ast.Expr, s *value.Scope) value.Value {
 		for _, v := range t.List {
 			vs = append(vs, ev.eval(v, s))
 		}
-		return &value.ValueTuple{vs}
+		return &value.ValueTuple{vs, false}
 	}
 	return ev.eval(e, s)
 }

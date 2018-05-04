@@ -8,7 +8,8 @@ import (
 )
 
 type ValueTuple struct {
-	List []Value
+	List     []Value
+	Ellipsis bool
 }
 
 func (v *ValueTuple) String() string {
@@ -48,14 +49,40 @@ func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 		return ValueNil, fmt.Errorf("Type to Tuple error")
 	}
 
-	if len(v.List) != len(vt.List) {
-		return ValueNil, fmt.Errorf("Tuple The length is different")
-	}
-
 	tmp := make([]Value, 0, len(vt.List))
 	for _, v := range vt.List {
 		yy := v.Point()
 		tmp = append(tmp, yy)
+	}
+	es := []int{}
+	for i, v0 := range v.List {
+		switch t := v0.(type) {
+		case *ValueVar:
+			if t.Ellipsis {
+				t.Ellipsis = false
+				es = append(es, i)
+			}
+		}
+	}
+	switch len(es) {
+	case 0:
+	case 1:
+		e := es[0]
+		ll := len(tmp) - len(v.List)
+		l := tmp[:e]
+		m := tmp[e : e+ll+1]
+		r := tmp[e+ll+1:]
+		tmp0 := make([]Value, 0, len(l)+len(r)+1)
+		tmp0 = append(tmp0, l...)
+		tmp0 = append(tmp0, &ValueTuple{m, false})
+		tmp0 = append(tmp0, r...)
+		tmp = tmp0
+	default:
+		return ValueNil, fmt.Errorf("左值只允许有一个省略参数")
+	}
+
+	if len(v.List) != len(tmp) {
+		return ValueNil, fmt.Errorf("Tuple The length is different")
 	}
 	for i, v0 := range v.List {
 		ov, err := v0.Binary(t, tmp[i])
@@ -64,8 +91,8 @@ func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 		}
 		tmp[i] = ov
 	}
+	return &ValueTuple{tmp, false}, nil
 
-	return &ValueTuple{tmp}, nil
 }
 
 func (v *ValueTuple) UnaryPre(t token.Token) (Value, error) {
@@ -73,5 +100,10 @@ func (v *ValueTuple) UnaryPre(t token.Token) (Value, error) {
 }
 
 func (v *ValueTuple) UnarySuf(t token.Token) (Value, error) {
+	switch t {
+	case token.ELLIPSIS:
+		v.Ellipsis = true
+		return v, nil
+	}
 	return v, undefined
 }

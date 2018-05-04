@@ -5,19 +5,17 @@ import (
 )
 
 type ValueVar struct {
-	Scope *Scope
-	Name  string
+	Scope    *Scope
+	Ellipsis bool
+	Name     string
 }
 
 func (v *ValueVar) String() string {
 	if v == nil {
 		return "<ValueVar.nil>"
 	}
-	val, ok := v.Scope.Get(v.Name)
-	if !ok || val == nil {
-		return "<ValueVar.nil>"
-	}
-	return val.String()
+	val := v.Point()
+	return "<" + v.Name + "." + val.String() + ">"
 }
 
 func (v *ValueVar) Point() Value {
@@ -58,9 +56,13 @@ func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 }
 
 func (v *ValueVar) UnaryPre(t token.Token) (Value, error) {
+	switch t {
+	case token.ELLIPSIS:
+		v.Ellipsis = true
+		return v, nil
+	}
 
 	val := v.Point()
-
 	return val.UnaryPre(t)
 }
 

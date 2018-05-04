@@ -46,7 +46,7 @@ func (v *ValueFuncBuiltin) Call(v0 Value) (rr Value, err0 error) {
 	case 1:
 		return out[0], nil
 	default:
-		return &ValueTuple{out}, nil
+		return &ValueTuple{out, false}, nil
 	}
 
 }
