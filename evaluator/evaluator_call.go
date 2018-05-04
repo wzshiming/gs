@@ -14,7 +14,7 @@ func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
 	case *ast.Literal: // name a,b
 		val, ok := s.Get(t1.Value)
 		if !ok {
-			ev.errorsPos(t.Pos, fmt.Errorf("未定义"))
+			ev.errorsPos(t.Pos, fmt.Errorf("Undefined function %s", t1.Value))
 			break
 		}
 		switch t2 := val.(type) {
@@ -33,7 +33,7 @@ func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
 			}
 			return r
 		default:
-			ev.errorsPos(t.Pos, fmt.Errorf("不是一个函数"))
+			ev.errorsPos(t.Pos, fmt.Errorf("Not a function"))
 			break
 		}
 

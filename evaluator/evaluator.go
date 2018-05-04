@@ -80,7 +80,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 	if e == nil {
 		return value.ValueNil
 	}
-	ev.errorsPos(e.GetPos(), fmt.Errorf("未定义关键字处理"))
+	ev.errorsPos(e.GetPos(), fmt.Errorf("Undefined keyword processing"))
 	return value.ValueNil
 }
 

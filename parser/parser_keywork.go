@@ -22,7 +22,7 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 			fe.Cond = s.parseExpr()
 
 			if s.tok != token.SEMICOLON {
-				s.errors(fmt.Errorf("没有分号结尾"))
+				s.errors(fmt.Errorf("No semicolon ends"))
 				return nil
 			}
 			s.scan()
@@ -39,7 +39,7 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 				s.scan()
 				fe.Cond = s.parseExpr()
 				if s.tok != token.SEMICOLON {
-					s.errors(fmt.Errorf("没有分号结尾"))
+					s.errors(fmt.Errorf("No semicolon ends"))
 					return nil
 				}
 				s.scan()

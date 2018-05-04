@@ -78,7 +78,7 @@ func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 		tmp0 = append(tmp0, r...)
 		tmp = tmp0
 	default:
-		return ValueNil, fmt.Errorf("左值只允许有一个省略参数")
+		return ValueNil, fmt.Errorf("Only one omitted parameter is allowed for the left value")
 	}
 
 	if len(v.List) != len(tmp) {
