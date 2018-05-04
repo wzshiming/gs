@@ -31,7 +31,7 @@ func (s *parser) parseUnarySuf(expr ast.Expr) ast.Expr {
 			expr = &ast.Brack{
 				Pos: pos,
 				X:   expr,
-				Y:   s.parseExpr(),
+				Y:   s.parseUnary(),
 			}
 			return expr
 		default:
