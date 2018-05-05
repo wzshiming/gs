@@ -7,6 +7,20 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
+func NewValueTuple(vs []Value, ellip bool) Value {
+	switch len(vs) {
+	case 0:
+		return ValueNil
+	case 1:
+		return vs[0]
+	default:
+		return &ValueTuple{
+			List:     vs,
+			Ellipsis: ellip,
+		}
+	}
+}
+
 type ValueTuple struct {
 	List     []Value
 	Ellipsis bool
@@ -74,7 +88,7 @@ func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 		r := tmp[e+ll+1:]
 		tmp0 := make([]Value, 0, len(l)+len(r)+1)
 		tmp0 = append(tmp0, l...)
-		tmp0 = append(tmp0, &ValueTuple{m, false})
+		tmp0 = append(tmp0, NewValueTuple(m, false))
 		tmp0 = append(tmp0, r...)
 		tmp = tmp0
 	default:
@@ -91,7 +105,7 @@ func (v *ValueTuple) Binary(t token.Token, y Value) (Value, error) {
 		}
 		tmp[i] = ov
 	}
-	return &ValueTuple{tmp, false}, nil
+	return NewValueTuple(tmp, false), nil
 
 }
 
