@@ -27,6 +27,12 @@ func (ev *Evaluator) evalBrack(t *ast.Brack, s *value.Scope) value.Value {
 			ev.errorsPos(t.X.GetPos(), fmt.Errorf("Indexes must be Numbers."))
 			return value.ValueNil
 		}
+	case value.ValueMap:
+		val, ok := tx[y]
+		if !ok {
+			return value.ValueNil
+		}
+		return val
 	default:
 		switch ty := y.(type) {
 		case value.ValueNumber:

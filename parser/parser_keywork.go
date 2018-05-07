@@ -12,6 +12,14 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 	pos := s.pos
 
 	switch tok {
+	case token.MAP:
+		me := &ast.Map{
+			Pos: pos,
+		}
+		s.scan()
+		body := s.parseTuple()
+		me.Body = body
+		return me
 	case token.FOR:
 		fe := &ast.For{
 			Pos: pos,

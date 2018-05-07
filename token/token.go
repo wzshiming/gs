@@ -80,6 +80,7 @@ const (
 	operatorEnd
 
 	keyworkBeg
+	MAP    // map
 	IF     // if
 	ELSE   // else
 	FOR    // for
@@ -156,6 +157,7 @@ var tokenMap = map[Token]string{
 	SEMICOLON: ";",
 	COLON:     ":",
 
+	MAP:    "map",
 	IF:     "if",
 	ELSE:   "else",
 	FOR:    "for",

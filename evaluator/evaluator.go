@@ -76,6 +76,8 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		return ev.evalReturn(t, s)
 	case *ast.Tuple:
 		return ev.evalTuple(t, s)
+	case *ast.Map:
+		return ev.evalMap(t, s)
 	}
 	if e == nil {
 		return value.ValueNil
