@@ -11,7 +11,7 @@ func (ev *Evaluator) evalUnarySuf(t *ast.UnarySuf, s *value.Scope) value.Value {
 	z, err := lx.UnarySuf(t.Op)
 	if err != nil {
 		ev.errorsPos(t.Pos, err)
-		return value.ValueNil
+		return value.Nil
 	}
 	return z
 }

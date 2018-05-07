@@ -7,78 +7,78 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-type valueNumberBigFloat struct {
+type numberBigFloat struct {
 	Val *big.Float
 }
 
-func newValueNumberBigFloat(f float64) valueNumberBigFloat {
-	return valueNumberBigFloat{
+func newNumberBigFloat(f float64) numberBigFloat {
+	return numberBigFloat{
 		Val: big.NewFloat(f),
 	}
 }
 
-func (v valueNumberBigFloat) String() string {
+func (v numberBigFloat) String() string {
 	return v.Val.String()
 }
 
-func (v valueNumberBigFloat) Point() Value {
+func (v numberBigFloat) Point() Value {
 	return v
 }
 
-func (v valueNumberBigFloat) Int() valueNumberInt {
+func (v numberBigFloat) Int() numberInt {
 	val, _ := v.Val.Int64()
-	return valueNumberInt(val)
+	return numberInt(val)
 }
 
-func (v valueNumberBigFloat) Float() valueNumberFloat {
+func (v numberBigFloat) Float() numberFloat {
 	val, _ := v.Val.Float64()
-	return valueNumberFloat(val)
+	return numberFloat(val)
 }
 
-func (v valueNumberBigFloat) BigInt() valueNumberBigInt {
+func (v numberBigFloat) BigInt() numberBigInt {
 	z, _ := v.Val.Int(nil)
-	return valueNumberBigInt{z}
+	return numberBigInt{z}
 }
 
-func (v valueNumberBigFloat) BigFloat() valueNumberBigFloat {
+func (v numberBigFloat) BigFloat() numberBigFloat {
 	return v
 }
 
-func (v valueNumberBigFloat) Binary(t token.Token, y Value) (vv Value, err error) {
-	var sum ValueNumber
+func (v numberBigFloat) Binary(t token.Token, y Value) (vv Value, err error) {
+	var sum Number
 	switch yy := y.(type) {
-	case ValueNumber:
+	case Number:
 		sum = yy
-	case *ValueVar:
+	case *Var:
 		val := yy.Point()
 		return v.Binary(t, val)
-	case *valueNil:
+	case *_Nil:
 		switch t {
 		case token.EQL:
 			return ValueFalse, nil
 		case token.NEQ:
 			return ValueTrue, nil
 		default:
-			return ValueNil, fmt.Errorf("Type to number error")
+			return Nil, fmt.Errorf("Type to number error")
 		}
 	default:
-		return ValueNil, fmt.Errorf("Type to number error")
+		return Nil, fmt.Errorf("Type to number error")
 	}
 
 	switch t {
 
 	case token.ADD:
 		v0 := big.NewFloat(0)
-		return valueNumberBigFloat{v0.Add(v.Val, sum.BigFloat().Val)}, nil
+		return numberBigFloat{v0.Add(v.Val, sum.BigFloat().Val)}, nil
 	case token.SUB:
 		v0 := big.NewFloat(0)
-		return valueNumberBigFloat{v0.Sub(v.Val, sum.BigFloat().Val)}, nil
+		return numberBigFloat{v0.Sub(v.Val, sum.BigFloat().Val)}, nil
 	case token.MUL:
 		v0 := big.NewFloat(0)
-		return valueNumberBigFloat{v0.Mul(v.Val, sum.BigFloat().Val)}, nil
+		return numberBigFloat{v0.Mul(v.Val, sum.BigFloat().Val)}, nil
 	case token.QUO:
 		v0 := big.NewFloat(0)
-		return valueNumberBigFloat{v0.Quo(v.Val, sum.BigFloat().Val)}, nil
+		return numberBigFloat{v0.Quo(v.Val, sum.BigFloat().Val)}, nil
 		//	case token.POW:
 		//		v0 := big.NewFloat(1)
 		//		vv = valueNumberBigFloat{v.Val.Sqrt(v0.Quo(v0, sum))}
@@ -87,29 +87,29 @@ func (v valueNumberBigFloat) Binary(t token.Token, y Value) (vv Value, err error
 
 		// 比较
 	case token.EQL:
-		return ValueBool(v.Val.Cmp(sum.BigFloat().Val) == 0), nil
+		return Bool(v.Val.Cmp(sum.BigFloat().Val) == 0), nil
 
 	case token.LSS:
-		return ValueBool(v.Val.Cmp(sum.BigFloat().Val) < 0), nil
+		return Bool(v.Val.Cmp(sum.BigFloat().Val) < 0), nil
 
 	case token.GTR:
-		return ValueBool(v.Val.Cmp(sum.BigFloat().Val) > 0), nil
+		return Bool(v.Val.Cmp(sum.BigFloat().Val) > 0), nil
 
 	case token.NEQ:
-		return ValueBool(v.Val.Cmp(sum.BigFloat().Val) != 0), nil
+		return Bool(v.Val.Cmp(sum.BigFloat().Val) != 0), nil
 
 	case token.LEQ:
-		return ValueBool(v.Val.Cmp(sum.BigFloat().Val) <= 0), nil
+		return Bool(v.Val.Cmp(sum.BigFloat().Val) <= 0), nil
 
 	case token.GEQ:
-		return ValueBool(v.Val.Cmp(sum.BigFloat().Val) >= 0), nil
+		return Bool(v.Val.Cmp(sum.BigFloat().Val) >= 0), nil
 
 	default:
 		return v, undefined
 	}
 }
 
-func (v valueNumberBigFloat) UnaryPre(t token.Token) (Value, error) {
+func (v numberBigFloat) UnaryPre(t token.Token) (Value, error) {
 
 	switch t {
 	case token.ADD:
@@ -122,7 +122,7 @@ func (v valueNumberBigFloat) UnaryPre(t token.Token) (Value, error) {
 	}
 }
 
-func (v valueNumberBigFloat) UnarySuf(t token.Token) (Value, error) {
+func (v numberBigFloat) UnarySuf(t token.Token) (Value, error) {
 	switch t {
 	case token.INC:
 		v.Val.Add(v.Val, big.NewFloat(1))

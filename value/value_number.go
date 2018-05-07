@@ -13,20 +13,20 @@ const (
 	minFloat = math.SmallestNonzeroFloat32
 )
 
-type ValueNumber interface {
+type Number interface {
 	Value
-	Int() valueNumberInt
-	Float() valueNumberFloat
-	BigInt() valueNumberBigInt
-	BigFloat() valueNumberBigFloat
+	Int() numberInt
+	Float() numberFloat
+	BigInt() numberBigInt
+	BigFloat() numberBigFloat
 }
 
-func ParseValueNumber(s string) ValueNumber {
+func ParseValueNumber(s string) Number {
 	if strings.Index(s, ".") != -1 {
 		val, _ := strconv.ParseFloat(s, 0)
-		return newValueNumberFloat(val)
+		return newNumberFloat(val)
 	} else {
 		val, _ := strconv.ParseInt(s, 0, 0)
-		return newValueNumberInt(val)
+		return newNumberInt(val)
 	}
 }

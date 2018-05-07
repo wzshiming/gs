@@ -11,7 +11,7 @@ func (ev *Evaluator) evalUnaryPre(t *ast.UnaryPre, s *value.Scope) value.Value {
 	z, err := lx.UnaryPre(t.Op)
 	if err != nil {
 		ev.errorsPos(t.Pos, err)
-		return value.ValueNil
+		return value.Nil
 	}
 	return z
 }

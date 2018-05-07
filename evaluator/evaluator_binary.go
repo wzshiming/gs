@@ -12,7 +12,7 @@ func (ev *Evaluator) evalBinary(t *ast.Binary, s *value.Scope) value.Value {
 	z, err := ev.evalBinaryBy(lx, ly, t.Op)
 	if err != nil {
 		ev.errorsPos(t.Pos, err)
-		return value.ValueNil
+		return value.Nil
 	}
 	return z
 }
@@ -20,7 +20,7 @@ func (ev *Evaluator) evalBinary(t *ast.Binary, s *value.Scope) value.Value {
 func (ev *Evaluator) evalBinaryBy(x, y value.Value, op token.Token) (value.Value, error) {
 	z, err := x.Binary(op, y)
 	if err != nil {
-		return value.ValueNil, err
+		return value.Nil, err
 	}
 	return z, nil
 }

@@ -13,40 +13,40 @@ func (ev *Evaluator) evalBrack(t *ast.Brack, s *value.Scope) value.Value {
 	x = x.Point()
 	y = y.Point()
 	switch tx := x.(type) {
-	case *value.ValueTuple:
+	case *value.Tuple:
 		switch ty := y.(type) {
-		case value.ValueNumber:
+		case value.Number:
 			l := int(ty.Int())
 			i := tx.Len()
 			if i <= l {
 				ev.errorsPos(t.X.GetPos(), fmt.Errorf("Index out of range."))
-				return value.ValueNil
+				return value.Nil
 			}
 			return tx.Index(l)
 		default:
 			ev.errorsPos(t.X.GetPos(), fmt.Errorf("Indexes must be Numbers."))
-			return value.ValueNil
+			return value.Nil
 		}
-	case value.ValueMap:
+	case value.Map:
 		val, ok := tx[y]
 		if !ok {
-			return value.ValueNil
+			return value.Nil
 		}
 		return val
 	default:
 		switch ty := y.(type) {
-		case value.ValueNumber:
+		case value.Number:
 			l := int(ty.Int())
 			if l != 0 {
 				ev.errorsPos(t.X.GetPos(), fmt.Errorf("Index out of range."))
-				return value.ValueNil
+				return value.Nil
 			}
 			return tx
 		default:
 			ev.errorsPos(t.X.GetPos(), fmt.Errorf("Indexes must be Numbers."))
-			return value.ValueNil
+			return value.Nil
 		}
 	}
 
-	return value.ValueNil
+	return value.Nil
 }

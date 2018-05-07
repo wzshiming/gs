@@ -6,9 +6,9 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-type ValueMap map[Value]Value
+type Map map[Value]Value
 
-func (v ValueMap) String() string {
+func (v Map) String() string {
 	if v == nil {
 		return "<nil.ValueMap>"
 	}
@@ -24,18 +24,18 @@ func (v ValueMap) String() string {
 	return buf.String()
 }
 
-func (v ValueMap) Point() Value {
+func (v Map) Point() Value {
 	return v
 }
 
-func (v ValueMap) Binary(t token.Token, y Value) (Value, error) {
+func (v Map) Binary(t token.Token, y Value) (Value, error) {
 	return v, undefined
 }
 
-func (v ValueMap) UnaryPre(t token.Token) (Value, error) {
+func (v Map) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v ValueMap) UnarySuf(t token.Token) (Value, error) {
+func (v Map) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }

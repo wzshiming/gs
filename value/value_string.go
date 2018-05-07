@@ -6,44 +6,44 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-type ValueString string
+type String string
 
-func (v ValueString) String() string {
+func (v String) String() string {
 	return `"` + string(v) + `"`
 }
 
-func (v ValueString) Point() Value {
+func (v String) Point() Value {
 	return v
 }
 
-func (v ValueString) Clone() ValueString {
+func (v String) Clone() String {
 	return v
 }
 
-func (v ValueString) Binary(t token.Token, y Value) (Value, error) {
+func (v String) Binary(t token.Token, y Value) (Value, error) {
 
-	var sum ValueString
+	var sum String
 	switch yy := y.(type) {
-	case ValueString:
+	case String:
 		sum = yy
-	case *ValueVar:
+	case *Var:
 		val := yy.Point()
 		return v.Binary(t, val)
 	default:
-		return ValueNil, fmt.Errorf("Type to string error")
+		return Nil, fmt.Errorf("Type to string error")
 	}
 
 	switch t {
 	case token.ADD:
-		return v + ValueString(sum), nil
+		return v + String(sum), nil
 	}
 	return v, undefined
 }
 
-func (v ValueString) UnaryPre(t token.Token) (Value, error) {
+func (v String) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v ValueString) UnarySuf(t token.Token) (Value, error) {
+func (v String) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }

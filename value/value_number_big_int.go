@@ -7,72 +7,72 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-type valueNumberBigInt struct {
+type numberBigInt struct {
 	Val *big.Int
 }
 
-func newValueNumberBigInt(f int64) valueNumberBigInt {
-	return valueNumberBigInt{
+func newNumberBigInt(f int64) numberBigInt {
+	return numberBigInt{
 		Val: big.NewInt(f),
 	}
 }
 
-func (v valueNumberBigInt) String() string {
+func (v numberBigInt) String() string {
 	return v.Val.String()
 }
 
-func (v valueNumberBigInt) Point() Value {
+func (v numberBigInt) Point() Value {
 	return v
 }
 
-func (v valueNumberBigInt) Int() valueNumberInt {
-	return valueNumberInt(v.Val.Int64())
+func (v numberBigInt) Int() numberInt {
+	return numberInt(v.Val.Int64())
 }
 
-func (v valueNumberBigInt) Float() valueNumberFloat {
-	return valueNumberFloat(v.Val.Int64())
+func (v numberBigInt) Float() numberFloat {
+	return numberFloat(v.Val.Int64())
 }
 
-func (v valueNumberBigInt) BigInt() valueNumberBigInt {
+func (v numberBigInt) BigInt() numberBigInt {
 	return v
 }
 
-func (v valueNumberBigInt) BigFloat() valueNumberBigFloat {
+func (v numberBigInt) BigFloat() numberBigFloat {
 	f, _, _ := big.ParseFloat(v.Val.String(), 0, 0, big.ToNearestEven)
-	return valueNumberBigFloat{f}
+	return numberBigFloat{f}
 }
 
-func (v valueNumberBigInt) Binary(t token.Token, y Value) (vv Value, err error) {
-	var sum ValueNumber
+func (v numberBigInt) Binary(t token.Token, y Value) (vv Value, err error) {
+	var sum Number
 	switch yy := y.(type) {
-	case ValueNumber:
+	case Number:
 		sum = yy
-	case *ValueVar:
+	case *Var:
 		val := yy.Point()
 		return v.Binary(t, val)
-	case *valueNil:
+	case *_Nil:
 		switch t {
 		case token.EQL:
 			return ValueFalse, nil
 		case token.NEQ:
 			return ValueTrue, nil
 		default:
-			return ValueNil, fmt.Errorf("Type to number error")
+			return Nil, fmt.Errorf("Type to number error")
 		}
 	default:
-		return ValueNil, fmt.Errorf("Type to number error")
+		return Nil, fmt.Errorf("Type to number error")
 	}
 
 	switch t {
 	case token.ADD:
 		v0 := big.NewInt(0)
-		return valueNumberBigInt{v0.Add(v.Val, sum.BigInt().Val)}, nil
+		return numberBigInt{v0.Add(v.Val, sum.BigInt().Val)}, nil
 	case token.SUB:
 		v0 := big.NewInt(0)
-		return valueNumberBigInt{v0.Sub(v.Val, sum.BigInt().Val)}, nil
+		return numberBigInt{v0.Sub(v.Val, sum.BigInt().Val)}, nil
 	case token.MUL:
 		v0 := big.NewInt(0)
-		return valueNumberBigInt{v0.Mul(v.Val, sum.BigInt().Val)}, nil
+		return numberBigInt{v0.Mul(v.Val, sum.BigInt().Val)}, nil
 	case token.QUO:
 		return v.BigFloat().Binary(t, y)
 
@@ -80,33 +80,33 @@ func (v valueNumberBigInt) Binary(t token.Token, y Value) (vv Value, err error) 
 		//		v0 := big.NewInt(1)
 		//		vv = valueNumberBigInt{v.Val.Sqrt(v0.Quo(v0, sum))}
 	case token.REM:
-		return valueNumberBigInt{v.Val.Rem(v.Val, sum.BigInt().Val)}, nil
+		return numberBigInt{v.Val.Rem(v.Val, sum.BigInt().Val)}, nil
 
 		// 比较
 	case token.EQL:
-		return ValueBool(v.Val.Cmp(sum.BigInt().Val) == 0), nil
+		return Bool(v.Val.Cmp(sum.BigInt().Val) == 0), nil
 
 	case token.LSS:
-		return ValueBool(v.Val.Cmp(sum.BigInt().Val) < 0), nil
+		return Bool(v.Val.Cmp(sum.BigInt().Val) < 0), nil
 
 	case token.GTR:
-		return ValueBool(v.Val.Cmp(sum.BigInt().Val) > 0), nil
+		return Bool(v.Val.Cmp(sum.BigInt().Val) > 0), nil
 
 	case token.NEQ:
-		return ValueBool(v.Val.Cmp(sum.BigInt().Val) != 0), nil
+		return Bool(v.Val.Cmp(sum.BigInt().Val) != 0), nil
 
 	case token.LEQ:
-		return ValueBool(v.Val.Cmp(sum.BigInt().Val) <= 0), nil
+		return Bool(v.Val.Cmp(sum.BigInt().Val) <= 0), nil
 
 	case token.GEQ:
-		return ValueBool(v.Val.Cmp(sum.BigInt().Val) >= 0), nil
+		return Bool(v.Val.Cmp(sum.BigInt().Val) >= 0), nil
 
 	default:
 		return v, undefined
 	}
 }
 
-func (v valueNumberBigInt) UnaryPre(t token.Token) (Value, error) {
+func (v numberBigInt) UnaryPre(t token.Token) (Value, error) {
 
 	switch t {
 	case token.ADD:
@@ -119,7 +119,7 @@ func (v valueNumberBigInt) UnaryPre(t token.Token) (Value, error) {
 	}
 }
 
-func (v valueNumberBigInt) UnarySuf(t token.Token) (Value, error) {
+func (v numberBigInt) UnarySuf(t token.Token) (Value, error) {
 	switch t {
 	case token.INC:
 		v.Val.Add(v.Val, big.NewInt(1))

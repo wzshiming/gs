@@ -5,28 +5,28 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-type ValueFunc struct {
+type Func struct {
 	Args  ast.Expr
 	Scope *Scope
 	Body  ast.Expr
 }
 
-func (v *ValueFunc) String() string {
+func (v *Func) String() string {
 	return v.Body.String()
 }
 
-func (v *ValueFunc) Point() Value {
+func (v *Func) Point() Value {
 	return v
 }
 
-func (v *ValueFunc) Binary(t token.Token, y Value) (Value, error) {
+func (v *Func) Binary(t token.Token, y Value) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueFunc) UnaryPre(t token.Token) (Value, error) {
+func (v *Func) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v *ValueFunc) UnarySuf(t token.Token) (Value, error) {
+func (v *Func) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }

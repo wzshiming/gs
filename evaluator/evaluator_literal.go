@@ -13,21 +13,21 @@ func (ev *Evaluator) evalLiteral(t *ast.Literal, s *value.Scope) value.Value {
 	case token.NUMBER:
 		return value.ParseValueNumber(t.Value)
 	case token.STRING:
-		return value.ValueString(t.Value[1 : len(t.Value)-1])
+		return value.String(t.Value[1 : len(t.Value)-1])
 	case token.BOOL:
 		if t.Value == "true" {
 			return value.ValueTrue
 		}
 		return value.ValueFalse
 	case token.IDENT:
-		return &value.ValueVar{
+		return &value.Var{
 			Name:  t.Value,
 			Scope: s,
 		}
 	case token.NIL:
-		return value.ValueNil
+		return value.Nil
 	default:
 		ev.errorsPos(t.Pos, fmt.Errorf("Panic "+t.Type.String()))
-		return value.ValueNil
+		return value.Nil
 	}
 }

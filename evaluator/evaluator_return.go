@@ -8,7 +8,7 @@ import (
 func (ev *Evaluator) evalReturn(t *ast.Return, s *value.Scope) value.Value {
 	ev.stackRet--
 	if t.Ret == nil {
-		return value.ValueNil
+		return value.Nil
 	}
 	return ev.eval(t.Ret, s)
 }

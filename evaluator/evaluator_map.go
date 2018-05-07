@@ -12,7 +12,7 @@ import (
 func (ev *Evaluator) evalMap(m *ast.Map, s *value.Scope) value.Value {
 	switch t := m.Body.(type) {
 	case *ast.Brace:
-		mr := value.ValueMap{}
+		mr := value.Map{}
 
 		list := t.List
 		if len(list) != 1 {
@@ -41,5 +41,5 @@ func (ev *Evaluator) evalMap(m *ast.Map, s *value.Scope) value.Value {
 		return mr
 	default:
 	}
-	return value.ValueNil
+	return value.Nil
 }

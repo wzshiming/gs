@@ -18,18 +18,18 @@ func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
 			break
 		}
 		switch t2 := val.(type) {
-		case *value.ValueFunc:
+		case *value.Func:
 
 			ss := t2.Scope.NewChildScope()
 			ev.evalBinaryBy(ev.eval(t2.Args, ss), ev.toValues(t.Args, s), token.DEFINE)
 			ev.stackRet++
 			return ev.eval(t2.Body, ss)
-		case *value.ValueFuncBuiltin:
+		case *value.FuncBuiltin:
 
 			r, err := t2.Call(ev.toValues(t.Args, s))
 			if err != nil {
 				ev.errorsPos(t.Pos, err)
-				return value.ValueNil
+				return value.Nil
 			}
 			return r
 		default:
@@ -39,5 +39,5 @@ func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
 
 	default: // typ.name a,b
 	}
-	return value.ValueNil
+	return value.Nil
 }

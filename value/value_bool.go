@@ -5,13 +5,13 @@ import (
 )
 
 var (
-	ValueTrue  ValueBool = true
-	ValueFalse ValueBool = false
+	ValueTrue  Bool = true
+	ValueFalse Bool = false
 )
 
-type ValueBool bool
+type Bool bool
 
-func (v ValueBool) String() string {
+func (v Bool) String() string {
 	if v {
 		return "true"
 	} else {
@@ -19,18 +19,18 @@ func (v ValueBool) String() string {
 	}
 }
 
-func (v ValueBool) Point() Value {
+func (v Bool) Point() Value {
 	return v
 }
 
-func (v ValueBool) Binary(t token.Token, y Value) (Value, error) {
+func (v Bool) Binary(t token.Token, y Value) (Value, error) {
 	return v, undefined
 }
 
-func (v ValueBool) UnaryPre(t token.Token) (Value, error) {
+func (v Bool) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v ValueBool) UnarySuf(t token.Token) (Value, error) {
+func (v Bool) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }

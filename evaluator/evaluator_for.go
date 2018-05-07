@@ -15,7 +15,7 @@ func (ev *Evaluator) evalFor(t *ast.For, s *value.Scope) value.Value {
 	var ex value.Value
 	for {
 		loop := ev.eval(t.Cond, ss)
-		vb, ok := loop.(value.ValueBool)
+		vb, ok := loop.(value.Bool)
 		if !ok {
 			ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'for'."))
 			break
@@ -39,5 +39,5 @@ func (ev *Evaluator) evalFor(t *ast.For, s *value.Scope) value.Value {
 		return ev.eval(t.Else, ss)
 	}
 
-	return value.ValueNil
+	return value.Nil
 }

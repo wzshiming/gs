@@ -11,10 +11,10 @@ func (ev *Evaluator) evalIf(t *ast.If, s *value.Scope) value.Value {
 	ss := s.NewChildScope()
 	ev.eval(t.Init, ss)
 	loop := ev.eval(t.Cond, ss)
-	vb, ok := loop.(value.ValueBool)
+	vb, ok := loop.(value.Bool)
 	if !ok {
 		ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'if'."))
-		return value.ValueNil
+		return value.Nil
 	}
 
 	if vb {
@@ -22,5 +22,5 @@ func (ev *Evaluator) evalIf(t *ast.If, s *value.Scope) value.Value {
 	} else if t.Else != nil {
 		return ev.eval(t.Else, ss)
 	}
-	return value.ValueNil
+	return value.Nil
 }

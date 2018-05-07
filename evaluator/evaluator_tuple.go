@@ -6,11 +6,11 @@ import (
 )
 
 func (ev *Evaluator) evalTuple(t *ast.Tuple, s *value.Scope) value.Value {
-	z := &value.ValueTuple{}
+	z := &value.Tuple{}
 	for _, v := range t.List {
 		b := ev.eval(v, s)
 		switch t := b.(type) {
-		case *value.ValueTuple:
+		case *value.Tuple:
 			if t.Ellipsis {
 				z.List = append(z.List, t.List...)
 			} else {

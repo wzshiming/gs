@@ -8,7 +8,7 @@ import (
 func (ev *Evaluator) evalFunc(t *ast.Func, s *value.Scope) value.Value {
 	fun := t.Func
 	//ss := s.NewChildScope()
-	vf := &value.ValueFunc{
+	vf := &value.Func{
 		Scope: s,
 		Body:  t.Body,
 	}

@@ -6,55 +6,55 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-type valueNumberInt int64
+type numberInt int64
 
-func newValueNumberInt(f int64) valueNumberInt {
-	return valueNumberInt(f)
+func newNumberInt(f int64) numberInt {
+	return numberInt(f)
 }
 
-func (v valueNumberInt) String() string {
+func (v numberInt) String() string {
 	return fmt.Sprint(int64(v))
 }
 
-func (v valueNumberInt) Point() Value {
+func (v numberInt) Point() Value {
 	return v
 }
 
-func (v valueNumberInt) Int() valueNumberInt {
+func (v numberInt) Int() numberInt {
 	return v
 }
 
-func (v valueNumberInt) Float() valueNumberFloat {
-	return valueNumberFloat(v)
+func (v numberInt) Float() numberFloat {
+	return numberFloat(v)
 }
 
-func (v valueNumberInt) BigInt() valueNumberBigInt {
-	return newValueNumberBigInt(int64(v))
+func (v numberInt) BigInt() numberBigInt {
+	return newNumberBigInt(int64(v))
 }
 
-func (v valueNumberInt) BigFloat() valueNumberBigFloat {
-	return newValueNumberBigFloat(float64(v))
+func (v numberInt) BigFloat() numberBigFloat {
+	return newNumberBigFloat(float64(v))
 }
 
-func (v valueNumberInt) Binary(t token.Token, y Value) (vv Value, err error) {
-	var sum ValueNumber
+func (v numberInt) Binary(t token.Token, y Value) (vv Value, err error) {
+	var sum Number
 	switch yy := y.(type) {
-	case ValueNumber:
+	case Number:
 		sum = yy
-	case *ValueVar:
+	case *Var:
 		val := yy.Point()
 		return v.Binary(t, val)
-	case *valueNil:
+	case *_Nil:
 		switch t {
 		case token.EQL:
 			return ValueFalse, nil
 		case token.NEQ:
 			return ValueTrue, nil
 		default:
-			return ValueNil, fmt.Errorf("Type to number error")
+			return Nil, fmt.Errorf("Type to number error")
 		}
 	default:
-		return ValueNil, fmt.Errorf("Type to number error")
+		return Nil, fmt.Errorf("Type to number error")
 	}
 
 	switch t {
@@ -83,29 +83,29 @@ func (v valueNumberInt) Binary(t token.Token, y Value) (vv Value, err error) {
 
 		// 比较
 	case token.EQL:
-		return ValueBool(v == sum.Int()), nil
+		return Bool(v == sum.Int()), nil
 
 	case token.LSS:
-		return ValueBool(v < sum.Int()), nil
+		return Bool(v < sum.Int()), nil
 
 	case token.GTR:
-		return ValueBool(v > sum.Int()), nil
+		return Bool(v > sum.Int()), nil
 
 	case token.NEQ:
-		return ValueBool(v != sum.Int()), nil
+		return Bool(v != sum.Int()), nil
 
 	case token.LEQ:
-		return ValueBool(v <= sum.Int()), nil
+		return Bool(v <= sum.Int()), nil
 
 	case token.GEQ:
-		return ValueBool(v >= sum.Int()), nil
+		return Bool(v >= sum.Int()), nil
 
 	default:
 		return v, undefined
 	}
 }
 
-func (v valueNumberInt) UnaryPre(t token.Token) (Value, error) {
+func (v numberInt) UnaryPre(t token.Token) (Value, error) {
 
 	switch t {
 	case token.ADD:
@@ -117,7 +117,7 @@ func (v valueNumberInt) UnaryPre(t token.Token) (Value, error) {
 	}
 }
 
-func (v valueNumberInt) UnarySuf(t token.Token) (Value, error) {
+func (v numberInt) UnarySuf(t token.Token) (Value, error) {
 	switch t {
 	case token.INC:
 		return v + 1, nil

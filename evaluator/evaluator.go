@@ -62,7 +62,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		return ev.evalBrack(t, s)
 	case *ast.Break:
 		ev.stackFor--
-		return value.ValueNil
+		return value.Nil
 	case *ast.For:
 		return ev.evalFor(t, s)
 	case *ast.Brace:
@@ -80,10 +80,10 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 		return ev.evalMap(t, s)
 	}
 	if e == nil {
-		return value.ValueNil
+		return value.Nil
 	}
 	ev.errorsPos(e.GetPos(), fmt.Errorf("Undefined keyword processing"))
-	return value.ValueNil
+	return value.Nil
 }
 
 func (ev *Evaluator) toValues(e ast.Expr, s *value.Scope) value.Value {
@@ -96,7 +96,7 @@ func (ev *Evaluator) toValues(e ast.Expr, s *value.Scope) value.Value {
 		for _, v := range t.List {
 			vs = append(vs, ev.eval(v, s))
 		}
-		return value.NewValueTuple(vs, false)
+		return value.NewTuple(vs, false)
 	}
 	return ev.eval(e, s)
 }

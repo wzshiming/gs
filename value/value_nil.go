@@ -4,19 +4,19 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-var ValueNil valueNil
+var Nil _Nil
 
-type valueNil struct{}
+type _Nil struct{}
 
-func (v valueNil) String() string {
+func (v _Nil) String() string {
 	return "nil"
 }
 
-func (v valueNil) Point() Value {
+func (v _Nil) Point() Value {
 	return v
 }
 
-func (v valueNil) Binary(t token.Token, y Value) (Value, error) {
+func (v _Nil) Binary(t token.Token, y Value) (Value, error) {
 	b := false
 	switch t {
 	case token.EQL:
@@ -30,17 +30,17 @@ func (v valueNil) Binary(t token.Token, y Value) (Value, error) {
 	y0 := y.Point()
 
 	switch y0.(type) {
-	case valueNil:
-		return ValueBool(b), nil
+	case _Nil:
+		return Bool(b), nil
 	default:
-		return ValueBool(!b), nil
+		return Bool(!b), nil
 	}
 }
 
-func (v valueNil) UnaryPre(t token.Token) (Value, error) {
+func (v _Nil) UnaryPre(t token.Token) (Value, error) {
 	return v, undefined
 }
 
-func (v valueNil) UnarySuf(t token.Token) (Value, error) {
+func (v _Nil) UnarySuf(t token.Token) (Value, error) {
 	return v, undefined
 }

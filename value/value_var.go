@@ -4,13 +4,13 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-type ValueVar struct {
+type Var struct {
 	Scope    *Scope
 	Ellipsis bool
 	Name     string
 }
 
-func (v *ValueVar) String() string {
+func (v *Var) String() string {
 	if v == nil {
 		return "<ValueVar.nil>"
 	}
@@ -18,15 +18,15 @@ func (v *ValueVar) String() string {
 	return "<" + v.Name + "." + val.String() + ">"
 }
 
-func (v *ValueVar) Point() Value {
+func (v *Var) Point() Value {
 	val, ok := v.Scope.Get(v.Name)
 	if !ok {
-		return ValueNil
+		return Nil
 	}
 	return val
 }
 
-func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
+func (v *Var) Binary(t token.Token, y Value) (Value, error) {
 
 	switch t {
 	case token.ASSIGN:
@@ -47,7 +47,7 @@ func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 		t0 := t - (token.ADD_ASSIGN - token.ADD)
 		val, err := val.Binary(t0, y)
 		if err != nil {
-			return ValueNil, err
+			return Nil, err
 		}
 		v.Scope.Set(v.Name, val)
 		return v, nil
@@ -55,7 +55,7 @@ func (v *ValueVar) Binary(t token.Token, y Value) (Value, error) {
 	return val.Binary(t, y)
 }
 
-func (v *ValueVar) UnaryPre(t token.Token) (Value, error) {
+func (v *Var) UnaryPre(t token.Token) (Value, error) {
 	switch t {
 	case token.ELLIPSIS:
 		v.Ellipsis = true
@@ -66,19 +66,19 @@ func (v *ValueVar) UnaryPre(t token.Token) (Value, error) {
 	return val.UnaryPre(t)
 }
 
-func (v *ValueVar) UnarySuf(t token.Token) (Value, error) {
+func (v *Var) UnarySuf(t token.Token) (Value, error) {
 	val := v.Point()
 
 	switch t {
 	case token.INC:
-		vv, err := val.Binary(token.ADD, newValueNumberBigInt(1))
+		vv, err := val.Binary(token.ADD, newNumberBigInt(1))
 		if err != nil {
 			return nil, err
 		}
 		v.Scope.Set(v.Name, vv)
 		return v, nil
 	case token.DEC:
-		vv, err := val.Binary(token.SUB, newValueNumberBigInt(1))
+		vv, err := val.Binary(token.SUB, newNumberBigInt(1))
 		if err != nil {
 			return nil, err
 		}

@@ -6,55 +6,55 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-type valueNumberFloat float64
+type numberFloat float64
 
-func newValueNumberFloat(f float64) valueNumberFloat {
-	return valueNumberFloat(f)
+func newNumberFloat(f float64) numberFloat {
+	return numberFloat(f)
 }
 
-func (v valueNumberFloat) String() string {
+func (v numberFloat) String() string {
 	return fmt.Sprint(float64(v))
 }
 
-func (v valueNumberFloat) Point() Value {
+func (v numberFloat) Point() Value {
 	return v
 }
 
-func (v valueNumberFloat) Int() valueNumberInt {
-	return valueNumberInt(v)
+func (v numberFloat) Int() numberInt {
+	return numberInt(v)
 }
 
-func (v valueNumberFloat) Float() valueNumberFloat {
+func (v numberFloat) Float() numberFloat {
 	return v
 }
 
-func (v valueNumberFloat) BigInt() valueNumberBigInt {
-	return newValueNumberBigInt(int64(v))
+func (v numberFloat) BigInt() numberBigInt {
+	return newNumberBigInt(int64(v))
 }
 
-func (v valueNumberFloat) BigFloat() valueNumberBigFloat {
-	return newValueNumberBigFloat(float64(v))
+func (v numberFloat) BigFloat() numberBigFloat {
+	return newNumberBigFloat(float64(v))
 }
 
-func (v valueNumberFloat) Binary(t token.Token, y Value) (vv Value, err error) {
-	var sum ValueNumber
+func (v numberFloat) Binary(t token.Token, y Value) (vv Value, err error) {
+	var sum Number
 	switch yy := y.(type) {
-	case ValueNumber:
+	case Number:
 		sum = yy
-	case *ValueVar:
+	case *Var:
 		val := yy.Point()
 		return v.Binary(t, val)
-	case *valueNil:
+	case *_Nil:
 		switch t {
 		case token.EQL:
 			return ValueFalse, nil
 		case token.NEQ:
 			return ValueTrue, nil
 		default:
-			return ValueNil, fmt.Errorf("Type to number error")
+			return Nil, fmt.Errorf("Type to number error")
 		}
 	default:
-		return ValueNil, fmt.Errorf("Type to number error")
+		return Nil, fmt.Errorf("Type to number error")
 	}
 
 	switch t {
@@ -87,29 +87,29 @@ func (v valueNumberFloat) Binary(t token.Token, y Value) (vv Value, err error) {
 
 		// 比较
 	case token.EQL:
-		return ValueBool(v == sum.Float()), nil
+		return Bool(v == sum.Float()), nil
 
 	case token.LSS:
-		return ValueBool(v < sum.Float()), nil
+		return Bool(v < sum.Float()), nil
 
 	case token.GTR:
-		return ValueBool(v > sum.Float()), nil
+		return Bool(v > sum.Float()), nil
 
 	case token.NEQ:
-		return ValueBool(v != sum.Float()), nil
+		return Bool(v != sum.Float()), nil
 
 	case token.LEQ:
-		return ValueBool(v <= sum.Float()), nil
+		return Bool(v <= sum.Float()), nil
 
 	case token.GEQ:
-		return ValueBool(v >= sum.Float()), nil
+		return Bool(v >= sum.Float()), nil
 
 	default:
 		return v, undefined
 	}
 }
 
-func (v valueNumberFloat) UnaryPre(t token.Token) (Value, error) {
+func (v numberFloat) UnaryPre(t token.Token) (Value, error) {
 
 	switch t {
 	case token.ADD:
@@ -121,7 +121,7 @@ func (v valueNumberFloat) UnaryPre(t token.Token) (Value, error) {
 	}
 }
 
-func (v valueNumberFloat) UnarySuf(t token.Token) (Value, error) {
+func (v numberFloat) UnarySuf(t token.Token) (Value, error) {
 	switch t {
 	case token.INC:
 		return v + 1, nil
