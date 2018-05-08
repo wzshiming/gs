@@ -9,6 +9,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
+// Evaluator 执行 ast
 type Evaluator struct {
 	fset *position.FileSet
 	errs *errors.Errors
@@ -18,6 +19,7 @@ type Evaluator struct {
 	tableFor string
 }
 
+// NewEvaluator 新的执行
 func NewEvaluator(fset *position.FileSet, errs *errors.Errors) *Evaluator {
 	return &Evaluator{
 		fset: fset,
@@ -25,15 +27,17 @@ func NewEvaluator(fset *position.FileSet, errs *errors.Errors) *Evaluator {
 	}
 }
 
-func (s *Evaluator) errorsPos(pos position.Pos, err error) {
-	s.errs.Append(s.fset.Position(pos), err)
+func (ev *Evaluator) errorsPos(pos position.Pos, err error) {
+	ev.errs.Append(ev.fset.Position(pos), err)
 }
 
+// Eval 执行 expr
 func (ev *Evaluator) Eval(es []ast.Expr) value.Value {
 	s := value.NewScope(nil)
 	return ev.EvalBy(es, s)
 }
 
+// EvalBy 执行 expr 指定作用域
 func (ev *Evaluator) EvalBy(es []ast.Expr, s *value.Scope) (ex value.Value) {
 	sr := ev.stackRet
 	sf := ev.stackFor

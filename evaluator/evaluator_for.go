@@ -17,7 +17,7 @@ func (ev *Evaluator) evalFor(t *ast.For, s *value.Scope) value.Value {
 		loop := ev.eval(t.Cond, ss)
 		vb, ok := loop.(value.Bool)
 		if !ok {
-			ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'for'."))
+			ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'for'"))
 			break
 		}
 

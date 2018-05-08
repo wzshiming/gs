@@ -6,7 +6,6 @@ import (
 	"github.com/wzshiming/gs/ast"
 	"github.com/wzshiming/gs/token"
 	"github.com/wzshiming/gs/value"
-	ffmt "gopkg.in/ffmt.v1"
 )
 
 func (ev *Evaluator) evalMap(m *ast.Map, s *value.Scope) value.Value {
@@ -35,7 +34,7 @@ func (ev *Evaluator) evalMap(m *ast.Map, s *value.Scope) value.Value {
 				y := ev.eval(t1.Y, s)
 				mr[x] = y
 			default:
-				ffmt.P(t1)
+				ev.errorsPos(v.GetPos(), fmt.Errorf("Not a colon statement"))
 			}
 		}
 		return mr

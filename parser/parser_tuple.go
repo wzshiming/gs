@@ -23,5 +23,8 @@ func (s *parser) parseTuple() ast.Expr {
 		return es[0]
 	}
 
-	return &ast.Tuple{s.pos, es}
+	return &ast.Tuple{
+		Pos:  s.pos,
+		List: es,
+	}
 }

@@ -13,7 +13,7 @@ func (ev *Evaluator) evalIf(t *ast.If, s *value.Scope) value.Value {
 	loop := ev.eval(t.Cond, ss)
 	vb, ok := loop.(value.Bool)
 	if !ok {
-		ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'if'."))
+		ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'if'"))
 		return value.Nil
 	}
 
