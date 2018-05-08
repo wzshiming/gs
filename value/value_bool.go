@@ -15,9 +15,8 @@ type Bool bool
 func (v Bool) String() string {
 	if v {
 		return "true"
-	} else {
-		return "false"
 	}
+	return "false"
 }
 
 func (v Bool) Point() Value {

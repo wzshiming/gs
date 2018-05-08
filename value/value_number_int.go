@@ -61,21 +61,18 @@ func (v numberInt) Binary(t token.Token, y Value) (vv Value, err error) {
 	case token.ADD:
 		if v > maxInt {
 			return v.BigInt().Binary(t, sum)
-		} else {
-			return v + sum.Int(), nil
 		}
+		return v + sum.Int(), nil
 	case token.SUB:
 		if v < minInt {
 			return v.BigInt().Binary(t, sum)
-		} else {
-			return v - sum.Int(), nil
 		}
+		return v - sum.Int(), nil
 	case token.MUL:
 		if v > maxInt {
 			return v.BigInt().Binary(t, sum)
-		} else {
-			return v * sum.Int(), nil
 		}
+		return v * sum.Int(), nil
 	case token.QUO:
 		return v.Float().Binary(t, sum)
 	case token.REM:

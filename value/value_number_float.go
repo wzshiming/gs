@@ -61,27 +61,23 @@ func (v numberFloat) Binary(t token.Token, y Value) (vv Value, err error) {
 	case token.ADD:
 		if v > maxFloat {
 			return v.BigFloat().Binary(t, sum)
-		} else {
-			return v + sum.Float(), nil
 		}
+		return v + sum.Float(), nil
 	case token.SUB:
 		if v < minFloat {
 			return v.BigFloat().Binary(t, sum)
-		} else {
-			return v - sum.Float(), nil
 		}
+		return v - sum.Float(), nil
 	case token.MUL:
 		if v > maxFloat {
 			return v.BigFloat().Binary(t, sum)
-		} else {
-			return v * sum.Float(), nil
 		}
+		return v * sum.Float(), nil
 	case token.QUO:
 		if v < minFloat {
 			return v.BigFloat().Binary(t, sum)
-		} else {
-			return v / sum.Float(), nil
 		}
+		return v / sum.Float(), nil
 	case token.REM:
 		return v.BigFloat().Binary(t, sum)
 
