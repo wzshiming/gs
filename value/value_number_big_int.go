@@ -53,9 +53,9 @@ func (v numberBigInt) Binary(t token.Token, y Value) (vv Value, err error) {
 	case *_Nil:
 		switch t {
 		case token.EQL:
-			return ValueFalse, nil
+			return False, nil
 		case token.NEQ:
-			return ValueTrue, nil
+			return True, nil
 		default:
 			return Nil, fmt.Errorf("Type to number error")
 		}

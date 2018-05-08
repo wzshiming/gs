@@ -4,9 +4,10 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
+// Boolean constant definition
 var (
-	ValueTrue  Bool = true
-	ValueFalse Bool = false
+	True  Bool = true
+	False Bool = false
 )
 
 type Bool bool

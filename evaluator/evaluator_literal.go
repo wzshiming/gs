@@ -16,9 +16,9 @@ func (ev *Evaluator) evalLiteral(t *ast.Literal, s *value.Scope) value.Value {
 		return value.String(t.Value[1 : len(t.Value)-1])
 	case token.BOOL:
 		if t.Value == "true" {
-			return value.ValueTrue
+			return value.True
 		}
-		return value.ValueFalse
+		return value.False
 	case token.IDENT:
 		return &value.Var{
 			Name:  t.Value,
