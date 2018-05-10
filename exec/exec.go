@@ -20,7 +20,7 @@ type Exec struct {
 func NewExec() *Exec {
 	scope := value.NewScope(nil)
 	for k, v := range builtin.Func {
-		scope.SetLocal(k, value.NewFuncBuiltin(v))
+		scope.SetLocal(value.String(k), value.NewFuncBuiltin(v))
 	}
 	return &Exec{
 		fset:  position.NewFileSet(),

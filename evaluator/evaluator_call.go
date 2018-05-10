@@ -12,7 +12,7 @@ func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
 
 	switch t1 := t.Name.(type) {
 	case *ast.Literal: // name a,b
-		val, ok := s.Get(t1.Value)
+		val, ok := s.Get(value.String(t1.Value))
 		if !ok {
 			ev.errorsPos(t.Pos, fmt.Errorf("Undefined function %s", t1.Value))
 			break
@@ -21,7 +21,7 @@ func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
 		case *value.Func:
 
 			ss := t2.Scope.NewChildScope()
-			ev.evalBinaryBy(ev.eval(t2.Args, ss), ev.toValues(t.Args, s), token.DEFINE)
+			ev.evalBinaryBy(ev.evalVar(t2.Args, ss), ev.toValues(t.Args, s), token.DEFINE)
 			ev.stackRet++
 			return ev.eval(t2.Body, ss)
 		case *value.FuncBuiltin:

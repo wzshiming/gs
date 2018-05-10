@@ -16,7 +16,7 @@ func (ev *Evaluator) evalFunc(t *ast.Func, s *value.Scope) value.Value {
 	case *ast.Call: // func name a,b
 		switch t1 := t0.Name.(type) {
 		case *ast.Literal: // func name a,b
-			s.SetLocal(t1.Value, vf)
+			s.SetLocal(value.String(t1.Value), vf)
 			//t1.Value
 		default: // func typ.name a,b
 		}

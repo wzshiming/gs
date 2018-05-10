@@ -21,7 +21,7 @@ func (ev *Evaluator) evalLiteral(t *ast.Literal, s *value.Scope) value.Value {
 		return value.False
 	case token.IDENT:
 		return &value.Var{
-			Name:  t.Value,
+			Name:  value.String(t.Value),
 			Scope: s,
 		}
 	case token.NIL:

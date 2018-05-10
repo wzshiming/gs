@@ -2,7 +2,7 @@ package value
 
 type Scope struct {
 	parent *Scope
-	scope  map[string]Value
+	scope  map[Value]Value
 }
 
 func NewScope(parent *Scope) *Scope {
@@ -15,7 +15,7 @@ func (p *Scope) NewChildScope() *Scope {
 	return NewScope(p)
 }
 
-func (p *Scope) Get(name string) (Value, bool) {
+func (p *Scope) Get(name Value) (Value, bool) {
 	v, ok := p.getScope(name)
 	if ok {
 		return v.scope[name], ok
@@ -23,7 +23,7 @@ func (p *Scope) Get(name string) (Value, bool) {
 	return Nil, ok
 }
 
-func (p *Scope) getScope(name string) (*Scope, bool) {
+func (p *Scope) getScope(name Value) (*Scope, bool) {
 	if p == nil {
 		return nil, false
 	}
@@ -37,7 +37,7 @@ func (p *Scope) getScope(name string) (*Scope, bool) {
 	return p, ok
 }
 
-func (p *Scope) Set(name string, val Value) {
+func (p *Scope) Set(name Value, val Value) {
 	v, ok := p.getScope(name)
 	if ok {
 		v.scope[name] = val
@@ -47,12 +47,12 @@ func (p *Scope) Set(name string, val Value) {
 	return
 }
 
-func (p *Scope) SetLocal(name string, val Value) {
+func (p *Scope) SetLocal(name Value, val Value) {
 	if p == nil {
 		return
 	}
 	if len(p.scope) == 0 {
-		p.scope = map[string]Value{}
+		p.scope = map[Value]Value{}
 	}
 	p.scope[name] = val
 	return

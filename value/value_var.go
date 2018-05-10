@@ -5,9 +5,10 @@ import (
 )
 
 type Var struct {
+	Parent   Value
 	Scope    *Scope
 	Ellipsis bool
-	Name     string
+	Name     Value
 }
 
 func (v *Var) String() string {
@@ -15,7 +16,7 @@ func (v *Var) String() string {
 		return "<ValueVar.nil>"
 	}
 	val := v.Point()
-	return "<" + v.Name + "." + val.String() + ">"
+	return "<" + v.Name.String() + "." + val.String() + ">"
 }
 
 func (v *Var) Point() Value {
