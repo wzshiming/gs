@@ -34,7 +34,7 @@ func (v *Var) Binary(t token.Token, y Value) (Value, error) {
 		yy := y.Point()
 		v.Scope.Set(v.Name, yy)
 		return v, nil
-	case token.DEFINE, token.COLON:
+	case token.DEFINE:
 		yy := y.Point()
 		v.Scope.SetLocal(v.Name, yy)
 		return v, nil
