@@ -24,7 +24,7 @@ func (s *parser) parseUnarySuf(expr ast.Expr) ast.Expr {
 			expr = &ast.Call{
 				Pos:  pos,
 				Name: expr,
-				Args: s.parseExpr(),
+				Args: s.parseUnary(),
 			}
 			return expr
 		case token.LBRACK:
