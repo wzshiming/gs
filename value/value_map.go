@@ -29,13 +29,13 @@ func (v Map) Point() Value {
 }
 
 func (v Map) Binary(t token.Token, y Value) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v Map) UnaryPre(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v Map) UnarySuf(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }

@@ -24,7 +24,7 @@ func (v _Nil) Binary(t token.Token, y Value) (Value, error) {
 	case token.NEQ:
 		b = false
 	default:
-		return v, undefined
+		return Nil, undefined
 	}
 
 	y0 := y.Point()
@@ -38,9 +38,9 @@ func (v _Nil) Binary(t token.Token, y Value) (Value, error) {
 }
 
 func (v _Nil) UnaryPre(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v _Nil) UnarySuf(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }

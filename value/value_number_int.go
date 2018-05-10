@@ -98,7 +98,7 @@ func (v numberInt) Binary(t token.Token, y Value) (vv Value, err error) {
 		return Bool(v >= sum.Int()), nil
 
 	default:
-		return v, undefined
+		return Nil, undefined
 	}
 }
 
@@ -110,7 +110,7 @@ func (v numberInt) UnaryPre(t token.Token) (Value, error) {
 	case token.SUB:
 		return -v, nil
 	default:
-		return v, undefined
+		return Nil, undefined
 	}
 }
 
@@ -121,6 +121,6 @@ func (v numberInt) UnarySuf(t token.Token) (Value, error) {
 	case token.DEC:
 		return v - 1, nil
 	default:
-		return v, undefined
+		return Nil, undefined
 	}
 }

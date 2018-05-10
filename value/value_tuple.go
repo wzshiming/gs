@@ -110,7 +110,7 @@ func (v *Tuple) Binary(t token.Token, y Value) (Value, error) {
 }
 
 func (v *Tuple) UnaryPre(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v *Tuple) UnarySuf(t token.Token) (Value, error) {
@@ -119,5 +119,5 @@ func (v *Tuple) UnarySuf(t token.Token) (Value, error) {
 		v.Ellipsis = true
 		return v, nil
 	}
-	return v, undefined
+	return Nil, undefined
 }

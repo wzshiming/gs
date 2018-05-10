@@ -102,7 +102,7 @@ func (v numberBigInt) Binary(t token.Token, y Value) (vv Value, err error) {
 		return Bool(v.Val.Cmp(sum.BigInt().Val) >= 0), nil
 
 	default:
-		return v, undefined
+		return Nil, undefined
 	}
 }
 
@@ -115,7 +115,7 @@ func (v numberBigInt) UnaryPre(t token.Token) (Value, error) {
 		v.Val.Mul(v.Val, big.NewInt(-1))
 		return v, nil
 	default:
-		return v, undefined
+		return Nil, undefined
 	}
 }
 
@@ -128,6 +128,6 @@ func (v numberBigInt) UnarySuf(t token.Token) (Value, error) {
 		v.Val.Sub(v.Val, big.NewInt(1))
 		return v, nil
 	default:
-		return v, undefined
+		return Nil, undefined
 	}
 }

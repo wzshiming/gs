@@ -60,15 +60,15 @@ func (v *FuncBuiltin) Point() Value {
 }
 
 func (v *FuncBuiltin) Binary(t token.Token, y Value) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v *FuncBuiltin) UnaryPre(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v *FuncBuiltin) UnarySuf(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func toGsValue(v reflect.Value) Value {

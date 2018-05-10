@@ -24,13 +24,13 @@ func (v Bool) Point() Value {
 }
 
 func (v Bool) Binary(t token.Token, y Value) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v Bool) UnaryPre(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v Bool) UnarySuf(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }

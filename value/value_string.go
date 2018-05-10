@@ -37,13 +37,13 @@ func (v String) Binary(t token.Token, y Value) (Value, error) {
 	case token.ADD:
 		return v + String(sum), nil
 	}
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v String) UnaryPre(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v String) UnarySuf(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }

@@ -20,13 +20,13 @@ func (v *Func) Point() Value {
 }
 
 func (v *Func) Binary(t token.Token, y Value) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v *Func) UnaryPre(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
 
 func (v *Func) UnarySuf(t token.Token) (Value, error) {
-	return v, undefined
+	return Nil, undefined
 }
