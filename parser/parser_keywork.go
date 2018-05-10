@@ -17,7 +17,7 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 			Pos: pos,
 		}
 		s.scan()
-		body := s.parseTuple()
+		body := s.parseUnary()
 		me.Body = body
 		return me
 	case token.FOR:
