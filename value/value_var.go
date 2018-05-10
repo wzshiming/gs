@@ -28,7 +28,6 @@ func (v *Var) Point() Value {
 }
 
 func (v *Var) Binary(t token.Token, y Value) (Value, error) {
-
 	switch t {
 	case token.ASSIGN:
 		yy := y.Point()
@@ -38,22 +37,20 @@ func (v *Var) Binary(t token.Token, y Value) (Value, error) {
 		yy := y.Point()
 		v.Scope.SetLocal(v.Name, yy)
 		return v, nil
-	}
-
-	val := v.Point()
-
-	switch t {
 	case token.ADD_ASSIGN, token.SUB_ASSIGN, token.MUL_ASSIGN, token.QUO_ASSIGN, token.POW_ASSIGN, token.REM_ASSIGN,
 		token.AND_ASSIGN, token.OR_ASSIGN, token.XOR_ASSIGN, token.SHL_ASSIGN, token.SHR_ASSIGN, token.AND_NOT_ASSIGN:
 		t0 := t - (token.ADD_ASSIGN - token.ADD)
+		val := v.Point()
 		val, err := val.Binary(t0, y)
 		if err != nil {
 			return Nil, err
 		}
 		v.Scope.Set(v.Name, val)
 		return v, nil
+	default:
+		val := v.Point()
+		return val.Binary(t, y)
 	}
-	return val.Binary(t, y)
 }
 
 func (v *Var) UnaryPre(t token.Token) (Value, error) {
