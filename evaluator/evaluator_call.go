@@ -33,7 +33,7 @@ func (ev *Evaluator) evalCall(t *ast.Call, s value.Assigner) value.Value {
 			return ev.eval(t2.Body, ss)
 		case *value.FuncBuiltin:
 
-			r, err := t2.Call(ev.toValues(t.Args, s))
+			r, err := t2.Call(ev.eval(t.Args, s))
 			if err != nil {
 				ev.errorsPos(t.Pos, err)
 				return value.Nil

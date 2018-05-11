@@ -80,18 +80,3 @@ func (ev *Evaluator) eval(e ast.Expr, s value.Assigner) value.Value {
 	ev.errorsPos(e.GetPos(), fmt.Errorf("Undefined keyword processing"))
 	return value.Nil
 }
-
-func (ev *Evaluator) toValues(e ast.Expr, s value.Assigner) value.Value {
-	if e == nil {
-		return nil
-	}
-	switch t := e.(type) {
-	case *ast.Tuple:
-		vs := make([]value.Value, 0, len(t.List))
-		for _, v := range t.List {
-			vs = append(vs, ev.eval(v, s))
-		}
-		return value.NewTuple(vs, false)
-	}
-	return ev.eval(e, s)
-}
