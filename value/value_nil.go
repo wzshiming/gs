@@ -4,7 +4,7 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-var Nil _Nil
+var Nil Value = _Nil{}
 
 type _Nil struct{}
 

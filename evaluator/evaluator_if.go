@@ -9,7 +9,9 @@ import (
 
 func (ev *Evaluator) evalIf(t *ast.If, s value.Assigner) value.Value {
 	ss := s.Child()
-	ev.eval(t.Init, ss)
+	if t.Init != nil {
+		ev.eval(t.Init, ss)
+	}
 	loop := ev.eval(t.Cond, ss)
 	vb, ok := loop.(value.Bool)
 	if !ok {

@@ -12,7 +12,7 @@ func (ev *Evaluator) evalFor(t *ast.For, s value.Assigner) value.Value {
 	ev.eval(t.Init, ss)
 	i := 0
 
-	var ex value.Value
+	ex := value.Nil
 	for {
 		loop := ev.eval(t.Cond, ss)
 		vb, ok := loop.(value.Bool)

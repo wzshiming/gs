@@ -77,9 +77,6 @@ func (ev *Evaluator) eval(e ast.Expr, s value.Assigner) value.Value {
 	case *ast.Map:
 		return ev.evalMap(t, s)
 	}
-	if e == nil {
-		return value.Nil
-	}
 	ev.errorsPos(e.GetPos(), fmt.Errorf("Undefined keyword processing"))
 	return value.Nil
 }

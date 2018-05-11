@@ -19,9 +19,16 @@ func (ev *Evaluator) evalCall(t *ast.Call, s value.Assigner) value.Value {
 		}
 		switch t2 := val.(type) {
 		case *value.Func:
-
 			ss := t2.Scope.Child()
-			ev.evalBinaryBy(ev.evalVar(t2.Args, ss), ev.toValues(t.Args, s), token.DEFINE)
+			x := value.Nil
+			y := value.Nil
+			if t2.Args != nil {
+				x = ev.evalVar(t2.Args, ss)
+			}
+			if t.Args != nil {
+				y = ev.eval(t.Args, s)
+			}
+			ev.evalBinaryBy(x, y, token.DEFINE)
 			ev.stackRet++
 			return ev.eval(t2.Body, ss)
 		case *value.FuncBuiltin:

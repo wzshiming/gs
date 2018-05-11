@@ -7,7 +7,7 @@ import (
 )
 
 func (ev *Evaluator) evalBinary(t *ast.Binary, s value.Assigner) value.Value {
-	var lx value.Value
+	lx := value.Nil
 	switch t.Op {
 	case token.ASSIGN, token.DEFINE,
 		token.ADD_ASSIGN, token.SUB_ASSIGN, token.MUL_ASSIGN, token.QUO_ASSIGN, token.POW_ASSIGN, token.REM_ASSIGN,
