@@ -18,11 +18,14 @@ func (ev *Evaluator) evalFor(t *ast.For, s value.Assigner) value.Value {
 		vb, ok := loop.(value.Bool)
 		if !ok {
 			ev.errorsPos(t.Pos, fmt.Errorf("There are only Boolean values in the 'for'"))
-			break
+			return value.Nil
 		}
 
 		if !vb {
-			break
+			if i != 0 && t.Else != nil {
+				return ev.eval(t.Else, ss)
+			}
+			return ex
 		}
 
 		ex = ev.eval(t.Body, ss)
@@ -30,14 +33,4 @@ func (ev *Evaluator) evalFor(t *ast.For, s value.Assigner) value.Value {
 			ev.eval(t.Next, ss)
 		}
 	}
-
-	if i != 0 {
-		return ex
-	}
-
-	if t.Else != nil {
-		return ev.eval(t.Else, ss)
-	}
-
-	return value.Nil
 }
