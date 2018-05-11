@@ -8,7 +8,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalVar(e ast.Expr, s *value.Scope) value.Value {
+func (ev *Evaluator) evalVar(e ast.Expr, s value.Assigner) value.Value {
 	switch t := e.(type) {
 	case *ast.Tuple:
 		return ev.evalTupleVar(t, s)

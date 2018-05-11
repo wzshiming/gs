@@ -8,7 +8,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalLiteral(t *ast.Literal, s *value.Scope) value.Value {
+func (ev *Evaluator) evalLiteral(t *ast.Literal, s value.Assigner) value.Value {
 	switch t.Type {
 	case token.NUMBER:
 		return value.ParseValueNumber(t.Value)

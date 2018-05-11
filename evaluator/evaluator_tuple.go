@@ -5,7 +5,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalTuple(t *ast.Tuple, s *value.Scope) value.Value {
+func (ev *Evaluator) evalTuple(t *ast.Tuple, s value.Assigner) value.Value {
 	z := &value.Tuple{}
 	for _, v := range t.List {
 		b := ev.eval(v, s)
@@ -23,7 +23,7 @@ func (ev *Evaluator) evalTuple(t *ast.Tuple, s *value.Scope) value.Value {
 	return z
 }
 
-func (ev *Evaluator) evalTupleVar(t *ast.Tuple, s *value.Scope) value.Value {
+func (ev *Evaluator) evalTupleVar(t *ast.Tuple, s value.Assigner) value.Value {
 	z := &value.Tuple{}
 	for _, v := range t.List {
 		b := ev.evalVar(v, s)

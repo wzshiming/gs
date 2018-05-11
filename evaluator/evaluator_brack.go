@@ -7,7 +7,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalBrack(t *ast.Brack, s *value.Scope) value.Value {
+func (ev *Evaluator) evalBrack(t *ast.Brack, s value.Assigner) value.Value {
 	x := ev.eval(t.X, s)
 	y := ev.eval(t.Y, s)
 	x = x.Point()

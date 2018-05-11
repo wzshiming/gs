@@ -8,7 +8,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalMap(m *ast.Map, s *value.Scope) value.Value {
+func (ev *Evaluator) evalMap(m *ast.Map, s value.Assigner) value.Value {
 	switch t := m.Body.(type) {
 	case *ast.Brace:
 		mr := value.Map{}

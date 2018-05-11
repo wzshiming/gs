@@ -6,7 +6,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalBinary(t *ast.Binary, s *value.Scope) value.Value {
+func (ev *Evaluator) evalBinary(t *ast.Binary, s value.Assigner) value.Value {
 	var lx value.Value
 	switch t.Op {
 	case token.ASSIGN, token.DEFINE,

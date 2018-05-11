@@ -45,6 +45,10 @@ func (m Map) Get(k Value) (Value, bool) {
 	return v, ok
 }
 
+func (m Map) Child() Assigner {
+	return m
+}
+
 func (m Map) Binary(t token.Token, y Value) (Value, error) {
 	return Nil, undefined
 }

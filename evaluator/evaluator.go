@@ -31,14 +31,8 @@ func (ev *Evaluator) errorsPos(pos position.Pos, err error) {
 	ev.errs.Append(ev.fset.Position(pos), err)
 }
 
-// Eval 执行 expr
-func (ev *Evaluator) Eval(es []ast.Expr) value.Value {
-	s := value.NewScope(nil)
-	return ev.EvalBy(es, s)
-}
-
 // EvalBy 执行 expr 指定作用域
-func (ev *Evaluator) EvalBy(es []ast.Expr, s *value.Scope) (ex value.Value) {
+func (ev *Evaluator) EvalBy(es []ast.Expr, s value.Assigner) (ex value.Value) {
 	sr := ev.stackRet
 	sf := ev.stackFor
 	for _, v := range es {
@@ -50,7 +44,7 @@ func (ev *Evaluator) EvalBy(es []ast.Expr, s *value.Scope) (ex value.Value) {
 	return
 }
 
-func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
+func (ev *Evaluator) eval(e ast.Expr, s value.Assigner) value.Value {
 	switch t := e.(type) {
 	case *ast.Literal:
 		return ev.evalLiteral(t, s)
@@ -70,7 +64,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 	case *ast.For:
 		return ev.evalFor(t, s)
 	case *ast.Brace:
-		ss := s.NewChildScope()
+		ss := s.Child()
 		return ev.EvalBy(t.List, ss)
 	case *ast.Call:
 		return ev.evalCall(t, s)
@@ -90,7 +84,7 @@ func (ev *Evaluator) eval(e ast.Expr, s *value.Scope) value.Value {
 	return value.Nil
 }
 
-func (ev *Evaluator) toValues(e ast.Expr, s *value.Scope) value.Value {
+func (ev *Evaluator) toValues(e ast.Expr, s value.Assigner) value.Value {
 	if e == nil {
 		return nil
 	}

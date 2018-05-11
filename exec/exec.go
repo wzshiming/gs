@@ -14,7 +14,7 @@ import (
 type Exec struct {
 	fset  *position.FileSet
 	errs  *errors.Errors
-	scope *value.Scope
+	scope value.Assigner
 }
 
 func NewExec() *Exec {

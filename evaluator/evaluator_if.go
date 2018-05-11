@@ -7,8 +7,8 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalIf(t *ast.If, s *value.Scope) value.Value {
-	ss := s.NewChildScope()
+func (ev *Evaluator) evalIf(t *ast.If, s value.Assigner) value.Value {
+	ss := s.Child()
 	ev.eval(t.Init, ss)
 	loop := ev.eval(t.Cond, ss)
 	vb, ok := loop.(value.Bool)

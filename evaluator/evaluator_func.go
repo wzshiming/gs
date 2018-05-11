@@ -5,9 +5,9 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalFunc(t *ast.Func, s *value.Scope) value.Value {
+func (ev *Evaluator) evalFunc(t *ast.Func, s value.Assigner) value.Value {
 	fun := t.Func
-	//ss := s.NewChildScope()
+	//ss := s.Child()
 	vf := &value.Func{
 		Scope: s,
 		Body:  t.Body,

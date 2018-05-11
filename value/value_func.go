@@ -7,7 +7,7 @@ import (
 
 type Func struct {
 	Args  ast.Expr
-	Scope *Scope
+	Scope Assigner
 	Body  ast.Expr
 }
 

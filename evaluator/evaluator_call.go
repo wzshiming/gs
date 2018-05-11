@@ -8,7 +8,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
+func (ev *Evaluator) evalCall(t *ast.Call, s value.Assigner) value.Value {
 
 	switch t1 := t.Name.(type) {
 	case *ast.Literal: // name a,b
@@ -20,7 +20,7 @@ func (ev *Evaluator) evalCall(t *ast.Call, s *value.Scope) value.Value {
 		switch t2 := val.(type) {
 		case *value.Func:
 
-			ss := t2.Scope.NewChildScope()
+			ss := t2.Scope.Child()
 			ev.evalBinaryBy(ev.evalVar(t2.Args, ss), ev.toValues(t.Args, s), token.DEFINE)
 			ev.stackRet++
 			return ev.eval(t2.Body, ss)

@@ -11,7 +11,7 @@ func NewScope(parent *Scope) *Scope {
 	}
 }
 
-func (p *Scope) NewChildScope() *Scope {
+func (p *Scope) Child() Assigner {
 	return NewScope(p)
 }
 

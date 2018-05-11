@@ -7,8 +7,8 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalFor(t *ast.For, s *value.Scope) value.Value {
-	ss := s.NewChildScope()
+func (ev *Evaluator) evalFor(t *ast.For, s value.Assigner) value.Value {
+	ss := s.Child()
 	ev.eval(t.Init, ss)
 	i := 0
 

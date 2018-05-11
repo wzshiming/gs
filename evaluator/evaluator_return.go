@@ -5,7 +5,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalReturn(t *ast.Return, s *value.Scope) value.Value {
+func (ev *Evaluator) evalReturn(t *ast.Return, s value.Assigner) value.Value {
 	ev.stackRet--
 	if t.Ret == nil {
 		return value.Nil

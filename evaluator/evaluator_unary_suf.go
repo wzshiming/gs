@@ -5,7 +5,7 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-func (ev *Evaluator) evalUnarySuf(t *ast.UnarySuf, s *value.Scope) value.Value {
+func (ev *Evaluator) evalUnarySuf(t *ast.UnarySuf, s value.Assigner) value.Value {
 	lx := ev.eval(t.X, s)
 
 	z, err := lx.UnarySuf(t.Op)
