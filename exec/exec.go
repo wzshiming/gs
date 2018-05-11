@@ -1,6 +1,7 @@
 package exec
 
 import (
+	"bytes"
 	"io/ioutil"
 
 	"github.com/wzshiming/gs/builtin"
@@ -48,5 +49,5 @@ func (e *Exec) File(filename string) (value.Value, error) {
 	if err != nil {
 		return nil, err
 	}
-	return e.Cmd(filename, []rune(string(b)))
+	return e.Cmd(filename, bytes.Runes(b))
 }
