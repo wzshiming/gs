@@ -58,61 +58,6 @@ func (s *Scanner) next() {
 	return
 }
 
-func (s *Scanner) scanIdent() string {
-	off := s.off - 1
-loop:
-	for {
-		switch s.ch {
-		case '+', '-', '*', '/', '%',
-			'^', '&', '|',
-			'\n', '\t', '\r', ' ', '\\',
-			'(', ')', '[', ']', '{', '}',
-			',', '.', ';', ':', -1:
-			break loop
-		}
-		s.next()
-	}
-	return string(s.buf[off : s.off-1])
-}
-
-func (s *Scanner) scanString() string {
-	off := s.off - 1
-	ch := s.ch
-	s.next()
-	for ch != s.ch {
-		s.next()
-	}
-	s.next()
-	return string(s.buf[off : s.off-1])
-}
-
-func (s *Scanner) scanNumber() string {
-	off := s.off - 1
-	for s.ch >= '0' && s.ch <= '9' {
-		s.next()
-	}
-	if s.ch == '.' {
-		s.next()
-		for s.ch >= '0' && s.ch <= '9' {
-			s.next()
-		}
-	}
-	return string(s.buf[off : s.off-1])
-}
-
-func (s *Scanner) scanOperator() (token.Token, string) {
-	off := s.off - 1
-	look := token.LookupOperator
-	for {
-		look0 := look.GetRune(s.ch)
-		if look0 == nil {
-			return look.Tok, string(s.buf[off : s.off-1])
-		}
-		look = look0
-		s.next()
-	}
-}
-
 func (s *Scanner) Scan() (pos position.Pos, tok token.Token, val string, err error) {
 	s.skipSpace()
 	pos = s.file.Pos(s.off - 1)
