@@ -30,11 +30,10 @@ func echo.Hello a {
 	scan := parser.NewParser(fset, errs, "_", []rune(expr))
 	out := scan.Parse()
 	if errs.Len() != 0 {
-		ffmt.Puts(errs)
+		t.Error(errs)
 	}
 	for _, v := range out {
-		ffmt.Puts(v)
-		//defPuts.Print(v)
+		t.Log(v)
 	}
 
 }

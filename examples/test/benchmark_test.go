@@ -7,7 +7,7 @@ import (
 	"github.com/wzshiming/gs/evaluator"
 	"github.com/wzshiming/gs/parser"
 	"github.com/wzshiming/gs/position"
-	ffmt "gopkg.in/ffmt.v1"
+	"github.com/wzshiming/gs/value"
 )
 
 func BenchmarkGoFloat(b *testing.B) {
@@ -46,18 +46,18 @@ for i := 0; i < 100000; i ++ {
 	fset := position.NewFileSet()
 	errs := errors.NewErrors()
 	scan := parser.NewParser(fset, errs, "_", []rune(expr))
+	scope := value.NewScope(nil)
 	out := scan.Parse()
 	if errs.Len() != 0 {
-		ffmt.Puts(errs)
+		b.Error(errs)
 	}
 
 	ev := evaluator.NewEvaluator(fset, errs)
 
 	for i := 0; i != b.N; i++ {
-		ev.Eval(out)
-
+		ev.EvalBy(out, scope)
 		if errs.Len() != 0 {
-			ffmt.Puts(errs)
+			b.Error(errs)
 		}
 	}
 }
