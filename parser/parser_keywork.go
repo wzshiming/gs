@@ -27,7 +27,7 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 		s.scan()
 		if s.tok == token.SEMICOLON { // 开头是 ;
 			s.scan()
-			fe.Cond = s.parseExpr()
+			fe.Cond = s.parseDefine()
 
 			if s.tok != token.SEMICOLON {
 				s.errors(fmt.Errorf("No semicolon ends"))
@@ -35,52 +35,52 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 			}
 			s.scan()
 			if s.tok != token.LBRACE {
-				fe.Next = s.parseExpr()
+				fe.Next = s.parseDefine()
 			}
 		} else {
-			initOrCond := s.parseExpr()
+			initOrCond := s.parseDefine()
 
 			if s.tok != token.SEMICOLON {
 				fe.Cond = initOrCond
 			} else {
 				fe.Init = initOrCond
 				s.scan()
-				fe.Cond = s.parseExpr()
+				fe.Cond = s.parseDefine()
 				if s.tok != token.SEMICOLON {
 					s.errors(fmt.Errorf("No semicolon ends"))
 					return nil
 				}
 				s.scan()
 				if s.tok != token.LBRACE {
-					fe.Next = s.parseExpr()
+					fe.Next = s.parseDefine()
 				}
 			}
 		}
-		fe.Body = s.parseExpr()
+		fe.Body = s.parseDefine()
 
 		if s.tok == token.ELSE {
 			s.scan()
-			fe.Else = s.parseExpr()
+			fe.Else = s.parseDefine()
 		}
 		return fe
 
 	case token.IF:
 		s.scan()
-		init := s.parseExpr()
+		init := s.parseDefine()
 		cond := init
 
 		if s.tok == token.SEMICOLON {
 			s.scan()
-			cond = s.parseExpr()
+			cond = s.parseDefine()
 		} else {
 			init = nil
 		}
 
-		body := s.parseExpr()
+		body := s.parseDefine()
 		var els ast.Expr
 		if s.tok == token.ELSE {
 			s.scan()
-			els = s.parseExpr()
+			els = s.parseDefine()
 		}
 		expr = &ast.If{
 			Pos:  pos,
@@ -92,8 +92,8 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 		return expr
 	case token.FUNC:
 		s.scan()
-		fun := s.parseExpr()
-		body := s.parseExpr()
+		fun := s.parseDefine()
+		body := s.parseDefine()
 		expr = &ast.Func{
 			Pos:  pos,
 			Func: fun,
@@ -102,7 +102,7 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 		return expr
 	case token.RETURN:
 		s.scan()
-		ret := s.parseExpr()
+		ret := s.parseDefine()
 		expr = &ast.Return{
 			Pos: pos,
 			Ret: ret,

@@ -59,7 +59,7 @@ func (s *parser) parse() []ast.Expr {
 	ex := []ast.Expr{}
 	for {
 
-		pe := s.parseExpr()
+		pe := s.parseDefine()
 		if pe != nil {
 			ex = append(ex, pe)
 		}
@@ -77,8 +77,4 @@ func (s *parser) parse() []ast.Expr {
 			}
 		}
 	}
-}
-
-func (s *parser) parseExpr() ast.Expr {
-	return s.parseDefine()
 }

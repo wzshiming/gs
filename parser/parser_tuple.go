@@ -6,14 +6,14 @@ import (
 )
 
 func (s *parser) parseTuple() ast.Expr {
-	es := []ast.Expr{s.parseBinary(1)}
+	es := []ast.Expr{s.parseBinary()}
 
 	for {
 		if s.tok != token.COMMA {
 			break
 		}
 		s.scan()
-		b := s.parseBinary(1)
+		b := s.parseBinary()
 		if b == nil {
 			break
 		}

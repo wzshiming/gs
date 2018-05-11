@@ -4,7 +4,11 @@ import (
 	"github.com/wzshiming/gs/ast"
 )
 
-func (s *parser) parseBinary(pre int) ast.Expr {
+func (s *parser) parseBinary() ast.Expr {
+	return s._parseBinary(1)
+}
+
+func (s *parser) _parseBinary(pre int) ast.Expr {
 	x := s.parseUnary()
 	if x == nil {
 		return x
@@ -19,7 +23,7 @@ func (s *parser) parseBinary(pre int) ast.Expr {
 			break
 		}
 		s.scan()
-		y := s.parseBinary(op2 + 1)
+		y := s._parseBinary(op2 + 1)
 		x = &ast.Binary{
 			Pos: pos,
 			X:   x,
