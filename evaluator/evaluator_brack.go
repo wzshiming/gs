@@ -19,12 +19,12 @@ func (ev *Evaluator) evalBrack(t *ast.Brack, s value.Assigner) value.Value {
 			l := int(ty.Int())
 			i := tx.Len()
 			if i <= l {
-				ev.errorsPos(t.X.GetPos(), fmt.Errorf("Index out of range"))
+				ev.errorsPos(t.X.GetPos(), fmt.Errorf("Tuple index out of range"))
 				return value.Nil
 			}
 			return tx.Index(l)
 		default:
-			ev.errorsPos(t.X.GetPos(), fmt.Errorf("Indexes must be Numbers"))
+			ev.errorsPos(t.X.GetPos(), fmt.Errorf("Tuple indexes must be Numbers"))
 			return value.Nil
 		}
 	case value.Map:
