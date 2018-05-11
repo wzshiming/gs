@@ -15,7 +15,6 @@ func (ev *Evaluator) evalMap(m *ast.Map, s value.Assigner) value.Value {
 
 		list := t.List
 		if len(list) != 1 {
-			ev.errorsPos(m.Pos, fmt.Errorf("Map syntax error"))
 			return mr
 		}
 
