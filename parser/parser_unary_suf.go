@@ -24,16 +24,16 @@ func (s *parser) parseUnarySuf(expr ast.Expr) ast.Expr {
 			expr = &ast.Call{
 				Pos:  pos,
 				Name: expr,
-				Args: s.parseUnaryPre(),
+				Args: s.parseParen(),
 			}
-			return expr
+			return s.parseUnarySuf(expr)
 		case token.LBRACK:
 			expr = &ast.Brack{
 				Pos: pos,
 				X:   expr,
-				Y:   s.parseUnaryPre(),
+				Y:   s.parseBrack(),
 			}
-			return expr
+			return s.parseUnarySuf(expr)
 		default:
 			return expr
 		}
@@ -51,7 +51,7 @@ func (s *parser) parseUnarySuf(expr ast.Expr) ast.Expr {
 			expr = &ast.Call{
 				Pos:  pos,
 				Name: expr,
-				Args: s.parseDefine(),
+				Args: s.parseTuple(),
 			}
 			return s.parseUnarySuf(expr)
 		}
