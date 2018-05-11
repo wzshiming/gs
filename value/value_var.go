@@ -5,8 +5,7 @@ import (
 )
 
 type Var struct {
-	Parent   Value
-	Scope    *Scope
+	Scope    Assigner
 	Ellipsis bool
 	Name     Value
 }

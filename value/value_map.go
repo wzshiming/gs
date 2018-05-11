@@ -6,15 +6,19 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
+var (
+	_ Assigner = Map{}
+)
+
 type Map map[Value]Value
 
-func (v Map) String() string {
-	if v == nil {
+func (m Map) String() string {
+	if m == nil {
 		return "<nil.ValueMap>"
 	}
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("{\n")
-	for k, v := range v {
+	for k, v := range m {
 		buf.WriteString(k.String())
 		buf.WriteString(": ")
 		buf.WriteString(v.String())
@@ -24,18 +28,31 @@ func (v Map) String() string {
 	return buf.String()
 }
 
-func (v Map) Point() Value {
-	return v
+func (m Map) Point() Value {
+	return m
 }
 
-func (v Map) Binary(t token.Token, y Value) (Value, error) {
+func (m Map) Set(k Value, v Value) {
+	m[k] = v
+}
+
+func (m Map) SetLocal(k Value, v Value) {
+	m[k] = v
+}
+
+func (m Map) Get(k Value) (Value, bool) {
+	v, ok := m[k]
+	return v, ok
+}
+
+func (m Map) Binary(t token.Token, y Value) (Value, error) {
 	return Nil, undefined
 }
 
-func (v Map) UnaryPre(t token.Token) (Value, error) {
+func (m Map) UnaryPre(t token.Token) (Value, error) {
 	return Nil, undefined
 }
 
-func (v Map) UnarySuf(t token.Token) (Value, error) {
+func (m Map) UnarySuf(t token.Token) (Value, error) {
 	return Nil, undefined
 }

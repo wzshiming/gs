@@ -7,7 +7,16 @@ import (
 )
 
 func (ev *Evaluator) evalBinary(t *ast.Binary, s *value.Scope) value.Value {
-	lx := ev.eval(t.X, s)
+	var lx value.Value
+	switch t.Op {
+	case token.ASSIGN, token.DEFINE,
+		token.ADD_ASSIGN, token.SUB_ASSIGN, token.MUL_ASSIGN, token.QUO_ASSIGN, token.POW_ASSIGN, token.REM_ASSIGN,
+		token.AND_ASSIGN, token.OR_ASSIGN, token.XOR_ASSIGN, token.SHL_ASSIGN, token.SHR_ASSIGN, token.AND_NOT_ASSIGN:
+		lx = ev.evalVar(t.X, s)
+	default:
+		lx = ev.eval(t.X, s)
+	}
+
 	ly := ev.eval(t.Y, s)
 	z, err := ev.evalBinaryBy(lx, ly, t.Op)
 	if err != nil {

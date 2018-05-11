@@ -19,7 +19,24 @@ func (ev *Evaluator) evalTuple(t *ast.Tuple, s *value.Scope) value.Value {
 		default:
 			z.List = append(z.List, b)
 		}
+	}
+	return z
+}
 
+func (ev *Evaluator) evalTupleVar(t *ast.Tuple, s *value.Scope) value.Value {
+	z := &value.Tuple{}
+	for _, v := range t.List {
+		b := ev.evalVar(v, s)
+		switch t := b.(type) {
+		case *value.Tuple:
+			if t.Ellipsis {
+				z.List = append(z.List, t.List...)
+			} else {
+				z.List = append(z.List, b)
+			}
+		default:
+			z.List = append(z.List, b)
+		}
 	}
 	return z
 }
