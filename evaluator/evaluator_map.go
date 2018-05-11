@@ -31,6 +31,8 @@ func (ev *Evaluator) evalMap(m *ast.Map, s value.Assigner) value.Value {
 				}
 				x := ev.eval(t1.X, s)
 				y := ev.eval(t1.Y, s)
+				x = x.Point()
+				y = y.Point()
 				mr[x] = y
 			default:
 				ev.errorsPos(v.GetPos(), fmt.Errorf("Not a colon statement"))
