@@ -6,8 +6,8 @@ import (
 
 // Boolean constant definition
 var (
-	True  Bool = true
-	False Bool = false
+	True  Value = Bool(true)
+	False Value = Bool(false)
 )
 
 type Bool bool
