@@ -11,7 +11,7 @@ import (
 func (ev *Evaluator) evalLiteral(t *ast.Literal, s value.Assigner) value.Value {
 	switch t.Type {
 	case token.NUMBER:
-		return value.ParseValueNumber(t.Value)
+		return value.ParseNumber(t.Value)
 	case token.STRING:
 		return value.String(t.Value[1 : len(t.Value)-1])
 	case token.BOOL:

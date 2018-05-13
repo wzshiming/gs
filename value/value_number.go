@@ -21,7 +21,7 @@ type Number interface {
 	BigFloat() numberBigFloat
 }
 
-func ParseValueNumber(s string) Number {
+func ParseNumber(s string) Number {
 	if strings.Index(s, ".") != -1 {
 		val, _ := strconv.ParseFloat(s, 0)
 		return newNumberFloat(val)
