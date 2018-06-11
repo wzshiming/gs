@@ -6,7 +6,7 @@ import (
 	"github.com/wzshiming/gs/position"
 )
 
-// call
+// Call the is a call expression.
 type Call struct {
 	position.Pos
 	Name Expr

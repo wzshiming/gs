@@ -7,7 +7,7 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-// 前缀一元表达式
+// UnaryPre the is a unary pre expression.
 type UnaryPre struct {
 	position.Pos
 	Op token.Token

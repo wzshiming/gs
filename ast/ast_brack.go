@@ -6,7 +6,8 @@ import (
 	"github.com/wzshiming/gs/position"
 )
 
-// [] 方括号表达式
+// Brack the is a brack expression.
+// Used to fetch indexes or slices.
 type Brack struct {
 	position.Pos
 	X Expr

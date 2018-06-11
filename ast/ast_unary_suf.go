@@ -7,7 +7,7 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-// 后缀一元表达式
+// UnarySuf the is a unary suf expression.
 type UnarySuf struct {
 	position.Pos
 	X  Expr

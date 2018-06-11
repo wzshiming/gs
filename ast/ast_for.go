@@ -6,7 +6,8 @@ import (
 	"github.com/wzshiming/gs/position"
 )
 
-// for 关键字
+// For the is a for expression.
+// Used for circulation
 type For struct {
 	position.Pos
 	Init Expr

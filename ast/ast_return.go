@@ -6,7 +6,8 @@ import (
 	"github.com/wzshiming/gs/position"
 )
 
-// return 定义
+// Return the is a reurn expression.
+// Used to end the function and return the result.
 type Return struct {
 	position.Pos
 	Ret Expr

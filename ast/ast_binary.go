@@ -7,12 +7,13 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-// 二元表达式
+// Binary the is a binary expression.
+// Used for mathematical
 type Binary struct {
 	position.Pos
-	X   Expr
-	Op  token.Token
-	Y   Expr
+	X  Expr
+	Op token.Token
+	Y  Expr
 }
 
 func (o *Binary) String() string {

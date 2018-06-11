@@ -4,7 +4,8 @@ import (
 	"github.com/wzshiming/gs/position"
 )
 
-// continue 关键字
+// Continue the is a continue expression.
+// Used to jump out of the current
 type Continue struct {
 	position.Pos
 }

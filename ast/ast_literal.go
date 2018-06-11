@@ -5,7 +5,8 @@ import (
 	"github.com/wzshiming/gs/token"
 )
 
-// 常量和符号
+// Literal the is a literal expression.
+// Used to define base types
 type Literal struct {
 	position.Pos
 	Type  token.Token

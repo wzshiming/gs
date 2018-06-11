@@ -6,7 +6,8 @@ import (
 	"github.com/wzshiming/gs/position"
 )
 
-// 函数定义
+// Func the is a func expression.
+// Used to define functions or methods.
 type Func struct {
 	position.Pos
 	Func Expr

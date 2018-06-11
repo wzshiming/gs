@@ -4,7 +4,8 @@ import (
 	"github.com/wzshiming/gs/position"
 )
 
-// break 关键字
+// Break the is a brack expression.
+// Used to jump out of the loop
 type Break struct {
 	position.Pos
 }

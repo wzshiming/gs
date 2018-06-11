@@ -6,7 +6,8 @@ import (
 	"github.com/wzshiming/gs/position"
 )
 
-// map 关键字
+// Map the is a map expression.
+// Used to define map objects
 type Map struct {
 	position.Pos
 	Body Expr

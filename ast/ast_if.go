@@ -6,7 +6,8 @@ import (
 	"github.com/wzshiming/gs/position"
 )
 
-// if 关键字
+// If the is a if expression.
+// Used to logical judgment
 type If struct {
 	position.Pos
 	Init Expr
