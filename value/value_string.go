@@ -9,7 +9,7 @@ import (
 type String string
 
 func (v String) String() string {
-	return `"` + string(v) + `"`
+	return string(v)
 }
 
 func (v String) Point() Value {
