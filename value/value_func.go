@@ -12,7 +12,7 @@ type Func struct {
 }
 
 func (v *Func) String() string {
-	return v.Body.String()
+	return "<>"
 }
 
 func (v *Func) Point() Value {

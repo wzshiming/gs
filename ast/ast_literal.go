@@ -12,10 +12,3 @@ type Literal struct {
 	Type  token.Token
 	Value string
 }
-
-func (l *Literal) String() string {
-	if l == nil {
-		return "<nil.Literal>"
-	}
-	return l.Value
-}

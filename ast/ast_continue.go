@@ -10,10 +10,3 @@ type Continue struct {
 	position.Pos
 	Label *Literal
 }
-
-func (l *Continue) String() string {
-	if l == nil {
-		return "<nil.Continue>"
-	}
-	return "continue"
-}

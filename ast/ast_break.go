@@ -10,10 +10,3 @@ type Break struct {
 	position.Pos
 	Label *Literal
 }
-
-func (l *Break) String() string {
-	if l == nil {
-		return "<nil.Break>"
-	}
-	return "break"
-}
