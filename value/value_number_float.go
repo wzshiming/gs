@@ -8,10 +8,6 @@ import (
 
 type numberFloat float64
 
-func newNumberFloat(f float64) numberFloat {
-	return numberFloat(f)
-}
-
 func (v numberFloat) String() string {
 	return fmt.Sprint(float64(v))
 }
@@ -26,14 +22,6 @@ func (v numberFloat) Int() numberInt {
 
 func (v numberFloat) Float() numberFloat {
 	return v
-}
-
-func (v numberFloat) BigInt() numberBigInt {
-	return newNumberBigInt(int64(v))
-}
-
-func (v numberFloat) BigFloat() numberBigFloat {
-	return newNumberBigFloat(float64(v))
 }
 
 func (v numberFloat) Binary(t token.Token, y Value) (vv Value, err error) {
@@ -59,27 +47,15 @@ func (v numberFloat) Binary(t token.Token, y Value) (vv Value, err error) {
 
 	switch t {
 	case token.ADD:
-		if v > maxFloat {
-			return v.BigFloat().Binary(t, sum)
-		}
 		return v + sum.Float(), nil
 	case token.SUB:
-		if v < minFloat {
-			return v.BigFloat().Binary(t, sum)
-		}
 		return v - sum.Float(), nil
 	case token.MUL:
-		if v > maxFloat {
-			return v.BigFloat().Binary(t, sum)
-		}
 		return v * sum.Float(), nil
 	case token.QUO:
-		if v < minFloat {
-			return v.BigFloat().Binary(t, sum)
-		}
 		return v / sum.Float(), nil
 	case token.REM:
-		return v.BigFloat().Binary(t, sum)
+		return v.Int() % sum.Int(), nil
 
 		// 比较
 	case token.EQL:

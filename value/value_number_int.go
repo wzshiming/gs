@@ -8,10 +8,6 @@ import (
 
 type numberInt int64
 
-func newNumberInt(f int64) numberInt {
-	return numberInt(f)
-}
-
 func (v numberInt) String() string {
 	return fmt.Sprint(int64(v))
 }
@@ -26,14 +22,6 @@ func (v numberInt) Int() numberInt {
 
 func (v numberInt) Float() numberFloat {
 	return numberFloat(v)
-}
-
-func (v numberInt) BigInt() numberBigInt {
-	return newNumberBigInt(int64(v))
-}
-
-func (v numberInt) BigFloat() numberBigFloat {
-	return newNumberBigFloat(float64(v))
 }
 
 func (v numberInt) Binary(t token.Token, y Value) (vv Value, err error) {
@@ -59,22 +47,13 @@ func (v numberInt) Binary(t token.Token, y Value) (vv Value, err error) {
 
 	switch t {
 	case token.ADD:
-		if v > maxInt {
-			return v.BigInt().Binary(t, sum)
-		}
 		return v + sum.Int(), nil
 	case token.SUB:
-		if v < minInt {
-			return v.BigInt().Binary(t, sum)
-		}
 		return v - sum.Int(), nil
 	case token.MUL:
-		if v > maxInt {
-			return v.BigInt().Binary(t, sum)
-		}
 		return v * sum.Int(), nil
 	case token.QUO:
-		return v.Float().Binary(t, sum)
+		return v / sum.Int(), nil
 	case token.REM:
 		return v % sum.Int(), nil
 

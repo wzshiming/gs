@@ -78,11 +78,11 @@ func toGsValue(v reflect.Value) Value {
 	case reflect.String:
 		return String(v.String())
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return newNumberInt(v.Int())
+		return numberInt(v.Int())
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		return newNumberInt(int64(v.Uint()))
+		return numberInt(int64(v.Uint()))
 	case reflect.Float32, reflect.Float64:
-		return newNumberFloat(v.Float())
+		return numberFloat(v.Float())
 	case reflect.Func:
 		return &FuncBuiltin{v}
 	case reflect.Ptr, reflect.Interface:
