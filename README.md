@@ -4,7 +4,9 @@
 [![GoDoc](https://godoc.org/github.com/wzshiming/gs?status.svg)](https://godoc.org/github.com/wzshiming/gs)
 [![GitHub license](https://img.shields.io/github/license/wzshiming/gs.svg)](https://github.com/wzshiming/gs/blob/master/LICENSE)
 
-Syntax Reference golang ruby javascript
+This is a lightweight embedded scripting language.  
+The syntax takes golang as the main body, combining with some features of ruby,scheme and javascript.  
+**Note:** Some features aren't implemented yet. It is not ready for production use.  
 
 ## License
 
