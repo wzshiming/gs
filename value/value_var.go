@@ -67,15 +67,8 @@ func (v *Var) UnarySuf(t token.Token) (Value, error) {
 	val := v.Point()
 
 	switch t {
-	case token.INC:
-		vv, err := val.Binary(token.ADD, numberInt(1))
-		if err != nil {
-			return nil, err
-		}
-		v.Scope.Set(v.Name, vv)
-		return v, nil
-	case token.DEC:
-		vv, err := val.Binary(token.SUB, numberInt(1))
+	case token.INC, token.DEC:
+		vv, err := val.UnarySuf(t)
 		if err != nil {
 			return nil, err
 		}
