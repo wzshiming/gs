@@ -108,6 +108,28 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 			Ret: ret,
 		}
 		return expr
+	case token.BREAK:
+		s.scan()
+		var label *ast.Literal
+		if s.tok == token.IDENT {
+			label = s.parseLiteral()
+		}
+		expr = &ast.Break{
+			Pos:   pos,
+			Label: label,
+		}
+		return expr
+	case token.CONTINUE:
+		s.scan()
+		var label *ast.Literal
+		if s.tok == token.IDENT {
+			label = s.parseLiteral()
+		}
+		expr = &ast.Continue{
+			Pos:   pos,
+			Label: label,
+		}
+		return expr
 	default:
 		s.errors(fmt.Errorf("Undefined keywork %v", s.tok))
 		return nil

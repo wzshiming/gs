@@ -80,12 +80,14 @@ const (
 	operatorEnd
 
 	keyworkBeg
-	MAP    // map
-	IF     // if
-	ELSE   // else
-	FOR    // for
-	FUNC   // func
-	RETURN // return
+	MAP      // map
+	IF       // if
+	ELSE     // else
+	FOR      // for
+	FUNC     // func
+	RETURN   // return
+	BREAK    // break
+	CONTINUE // continue
 	keyworkEnd
 )
 
@@ -157,12 +159,14 @@ var tokenMap = map[Token]string{
 	SEMICOLON: ";",
 	COLON:     ":",
 
-	MAP:    "map",
-	IF:     "if",
-	ELSE:   "else",
-	FOR:    "for",
-	FUNC:   "func",
-	RETURN: "return",
+	MAP:      "map",
+	IF:       "if",
+	ELSE:     "else",
+	FOR:      "for",
+	FUNC:     "func",
+	RETURN:   "return",
+	BREAK:    "break",
+	CONTINUE: "continue",
 }
 
 func (op Token) String() string {

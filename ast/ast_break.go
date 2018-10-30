@@ -8,6 +8,7 @@ import (
 // Used to jump out of the loop
 type Break struct {
 	position.Pos
+	Label *Literal
 }
 
 func (l *Break) String() string {

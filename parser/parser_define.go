@@ -18,7 +18,17 @@ func (s *parser) parseDefine() ast.Expr {
 			Op:  op,
 			Y:   y,
 		}
-	default:
-		return x
+	case token.COLON:
+		switch x := x.(type) {
+		case *ast.Literal:
+			s.scan()
+			y := s.parseDefine()
+			return &ast.Labeled{
+				Pos:   pos,
+				Label: x,
+				Stmt:  y,
+			}
+		}
 	}
+	return x
 }

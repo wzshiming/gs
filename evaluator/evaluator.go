@@ -9,17 +9,15 @@ import (
 	"github.com/wzshiming/gs/value"
 )
 
-// Evaluator 执行 ast
+// Evaluator evaluate ast
 type Evaluator struct {
 	fset *position.FileSet
 	errs *errors.Errors
 
 	stackRet int
-	stackFor int
-	tableFor string
 }
 
-// NewEvaluator 新的执行
+// NewEvaluator Create a new evaluator
 func NewEvaluator(fset *position.FileSet, errs *errors.Errors) *Evaluator {
 	return &Evaluator{
 		fset: fset,
@@ -31,16 +29,16 @@ func (ev *Evaluator) errorsPos(pos position.Pos, err error) {
 	ev.errs.Append(ev.fset.Position(pos), err)
 }
 
-// EvalBy 执行 expr 指定作用域
+// EvalBy evaluate expression in the scope
 func (ev *Evaluator) EvalBy(es []ast.Expr, s value.Assigner) (ex value.Value) {
 	sr := ev.stackRet
-	sf := ev.stackFor
 	for _, v := range es {
 		ex = ev.eval(v, s)
-		if ev.stackRet < sr || ev.stackFor < sf {
+		if ev.stackRet < sr {
 			return
 		}
 	}
+	ev.stackRet--
 	return
 }
 
@@ -58,8 +56,14 @@ func (ev *Evaluator) eval(e ast.Expr, s value.Assigner) value.Value {
 		return ev.evalIf(t, s)
 	case *ast.Brack:
 		return ev.evalBrack(t, s)
+	case *ast.Labeled:
+		// TODO:
+		return value.Nil
 	case *ast.Break:
-		ev.stackFor--
+		// TODO:
+		return value.Nil
+	case *ast.Continue:
+		// TODO:
 		return value.Nil
 	case *ast.For:
 		return ev.evalFor(t, s)

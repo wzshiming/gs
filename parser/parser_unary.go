@@ -9,7 +9,6 @@ import (
 
 func (s *parser) parseUnary() (expr ast.Expr) {
 	tok := s.tok
-	pos := s.pos
 
 	switch {
 	case tok.IsOperator():
@@ -22,13 +21,7 @@ func (s *parser) parseUnary() (expr ast.Expr) {
 		case token.INVALID:
 			s.errors(fmt.Errorf("Undefined value %v", s.val))
 		default:
-			b := &ast.Literal{
-				Pos:   pos,
-				Type:  s.tok,
-				Value: s.val,
-			}
-			s.scan()
-			expr = b
+			expr = s.parseLiteral()
 		}
 
 	}

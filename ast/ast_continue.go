@@ -8,6 +8,7 @@ import (
 // Used to jump out of the current
 type Continue struct {
 	position.Pos
+	Label *Literal
 }
 
 func (l *Continue) String() string {
