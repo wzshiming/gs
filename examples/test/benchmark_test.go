@@ -3,11 +3,7 @@ package test
 import (
 	"testing"
 
-	"github.com/wzshiming/gs/errors"
-	"github.com/wzshiming/gs/evaluator"
-	"github.com/wzshiming/gs/parser"
-	"github.com/wzshiming/gs/position"
-	"github.com/wzshiming/gs/value"
+	"github.com/wzshiming/gs/exec"
 )
 
 func BenchmarkGoFloat(b *testing.B) {
@@ -15,7 +11,7 @@ func BenchmarkGoFloat(b *testing.B) {
 	for i := 0; i != b.N; i++ {
 		(func() {
 			sum := 0.0
-			for i := 0.0; i < 100000.0; i++ {
+			for i := 0.0; i < 10000.0; i++ {
 				sum += i + 1.0
 			}
 		})()
@@ -27,37 +23,39 @@ func BenchmarkGoInt(b *testing.B) {
 	for i := 0; i != b.N; i++ {
 		(func() {
 			sum := 0
-			for i := 0; i < 100000; i++ {
+			for i := 0; i < 10000; i++ {
 				sum += i + 1
 			}
 		})()
 	}
 }
 
-func BenchmarkGs1(b *testing.B) {
+func BenchmarkGsFloat(b *testing.B) {
 
-	expr := `
-sum := 0
-for i := 0; i < 100000; i ++ {
+	expr := []rune(`
+sum := 0.0
+for i := 0.0; i < 10000.0; i ++ {
 	sum += i + 1
 }
-`
-
-	fset := position.NewFileSet()
-	errs := errors.NewErrors()
-	scan := parser.NewParser(fset, errs, "_", []rune(expr))
-	scope := value.NewScope(nil)
-	out := scan.Parse()
-	if errs.Len() != 0 {
-		b.Error(errs)
-	}
-
-	ev := evaluator.NewEvaluator(fset, errs)
+`)
+	exe := exec.NewExec()
 
 	for i := 0; i != b.N; i++ {
-		ev.EvalBy(out, scope)
-		if errs.Len() != 0 {
-			b.Error(errs)
-		}
+		exe.Cmd("_", expr)
+	}
+}
+
+func BenchmarkGsInt(b *testing.B) {
+
+	expr := []rune(`
+sum := 0
+for i := 0; i < 10000; i ++ {
+	sum += i + 1
+}
+`)
+	exe := exec.NewExec()
+
+	for i := 0; i != b.N; i++ {
+		exe.Cmd("_", expr)
 	}
 }
