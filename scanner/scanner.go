@@ -33,7 +33,7 @@ func (s *Scanner) SkipError() {
 func (s *Scanner) skipSpace() {
 	for {
 		switch s.ch {
-		case '\n': // 防止调用参数跨行
+		case '\n': // Prevents calling parameters from crossing lines
 			return
 		case ' ', '\r', '\t':
 			s.next()

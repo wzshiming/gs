@@ -25,7 +25,7 @@ func (s *parser) parseKeywork() (expr ast.Expr) {
 			Pos: pos,
 		}
 		s.scan()
-		if s.tok == token.SEMICOLON { // 开头是 ;
+		if s.tok == token.SEMICOLON { // first is ';'
 			s.scan()
 			fe.Cond = s.parseDefine()
 

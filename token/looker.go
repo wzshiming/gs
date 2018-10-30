@@ -1,6 +1,6 @@
 package token
 
-// 符号查找器
+// looker is the symbolic looker
 type looker struct {
 	m   map[rune]*looker
 	Tok Token
