@@ -3,7 +3,7 @@ GO = /usr/bin/env go
 GS = /usr/bin/env gs
 GITPATH = github.com/wzshiming/gs/cmd/gs
 
-.PHONY: test
+.PHONY: gs test
 
 default: gs test
 	
